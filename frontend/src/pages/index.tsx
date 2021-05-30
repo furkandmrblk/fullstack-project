@@ -1,4 +1,6 @@
 import Head from 'next/head';
+import { Hero } from '../components/Hero';
+import { Navbar } from '../components/Navbar';
 
 export default function Index() {
   return (
@@ -6,7 +8,8 @@ export default function Index() {
       <Head>
         <title>aniProfile - Homepage</title>
       </Head>
-      <h1>Homepage</h1>
+      <Navbar />
+      <Hero />
     </>
   );
 }
