@@ -19,7 +19,13 @@ export default async () => {
 
   await apolloServer.start();
 
-  apolloServer.applyMiddleware({ app: app });
+  // Cross-Origin Resource Sharing - As the name already says we are sharing our resources with the front-end
+  const corsOption = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  };
+
+  apolloServer.applyMiddleware({ app: app, cors: corsOption });
 
   app.use('/', (req: Request, res: Response) => {
     res.send('Express Apollo Server is Ready');
@@ -28,8 +34,7 @@ export default async () => {
   // Express Bodyparser - Our code gets transformed into JSON
   app.use(express.json());
 
-  // Cross-Origin Resource Sharing - As the name already says we are sharing our resources with the front-end
-  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+  app.use(cors(corsOption));
 
   //Error Handler
   app.use((req: Request, res: Response, next: NextFunction) => {

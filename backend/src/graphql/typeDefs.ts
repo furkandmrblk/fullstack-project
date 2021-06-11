@@ -24,15 +24,17 @@ export const typeDefs = gql`
   }
 
   type Query {
-    getUser(id: ID): User
+    getUser(id: ID!): User
     getUsers: [User]
-    getUserProfile(id: ID): UserProfile
+    getUserProfile(id: ID!): UserProfile
     getUserProfiles: [UserProfile]
+
+    getCurrentUserProfile: UserProfile
   }
 
   input UserInput {
-    username: String
-    password: String
+    username: String!
+    password: String!
   }
 
   input ProfileInput {
@@ -45,12 +47,12 @@ export const typeDefs = gql`
 
   type Mutation {
     createUser(user: UserInput): User
-    loginUser(user: UserInput): AuthPayload
+    loginUser(user: UserInput): Boolean
     logoutUser: Boolean
     updateTokens: AuthPayload
-    deleteUser(id: ID): String
+    deleteUser(id: ID!): String
 
     createProfile(profile: ProfileInput): UserProfile
-    updateProfile(id: ID, profile: ProfileInput): UserProfile
+    updateProfile(id: ID!, profile: ProfileInput): UserProfile
   }
 `;

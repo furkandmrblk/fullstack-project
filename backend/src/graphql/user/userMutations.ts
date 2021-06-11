@@ -9,7 +9,11 @@ export const createProfile = async (parent, args, context, info) => {
       args.profile;
 
     // Get Access Token
-    const accessToken = context.req.headers.authorization;
+    const tokens = context.req.headers.cookie.split(' ');
+    const x = tokens[1];
+    const y = x.split('=');
+    const aToken = y[1].split(';');
+    const accessToken: string = 'Bearer ' + aToken[0];
 
     if (!accessToken)
       throw new createError.BadRequest('Access Token was not found.');
@@ -56,7 +60,11 @@ export const createProfile = async (parent, args, context, info) => {
 export const updateProfile = async (parent, args, context, info) => {
   try {
     // Get Access Token
-    const accessToken = context.req.headers.authorization;
+    const tokens = context.req.headers.cookie.split(' ');
+    const x = tokens[1];
+    const y = x.split('=');
+    const aToken = y[1].split(';');
+    const accessToken: string = 'Bearer ' + aToken[0];
 
     if (!accessToken)
       throw new createError.BadRequest('Access Token was not found.');

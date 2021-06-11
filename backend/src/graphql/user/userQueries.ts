@@ -46,11 +46,40 @@ export const getUserProfile = async (parent, args, context, info) => {
   const currentUser = await User.findById(profile.user);
 
   return {
+    id: profile.id,
     description: profile.description,
     color: profile.color,
     favoriteAnime: profile.favoriteAnime,
     favoriteManga: profile.favoriteManga,
     favoriteChar: profile.favoriteChar,
+    user: currentUser,
+  };
+};
+
+export const getCurrentUserProfile = async (parent, args, context, info) => {
+  // Get Access Token
+  const tokens = context.req.headers.cookie.split(' ');
+  const x = tokens[1];
+  const y = x.split('=');
+  const aToken = y[1].split(';');
+  const accessToken: string = 'Bearer ' + aToken[0];
+
+  // Get the user id
+  const id = await verifyAccessToken(context.req, context.res, accessToken);
+
+  const currentUser = await User.findById(id);
+
+  const userProfile: IUserProfile | any = await UserProfile.findById(
+    currentUser.userprofile
+  );
+
+  return {
+    id: userProfile.id,
+    description: userProfile.description,
+    color: userProfile.color,
+    favoriteAnime: userProfile.favoriteAnime,
+    favoriteManga: userProfile.favoriteManga,
+    favoriteChar: userProfile.favoriteChar,
     user: currentUser,
   };
 };
@@ -90,8 +119,10 @@ export const getUserProfiles = async (parent, args, context, info) => {
 // Profile Picture reinbringen []
 
 // Start with Frontend
-//  -Design verbessern
-//  -PC View hardcoden
-//  -GraphQL mit einbringen
-//  -Authentication
-//  -UserProfiles
+//  -Design verbessern [x]
+//  -PC View hardcoden [x]
+//  -GraphQL mit einbringen []
+//  -Authentication []
+//  -UserProfiles []
+
+// fetch policies apollo client cache

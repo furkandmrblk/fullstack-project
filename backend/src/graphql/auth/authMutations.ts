@@ -12,6 +12,7 @@ import {
   verifyRefreshToken,
   blacklistRefreshToken,
   verifyAccessToken,
+  sendAccessToken,
 } from '../../services/auth';
 
 export const createUser = async (parent, args, context, info) => {
@@ -25,7 +26,7 @@ export const createUser = async (parent, args, context, info) => {
     });
 
     if (usernameExists)
-      return new createError.Conflict(`${username} is already in use.`);
+      return new createError.Conflict(`'${username}' is already in use.`);
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -54,14 +55,12 @@ export const loginUser = async (parent, args, context, info) => {
     // Check if the Username exists
     const user = await User.findOne({ username: username });
 
-    const userId = user.id;
-
     if (!user) return new createError.NotFound('User is not registered.');
+
+    const userId = user.id;
 
     // Check if password is valid
     const validPassword = await bcrypt.compare(password, user.password);
-
-    // kriege hier Error warum auch immer, dass das Passwort falsch ist, obwohl es richtig ist.
 
     if (!validPassword)
       return new createError.Unauthorized('Incorrect username or password.');
@@ -72,21 +71,24 @@ export const loginUser = async (parent, args, context, info) => {
     const refreshToken = await createRefreshToken(userId);
 
     sendRefreshToken(context.req, context.res, refreshToken);
+    sendAccessToken(context.req, context.res, accessToken);
 
-    return {
-      accessToken: accessToken,
-      user: user,
-    };
+    return true;
   } catch (error) {
     if (error.isJoi === true)
       throw new createError.BadRequest('Invalid username or password');
+    return false;
   }
 };
 
 export const logoutUser = async (parent, args, context, info) => {
   try {
     // Get Refresh Token
-    const refreshToken = context.req.headers.authorization;
+    const tokens = context.req.headers.cookie.split(' ');
+    const x = tokens[0];
+    const y = x.split('=');
+    const refToken = y[1].split(';');
+    const refreshToken = 'Bearer ' + refToken[0];
 
     if (!refreshToken)
       return new createError.BadRequest('Refresh Token was not found.');
@@ -108,7 +110,11 @@ export const updateTokens = async (parent, args, context, info) => {
   // If the Access Token is not valid anymore generate a new pair of Access- & Refresh Tokens
   try {
     // Get Refresh Token
-    const refreshToken = context.req.headers.authorization;
+    const tokens = context.req.headers.cookie.split(' ');
+    const x = tokens[0];
+    const y = x.split('=');
+    const z = y[1].split(';');
+    const refreshToken = 'Bearer ' + z[0];
 
     if (!refreshToken)
       throw new createError.BadRequest('Refresh Token was not found.');
@@ -124,9 +130,10 @@ export const updateTokens = async (parent, args, context, info) => {
     const accessToken = await createAccessToken(userId);
     const refToken = await createRefreshToken(userId);
 
+    sendAccessToken(context.req, context.res, accessToken);
     sendRefreshToken(context.req, context.res, refToken);
 
-    return { accessToken: accessToken };
+    return 'Tokens updated successfully.';
   } catch (error) {
     console.log(error);
   }
@@ -136,7 +143,11 @@ export const deleteUser = async (parent, args, context, info) => {
   const { id } = args;
 
   // Get Refresh Token
-  const refreshToken = context.req.headers.authorization;
+  const tokens = context.req.headers.cookie.split(' ');
+  const x = tokens[0];
+  const y = x.split('=');
+  const refToken = y[1].split(';');
+  const refreshToken = 'Bearer ' + refToken[0];
 
   if (!refreshToken)
     throw new createError.BadRequest('Refreshtoken was not found.');

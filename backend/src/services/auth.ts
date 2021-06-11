@@ -4,6 +4,7 @@ import createError from 'http-errors';
 import config from '../config';
 
 import { client } from '../loaders/redis';
+import { domain } from 'node:process';
 
 // create AccessToken
 export function createAccessToken(userId: string) {
@@ -76,14 +77,17 @@ export function createRefreshToken(userId: string) {
 }
 
 // verify AccessToken
-export function verifyAccessToken(req: any, res: Response, next: NextFunction) {
+export function verifyAccessToken(
+  req: any,
+  res: Response,
+  accessToken: string
+) {
   return new Promise<string>((resolve, reject) => {
     // We're checking if the header contains the accesstoken in the authorization header
-    if (!req.headers['authorization']) return new createError.Unauthorized();
+    if (!req.headers.cookie) return new createError.Unauthorized();
 
     // Now we need to split the Bearer Token to get the accesstoken
-    const authHeader = req.headers['authorization'];
-    const bearerToken = authHeader.split(' ');
+    const bearerToken = accessToken.split(' ');
     const token = bearerToken[1];
 
     // Now that we got the accesstoken let's verify the jwt token
@@ -112,7 +116,7 @@ export function verifyRefreshToken(
   refreshToken: string
 ) {
   return new Promise<string>((resolve, reject) => {
-    if (!req.headers['authorization']) {
+    if (!req.headers.cookie) {
       return new createError.Unauthorized('Invalid Refresh Token');
     }
 
@@ -153,7 +157,7 @@ export function blacklistRefreshToken(
   refreshToken: string
 ) {
   return new Promise<string>((resolve, reject) => {
-    if (!req.headers['authorization']) {
+    if (!req.headers.cookie) {
       return new createError.Unauthorized('Invalid Refresh Token');
     }
 
@@ -202,8 +206,20 @@ export function sendRefreshToken(req: Request, res: Response, token: string) {
   const options: CookieOptions = {
     httpOnly: true,
     path: '/',
-    expires: new Date(Date.now() * 365 * 24 * 60 * 60),
+    expires: new Date(Date.now() + '1y'),
   };
 
   res.cookie('refreshToken', token, options);
+}
+
+// Send Access Token
+export function sendAccessToken(req: Request, res: Response, token: string) {
+  const options: CookieOptions = {
+    httpOnly: true,
+    path: '/',
+    domain: 'localhost',
+    expires: new Date(Date.now() + '20m'),
+  };
+
+  res.cookie('accessToken', token, options);
 }
