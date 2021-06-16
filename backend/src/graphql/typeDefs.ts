@@ -19,16 +19,16 @@ export const typeDefs = gql`
   }
 
   type AuthPayload {
-    accessToken: String
-    user: User
+    accessToken: String!
   }
 
   type Query {
     getUser(id: ID!): User
     getUsers: [User]
+    getCurrentUser: User
+
     getUserProfile(id: ID!): UserProfile
     getUserProfiles: [UserProfile]
-
     getCurrentUserProfile: UserProfile
   }
 
@@ -47,7 +47,7 @@ export const typeDefs = gql`
 
   type Mutation {
     createUser(user: UserInput): User
-    loginUser(user: UserInput): Boolean
+    loginUser(user: UserInput): AuthPayload
     logoutUser: Boolean
     updateTokens: AuthPayload
     deleteUser(id: ID!): String

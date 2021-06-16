@@ -1,18 +1,20 @@
 import { useMutation } from '@apollo/client';
 import React, { useContext, useState } from 'react';
 import { z } from 'zod';
+import { setAccessToken } from '../helpers/Tokens';
 import { loginUserM } from '../pages';
 import { Context } from '../reducer';
 
 export const Login = ({ openlogin, signin }): JSX.Element => {
   const authContext = useContext(Context);
 
-  // Fetch Data From Inputs
+  // Save the inputs here
   const [data, setData] = useState({
     username: '',
     password: '',
   });
 
+  // Save all of the changes for the inputs
   const { username, password } = data;
 
   const onChange = (e: any) => {
@@ -29,9 +31,9 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
     password: z
       .string()
       .min(6, { message: 'Password must be 6 or more characters long.' }),
-  });
+  }); // ???
 
-  // Use createUser Mutation & Submit It
+  // createUser mutation
   const [login, loginResult] = useMutation(loginUserM, {
     variables: {
       username: username,
@@ -39,6 +41,7 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
     },
   });
 
+  // Submitting createUser mutation & saving accessToken in memory
   const onSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -48,12 +51,17 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
         variables: { username: username, password: password },
       });
 
+      if (!loginResult.loading && loginResult.data !== undefined) {
+        setAccessToken(await loginResult.data.loginUser.accessToken);
+      } // loginUser undefined
+
       setZodError(null);
       setError(null);
 
       setTimeout(openlogin(e), 100);
       authContext.authDispatch('login');
     } catch (error) {
+      // Custom zod errors for different cases
       if (error instanceof z.ZodError) {
         setError(null);
 
@@ -72,7 +80,7 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
     }
   };
 
-  // Error Handler useState
+  // errorHandler useStates
   const [zodError, setZodError] = useState([]);
   const [error, setError] = useState('');
 

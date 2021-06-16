@@ -8,13 +8,13 @@ import { LeftSidebar } from '../../components/parts/LeftSidebar';
 import { RightSidebar } from '../../components/parts/RightSidebar';
 import { SignUp } from '../../components/SignUp';
 import { UserProfile } from '../../components/UserProfile';
-import { Context } from '../../reducer';
 
 export default function ProfilePage({ slug }) {
   const [signUp, setSignUp] = useState(false);
   const [signIn, setSignIn] = useState(false);
 
   const id = slug.slug;
+
   const { data, loading, error } = useQuery(getProfileQ, {
     variables: {
       id: id,

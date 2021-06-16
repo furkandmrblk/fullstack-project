@@ -12,7 +12,7 @@ export function createAccessToken(userId: string) {
     const payload = {};
     const secret = config.accessTokenSecret;
     const options = {
-      expiresIn: '20m',
+      expiresIn: '10m',
       audience: userId,
     };
 
@@ -84,11 +84,13 @@ export function verifyAccessToken(
 ) {
   return new Promise<string>((resolve, reject) => {
     // We're checking if the header contains the accesstoken in the authorization header
-    if (!req.headers.cookie) return new createError.Unauthorized();
+    if (!req.headers['authorization']) return new createError.Unauthorized();
 
     // Now we need to split the Bearer Token to get the accesstoken
     const bearerToken = accessToken.split(' ');
     const token = bearerToken[1];
+
+    if (!token) return new createError.NotFound('Could not find accessToken.');
 
     // Now that we got the accesstoken let's verify the jwt token
     jwt.verify(
@@ -111,14 +113,13 @@ export function verifyAccessToken(
 
 // verify RefreshToken
 export function verifyRefreshToken(
-  req: Request,
+  req: any,
   res: Response,
   refreshToken: string
 ) {
   return new Promise<string>((resolve, reject) => {
-    if (!req.headers.cookie) {
+    if (!req.headers.cookie)
       return new createError.Unauthorized('Invalid Refresh Token');
-    }
 
     const bearerToken = refreshToken.split(' ');
     const reftoken = bearerToken[1];
@@ -143,7 +144,7 @@ export function verifyRefreshToken(
           }
           if (reftoken === result) return resolve(userId);
 
-          reject(new createError.Unauthorized());
+          reject(new createError.Unauthorized()); // hier ist ein Error
         });
       }
     );
@@ -210,16 +211,4 @@ export function sendRefreshToken(req: Request, res: Response, token: string) {
   };
 
   res.cookie('refreshToken', token, options);
-}
-
-// Send Access Token
-export function sendAccessToken(req: Request, res: Response, token: string) {
-  const options: CookieOptions = {
-    httpOnly: true,
-    path: '/',
-    domain: 'localhost',
-    expires: new Date(Date.now() + '20m'),
-  };
-
-  res.cookie('accessToken', token, options);
 }

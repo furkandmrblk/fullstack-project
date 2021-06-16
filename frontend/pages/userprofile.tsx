@@ -1,8 +1,8 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/dist/client/router';
-import { redirect } from 'next/dist/next-server/server/api-utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getStandaloneApolloClient } from '../client';
 import { Login } from '../components/Login';
 import { Navbar } from '../components/Navbar';
 import { LeftSidebar } from '../components/parts/LeftSidebar';
@@ -16,22 +16,21 @@ export default function CurrentUserProfile() {
 
   const router = useRouter();
 
-  const { data, loading, error } = useQuery(getCurrentUserProfileQ);
+  const getProfile = useQuery(getCurrentUserProfileQ);
 
-  if (loading) {
+  if (getProfile.loading) {
     return <p className="text-white">Loading...</p>;
   }
 
-  if (error) {
-    console.log(error);
+  if (getProfile.error) {
+    console.log(getProfile.error);
   }
 
-  if (!data) {
-    return router.push('/');
-    // muss mit updateTokens hier rumspielen, sodass so ein Error nie zum Vorschein kommt
+  if (getProfile.data === undefined) {
+    router.push('/createprofile');
   }
 
-  const userProfile = data.getCurrentUserProfile;
+  const userProfile = getProfile.data.getCurrentUserProfile;
 
   const openSignUp = () => {
     setSignUp(!signUp);
@@ -55,6 +54,21 @@ export default function CurrentUserProfile() {
     </>
   );
 }
+
+// Muss mal schauen wie ich das hier reinbekomme, sodass der den accessToken mitnehmen kann
+// export async function getServerSideProps() {
+//   const client = await getStandaloneApolloClient();
+
+//   await client.query({
+//     query: getCurrentUserProfileQ,
+//   });
+
+//   return {
+//     props: {
+//       apolloStaticCache: client.cache.extract(),
+//     },
+//   };
+// }
 
 // User Queries
 

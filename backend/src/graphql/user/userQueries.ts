@@ -39,6 +39,21 @@ export const getUsers = async () => {
   return users;
 };
 
+export const getCurrentUser = async (parent, args, context, info) => {
+  // Get Access Token
+  const accessToken = context.req.headers['authorization'];
+
+  if (!accessToken)
+    return new createError.Unauthorized('Access token was not found.');
+
+  // Get the user ID
+  const id = await verifyAccessToken(context.req, context.res, accessToken);
+
+  const currentUser = await User.findById(id);
+
+  return currentUser;
+};
+
 export const getUserProfile = async (parent, args, context, info) => {
   const { id } = args;
 
@@ -58,13 +73,12 @@ export const getUserProfile = async (parent, args, context, info) => {
 
 export const getCurrentUserProfile = async (parent, args, context, info) => {
   // Get Access Token
-  const tokens = context.req.headers.cookie.split(' ');
-  const x = tokens[1];
-  const y = x.split('=');
-  const aToken = y[1].split(';');
-  const accessToken: string = 'Bearer ' + aToken[0];
+  const accessToken = context.req.headers['authorization'];
 
-  // Get the user id
+  if (!accessToken)
+    return new createError.Unauthorized('Access token was not found.');
+
+  // Get the user ID
   const id = await verifyAccessToken(context.req, context.res, accessToken);
 
   const currentUser = await User.findById(id);

@@ -1,12 +1,26 @@
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
+import { useRouter } from 'next/dist/client/router';
+import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
-import { logoutUserM } from '../pages';
+import { setAccessToken } from '../helpers/Tokens';
+import { logoutUserM, updateTokensM } from '../pages';
+import { getCurrentUserProfileQ } from '../pages/userprofile';
 import { Context } from '../reducer';
 
 export const Navbar = ({ openregister, openlogin }): JSX.Element => {
   const authContext = useContext(Context);
-  const isAuth: boolean = JSON.parse(authContext.authState);
+
+  const isAuth = JSON.parse(authContext.authState);
   //  macht bei isAuth === true error, aber nur bei index page
+
+  const profile = useQuery(getCurrentUserProfileQ);
+
+  let userProfile: boolean = undefined;
+  if (profile.data === undefined) {
+    userProfile = false;
+  } else {
+    userProfile = true;
+  }
 
   const [open, isOpen] = useState(false);
   const [open2, isOpen2] = useState(false);
@@ -27,9 +41,16 @@ export const Navbar = ({ openregister, openlogin }): JSX.Element => {
     try {
       await logout();
 
+      setAccessToken(null);
       authContext.authDispatch('logout');
 
-      isOpen(open === false);
+      if (open === true) {
+        isOpen(!open);
+      }
+
+      if (open2 === true) {
+        isOpen2(!open2);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -126,18 +147,32 @@ export const Navbar = ({ openregister, openlogin }): JSX.Element => {
         }}
         className="container mt-[5rem] mr-[16rem] z-[99] h-32 w-64 bg-gray-900 absolute right-0 rounded-bl-lg rounded-br-lg flex flex-col justify-start items-center p-5 overflow-hidden whitespace-nowrap"
       >
-        <a
-          href="/userprofile"
-          className="text-base antialiased font-medium text-white my-1"
-        >
-          My Profile
-        </a>
-        <a
-          href="#"
-          className="text-base antialiased font-medium text-white my-1"
-        >
-          Edit Profile
-        </a>
+        {userProfile ? (
+          <>
+            <a
+              href="/userprofile"
+              className="text-base antialiased font-medium text-white my-1"
+            >
+              My Profile
+            </a>
+
+            <a
+              href="/editprofile"
+              className="text-base antialiased font-medium text-white my-1"
+            >
+              Edit Profile
+            </a>
+          </>
+        ) : (
+          <>
+            <a
+              href="/createprofile"
+              className="text-base antialiased font-medium text-white my-1"
+            >
+              Create Profile
+            </a>
+          </>
+        )}
       </div>
     </>
   );

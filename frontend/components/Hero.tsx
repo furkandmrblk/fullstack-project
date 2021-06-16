@@ -2,6 +2,8 @@ import React from 'react';
 import { LeftSidebar } from './parts/LeftSidebar';
 import { MiddleScreen } from './parts/MiddleScreen';
 import { RightSidebar } from './parts/RightSidebar';
+import { AnimeChart } from './parts/AnimeChart';
+import { MangaChart } from './parts/MangaChart';
 
 export const Hero = ({ props }): JSX.Element => {
   // If the data is still loading or an error occurs, then we will return the messages below.

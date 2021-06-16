@@ -12,7 +12,6 @@ import {
   verifyRefreshToken,
   blacklistRefreshToken,
   verifyAccessToken,
-  sendAccessToken,
 } from '../../services/auth';
 
 export const createUser = async (parent, args, context, info) => {
@@ -71,9 +70,8 @@ export const loginUser = async (parent, args, context, info) => {
     const refreshToken = await createRefreshToken(userId);
 
     sendRefreshToken(context.req, context.res, refreshToken);
-    sendAccessToken(context.req, context.res, accessToken);
 
-    return true;
+    return { accessToken: accessToken };
   } catch (error) {
     if (error.isJoi === true)
       throw new createError.BadRequest('Invalid username or password');
@@ -109,12 +107,13 @@ export const logoutUser = async (parent, args, context, info) => {
 export const updateTokens = async (parent, args, context, info) => {
   // If the Access Token is not valid anymore generate a new pair of Access- & Refresh Tokens
   try {
+    if (!context.req.headers.cookie)
+      return new createError.Unauthorized('Cookie was not found.');
+
     // Get Refresh Token
-    const tokens = context.req.headers.cookie.split(' ');
-    const x = tokens[0];
-    const y = x.split('=');
-    const z = y[1].split(';');
-    const refreshToken = 'Bearer ' + z[0];
+    const token = await context.req.headers.cookie;
+    const x = token.split('=');
+    const refreshToken = 'Bearer ' + x[1];
 
     if (!refreshToken)
       throw new createError.BadRequest('Refresh Token was not found.');
@@ -130,10 +129,9 @@ export const updateTokens = async (parent, args, context, info) => {
     const accessToken = await createAccessToken(userId);
     const refToken = await createRefreshToken(userId);
 
-    sendAccessToken(context.req, context.res, accessToken);
     sendRefreshToken(context.req, context.res, refToken);
 
-    return 'Tokens updated successfully.';
+    return { accessToken: accessToken };
   } catch (error) {
     console.log(error);
   }
@@ -142,12 +140,13 @@ export const updateTokens = async (parent, args, context, info) => {
 export const deleteUser = async (parent, args, context, info) => {
   const { id } = args;
 
+  if (!context.req.headers.cookie)
+    return new createError.Unauthorized('Cookie was not found.');
+
   // Get Refresh Token
-  const tokens = context.req.headers.cookie.split(' ');
-  const x = tokens[0];
-  const y = x.split('=');
-  const refToken = y[1].split(';');
-  const refreshToken = 'Bearer ' + refToken[0];
+  const token = await context.req.headers.cookie;
+  const x = token.split('=');
+  const refreshToken = 'Bearer ' + x[1];
 
   if (!refreshToken)
     throw new createError.BadRequest('Refreshtoken was not found.');
