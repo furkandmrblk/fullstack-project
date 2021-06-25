@@ -51,7 +51,14 @@ export const getCurrentUser = async (parent, args, context, info) => {
 
   const currentUser = await User.findById(id);
 
-  return currentUser;
+  const profile = await UserProfile.findById(currentUser.userprofile);
+
+  return {
+    id: currentUser.id,
+    username: currentUser.username,
+    password: currentUser.password,
+    userprofile: profile,
+  };
 };
 
 export const getUserProfile = async (parent, args, context, info) => {
@@ -83,9 +90,9 @@ export const getCurrentUserProfile = async (parent, args, context, info) => {
 
   const currentUser = await User.findById(id);
 
-  const userProfile: IUserProfile | any = await UserProfile.findById(
-    currentUser.userprofile
-  );
+  const userProfile: any = await UserProfile.findById(currentUser.userprofile);
+  console.log(userProfile);
+  
 
   return {
     id: userProfile.id,
@@ -94,6 +101,7 @@ export const getCurrentUserProfile = async (parent, args, context, info) => {
     favoriteAnime: userProfile.favoriteAnime,
     favoriteManga: userProfile.favoriteManga,
     favoriteChar: userProfile.favoriteChar,
+
     user: currentUser,
   };
 };

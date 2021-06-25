@@ -1,18 +1,12 @@
 import { gql, useQuery } from '@apollo/client';
 import Head from 'next/head';
-import { useState } from 'react';
-import { client, getStandaloneApolloClient } from '../../client';
-import { Login } from '../../components/Login';
-import { Navbar } from '../../components/Navbar';
-import { LeftSidebar } from '../../components/parts/LeftSidebar';
-import { RightSidebar } from '../../components/parts/RightSidebar';
-import { SignUp } from '../../components/SignUp';
-import { UserProfile } from '../../components/UserProfile';
+import { getStandaloneApolloClient } from '../../client/standAloneClient';
+import { Navbar } from '../../components/Auth/Navbar';
+import { LeftSidebar } from '../../components/Layout/LeftSidebar';
+import { RightSidebar } from '../../components/Layout/RightSidebar';
+import { UserProfile } from '../../components/Userprofile/UserProfile';
 
 export default function ProfilePage({ slug }) {
-  const [signUp, setSignUp] = useState(false);
-  const [signIn, setSignIn] = useState(false);
-
   const id = slug.slug;
 
   const { data, loading, error } = useQuery(getProfileQ, {
@@ -31,24 +25,20 @@ export default function ProfilePage({ slug }) {
 
   const userProfile = data.getUserProfile;
 
-  const openSignUp = () => {
-    setSignUp(!signUp);
-  };
-
-  const openSignIn = (e: any) => {
-    setSignIn(!signIn);
-    e.preventDefault();
-  };
-
   return (
     <>
       <div className="flex max-w-full" style={{ height: '91.5vh' }}>
-        <Navbar openregister={openSignUp} openlogin={openSignIn} />
-        <LeftSidebar />
-        <UserProfile props={userProfile} />
-        <RightSidebar />
-        <SignUp signup={signUp} openregister={openSignUp} />
-        <Login signin={signIn} openlogin={openSignIn} />
+        <Navbar />
+        <div
+          className="container flex max-w-full justify-center items-start"
+          style={{ height: '91vh', marginTop: '5.235rem' }}
+        >
+          <LeftSidebar confetti={false} />
+          <div className="flex flex-wrap w-[56vw] pt-[1.6rem]">
+            <UserProfile props={userProfile} />
+          </div>
+          <RightSidebar confetti={false} />
+        </div>
       </div>
     </>
   );

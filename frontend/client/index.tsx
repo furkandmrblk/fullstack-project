@@ -4,7 +4,6 @@ import {
   from,
   InMemoryCache,
   NormalizedCacheObject,
-  HttpLink,
 } from '@apollo/client';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 
@@ -72,33 +71,5 @@ export const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     },
   },
 });
-
-export async function getStandaloneApolloClient() {
-  // const { ApolloClient, InMemoryCache, HttpLink } = await import(
-  //   '@apollo/client'
-  // );
-
-  // const httpLink = new HttpLink({
-  //   uri: 'http://localhost:4000/graphql',
-  //   credentials: 'include',
-  // });
-
-  return new ApolloClient({
-    ssrMode: true,
-    cache: new InMemoryCache({
-      typePolicies: {
-        UserProfile: {
-          keyFields: ['id'],
-        },
-      },
-    }),
-    link: from([refreshLink, authLink, errorLink, httpLink]),
-    defaultOptions: {
-      watchQuery: {
-        fetchPolicy: 'cache-and-network',
-      },
-    },
-  });
-}
 
 //  Cache ist Zwischenspeicher, der getStandaloneApolloClient wird nur bei build time benutzt.

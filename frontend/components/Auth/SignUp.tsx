@@ -1,20 +1,15 @@
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import React, { useContext, useState } from 'react';
-import { z } from 'zod';
-import { setAccessToken } from '../helpers/Tokens';
-import { loginUserM } from '../pages';
-import { Context } from '../reducer';
+import { createUserM } from '../../pages';
+import { custom, z, ZodError } from 'zod';
 
-export const Login = ({ openlogin, signin }): JSX.Element => {
-  const authContext = useContext(Context);
-
-  // Save the inputs here
+export const SignUp = ({ signup, openregister }): JSX.Element => {
+  // Fetch Data From Inputs
   const [data, setData] = useState({
     username: '',
     password: '',
   });
 
-  // Save all of the changes for the inputs
   const { username, password } = data;
 
   const onChange = (e: any) => {
@@ -23,7 +18,7 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
   };
 
   // Zod Validation Schema
-  const loginSchema = z.object({
+  const registerSchema = z.object({
     username: z
       .string()
       .min(3, { message: 'Username must be 3 or more characters long.' })
@@ -31,38 +26,31 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
     password: z
       .string()
       .min(6, { message: 'Password must be 6 or more characters long.' }),
-  }); // ???
+  });
 
-  // createUser mutation
-  const [login, loginResult] = useMutation(loginUserM, {
+  // Use createUser Mutation & Submit It
+  const [register, registerResult] = useMutation(createUserM, {
     variables: {
       username: username,
       password: password,
     },
   });
 
-  // Submitting createUser mutation & saving accessToken in memory
   const onSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
-      loginSchema.parse(data);
-      await login({
+      registerSchema.parse(data);
+      await register({
         variables: { username: username, password: password },
       });
-
-      if (!loginResult.loading && loginResult.data !== undefined) {
-        setAccessToken(await loginResult.data.loginUser.accessToken);
-      } // loginUser undefined
-
       setZodError(null);
       setError(null);
-
-      setTimeout(openlogin(e), 100);
-      authContext.authDispatch('login');
+      setSuccess('Successfully created account.');
+      setTimeout(openregister, 750);
     } catch (error) {
-      // Custom zod errors for different cases
       if (error instanceof z.ZodError) {
+        setSuccess(null);
         setError(null);
 
         let customError = error.flatten().fieldErrors;
@@ -73,24 +61,26 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
           setZodError(customError.password);
         }
       } else {
+        setSuccess(null);
         setZodError(null);
         setError(error.message);
-        console.log(error);
       }
     }
   };
 
-  // errorHandler useStates
+  // Error Handler useState
   const [zodError, setZodError] = useState([]);
   const [error, setError] = useState('');
+  // Success Handler useState
+  const [success, setSuccess] = useState('');
 
   return (
     <>
-      {signin ? (
+      {signup ? (
         <>
-          <div className="absolute right-0 left-0 top-0 bottom-0 z-50 flex flex-col items-center h-64 w-80 mx-auto my-auto rounded-lg bg-gray-200 p-5 ">
-            <h1 className="text-lg antialiased font-bold text-black mb-7">
-              Sign In
+          <div className="fixed right-0 left-0 top-0 bottom-0 z-50 flex flex-col items-center h-64 w-80 mx-auto my-auto rounded-lg bg-indigo-100 p-5 ">
+            <h1 className="text-lg antialiased font-bold italic text-black mb-7">
+              Sign Up
             </h1>
             <div
               className="absolute right-0 top-0 mr-3 mt-3 h-4 w-4 cursor-pointer"
@@ -100,7 +90,7 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
               }}
-              onClick={openlogin}
+              onClick={openregister}
             />
 
             <form
@@ -112,20 +102,20 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
                 type="text"
                 placeholder="username"
                 onChange={onChange}
-                className="text-base antialiased font-base text-black bg-gray-200 border-[1px] border-black rounded-lg outline-none w-64 h-[2.5rem]  px-4  mb-3"
+                className="text-base antialiased font-base text-black italic bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3"
               />
               <input
                 name="password"
                 type="password"
                 placeholder="password"
                 onChange={onChange}
-                className="text-base antialiased font-base text-black bg-gray-200 border-[1px] border-black rounded-lg outline-none w-64 h-[2.5rem]  px-4  mb-3"
+                className="text-base antialiased font-base text-black italic bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3"
               />
               <button
                 type="submit"
-                className="btn text-white bg-green-600 hover:bg-green-700 w-64"
+                className="btn text-white bg-indigo-600 hover:bg-indigo-700 w-64"
               >
-                Login
+                Register
               </button>
             </form>
             {zodError ? (
@@ -137,9 +127,17 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
             ) : null}
             {error ? (
               <>
-                <p className="text-xs antialiased font-medium text-red-600 mt-2">
-                  {error}
+                <p className="text-xs antialiased font-medium italic text-red-600 mt-2">
+                  Username {error}
                 </p>
+              </>
+            ) : null}
+            {success ? (
+              <>
+                {' '}
+                <p className="text-xs antialiased font-medium italic text-green-600 mt-2">
+                  {success}
+                </p>{' '}
               </>
             ) : null}
           </div>

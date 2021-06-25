@@ -16,6 +16,14 @@ export const typeDefs = gql`
     favoriteAnime: String
     favoriteManga: String
     favoriteChar: String
+
+    finishedAnime: [String]
+    watchingAnime: [String]
+    watchlistAnime: [String]
+
+    finishedManga: [String]
+    watchingManga: [String]
+    watchlistManga: [String]
   }
 
   type AuthPayload {
@@ -43,6 +51,14 @@ export const typeDefs = gql`
     favoriteAnime: String
     favoriteManga: String
     favoriteChar: String
+
+    finishedAnime: [String]
+    watchingAnime: [String]
+    watchlistAnime: [String]
+
+    finishedManga: [String]
+    watchingManga: [String]
+    watchlistManga: [String]
   }
 
   type Mutation {
@@ -50,9 +66,12 @@ export const typeDefs = gql`
     loginUser(user: UserInput): AuthPayload
     logoutUser: Boolean
     updateTokens: AuthPayload
-    deleteUser(id: ID!): String
+    deleteUser(password: String!): String
+
+    changeUsername(username: String!): User
+    changePassword(oldPassword: String! password: String!): User
 
     createProfile(profile: ProfileInput): UserProfile
-    updateProfile(id: ID!, profile: ProfileInput): UserProfile
+    updateProfile(profile: ProfileInput): UserProfile
   }
 `;

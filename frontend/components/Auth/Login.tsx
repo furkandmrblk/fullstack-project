@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { createUserM } from '../pages';
-import { custom, z, ZodError } from 'zod';
+import React, { useContext, useState } from 'react';
+import { z } from 'zod';
+import { setAccessToken } from '../../helpers/Tokens';
+import { loginUserM } from '../../pages';
+import { Context } from '../../reducer';
 
-export const SignUp = ({ signup, openregister }): JSX.Element => {
-  // Fetch Data From Inputs
+export const Login = ({ openlogin, signin }): JSX.Element => {
+  const authContext = useContext(Context);
+
   const [data, setData] = useState({
     username: '',
     password: '',
@@ -17,8 +20,7 @@ export const SignUp = ({ signup, openregister }): JSX.Element => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  // Zod Validation Schema
-  const registerSchema = z.object({
+  const loginSchema = z.object({
     username: z
       .string()
       .min(3, { message: 'Username must be 3 or more characters long.' })
@@ -28,8 +30,7 @@ export const SignUp = ({ signup, openregister }): JSX.Element => {
       .min(6, { message: 'Password must be 6 or more characters long.' }),
   });
 
-  // Use createUser Mutation & Submit It
-  const [register, registerResult] = useMutation(createUserM, {
+  const [login, loginResult] = useMutation(loginUserM, {
     variables: {
       username: username,
       password: password,
@@ -40,17 +41,22 @@ export const SignUp = ({ signup, openregister }): JSX.Element => {
     e.preventDefault();
 
     try {
-      registerSchema.parse(data);
-      await register({
+      loginSchema.parse(data);
+      await login({
         variables: { username: username, password: password },
       });
+
+      if (!loginResult.loading && loginResult.data !== undefined) {
+        setAccessToken(await loginResult.data.loginUser.accessToken);
+      }
+
       setZodError(null);
       setError(null);
-      setSuccess('Successfully created account.');
-      setTimeout(openregister, 750);
+
+      setTimeout(openlogin(e), 100);
+      authContext.authDispatch('login');
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setSuccess(null);
         setError(null);
 
         let customError = error.flatten().fieldErrors;
@@ -61,26 +67,24 @@ export const SignUp = ({ signup, openregister }): JSX.Element => {
           setZodError(customError.password);
         }
       } else {
-        setSuccess(null);
         setZodError(null);
         setError(error.message);
+        console.log(error);
       }
     }
   };
 
-  // Error Handler useState
+  // errorHandler useStates
   const [zodError, setZodError] = useState([]);
   const [error, setError] = useState('');
-  // Success Handler useState
-  const [success, setSuccess] = useState('');
 
   return (
     <>
-      {signup ? (
+      {signin ? (
         <>
-          <div className="absolute right-0 left-0 top-0 bottom-0 z-50 flex flex-col items-center h-64 w-80 mx-auto my-auto rounded-lg bg-gray-200 p-5 ">
-            <h1 className="text-lg antialiased font-bold text-black mb-7">
-              Sign Up
+          <div className="fixed right-0 left-0 top-0 bottom-0 z-50 flex flex-col items-center h-64 w-80 mx-auto my-auto rounded-lg bg-indigo-100 p-5 ">
+            <h1 className="text-lg antialiased font-bold italic text-black mb-7">
+              Sign In
             </h1>
             <div
               className="absolute right-0 top-0 mr-3 mt-3 h-4 w-4 cursor-pointer"
@@ -90,7 +94,7 @@ export const SignUp = ({ signup, openregister }): JSX.Element => {
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
               }}
-              onClick={openregister}
+              onClick={openlogin}
             />
 
             <form
@@ -102,43 +106,34 @@ export const SignUp = ({ signup, openregister }): JSX.Element => {
                 type="text"
                 placeholder="username"
                 onChange={onChange}
-                className="text-base antialiased font-base text-black bg-gray-200 border-[1px] border-black rounded-lg outline-none w-64 h-[2.5rem]  px-4  mb-3"
+                className="text-base antialiased font-base text-black italic bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3"
               />
               <input
                 name="password"
                 type="password"
                 placeholder="password"
                 onChange={onChange}
-                className="text-base antialiased font-base text-black bg-gray-200 border-[1px] border-black rounded-lg outline-none w-64 h-[2.5rem]  px-4  mb-3"
+                className="text-base antialiased font-base text-black italic bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3"
               />
               <button
                 type="submit"
-                // onClick={openregister}
-                className="btn text-white bg-green-600 hover:bg-green-700 w-64"
+                className="btn text-white bg-indigo-600 hover:bg-indigo-700 w-64"
               >
-                Register
+                Login
               </button>
             </form>
             {zodError ? (
               <>
-                <p className="text-xs antialiased font-medium text-red-600 mt-2">
+                <p className="text-xs antialiased font-medium italic text-red-600 mt-2">
                   {zodError}
                 </p>
               </>
             ) : null}
             {error ? (
               <>
-                <p className="text-xs antialiased font-medium text-red-600 mt-2">
-                  Username {error}
+                <p className="text-xs antialiased font-medium italic text-red-600 mt-2">
+                  {error}
                 </p>
-              </>
-            ) : null}
-            {success ? (
-              <>
-                {' '}
-                <p className="text-xs antialiased font-medium text-green-600 mt-2">
-                  {success}
-                </p>{' '}
               </>
             ) : null}
           </div>

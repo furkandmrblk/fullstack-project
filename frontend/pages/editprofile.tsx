@@ -1,29 +1,35 @@
 import { useState } from 'react';
-import { Navbar } from '../components/Navbar';
-import { LeftSidebar } from '../components/parts/LeftSidebar';
-import { RightSidebar } from '../components/parts/RightSidebar';
-import { EditUserProfile } from '../components/EditUserProfile';
+import { Navbar } from '../components/Auth/Navbar';
+import { LeftSidebar } from '../components/Layout/LeftSidebar';
+import { RightSidebar } from '../components/Layout/RightSidebar';
+import { EditUserProfile } from '../components/Userprofile/EditUserProfile';
+import { useQuery } from '@apollo/client';
+import { getCurrentUserProfileQ } from './userprofile';
 
 export default function EditProfilePage() {
-  const [signUp, setSignUp] = useState(false);
-  const [signIn, setSignIn] = useState(false);
+  const getProfile = useQuery(getCurrentUserProfileQ);
 
-  const openSignUp = () => {
-    setSignUp(!signUp);
-  };
+  if (getProfile.loading) {
+    return <p>Loading...</p>;
+  }
 
-  const openSignIn = (e: any) => {
-    setSignIn(!signIn);
-    e.preventDefault();
-  };
+  const profile = getProfile.data.getCurrentUserProfile;
 
   return (
     <>
-      <Navbar openregister={openSignUp} openlogin={openSignIn} />
       <div className="flex max-w-full" style={{ height: '91.5vh' }}>
-        <LeftSidebar />
-        <EditUserProfile />
-        <RightSidebar />
+        <Navbar />
+
+        <div
+          className="container flex max-w-full justify-center items-start"
+          style={{ height: '91vh', marginTop: '5.235rem' }}
+        >
+          <LeftSidebar confetti={false} />
+          <div className="flex flex-wrap  w-[56vw] pt-[1.6rem]">
+            <EditUserProfile props={profile} />
+          </div>
+          <RightSidebar confetti={false} />
+        </div>
       </div>
     </>
   );

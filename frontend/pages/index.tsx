@@ -1,37 +1,45 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { getStandaloneApolloClient } from '../client';
-import { Hero } from '../components/Hero';
-import { Login } from '../components/Login';
-import { Navbar } from '../components/Navbar';
-import { SignUp } from '../components/SignUp';
-import { getCurrentUserProfileQ } from './userprofile';
+import { useContext, useEffect, useState } from 'react';
+import { getStandaloneApolloClient } from '../client/standAloneClient';
+import { Hero } from '../components/Layout/Hero';
+import { Navbar } from '../components/Auth/Navbar';
+import { Welcome } from '../components/Intro/Welcome';
+import { Context } from '../reducer';
+import { getCurrentUserQ } from '../components/Userprofile/CreateUserProfile';
 
 export default function Index() {
-  const [signUp, setSignUp] = useState(false);
-  const [signIn, setSignIn] = useState(false);
+  const authContext = useContext(Context);
+  const [auth, setAuth] = useState(false);
 
-  const openSignUp = () => {
-    setSignUp(!signUp);
-  };
-
-  const openSignIn = (e: any) => {
-    setSignIn(!signIn);
-    e.preventDefault();
-  };
+  useEffect(() => {
+    const isAuth = JSON.parse(authContext.authState);
+    setAuth(isAuth);
+  });
 
   const allProfiles = useQuery(getProfilesQ);
+
+  const profile = useQuery(getCurrentUserQ);
+
+  if (profile.loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
       <Head>
         <title>aniProfile - Homepage</title>
       </Head>
-      <Navbar openregister={openSignUp} openlogin={openSignIn} />
-      <Hero props={allProfiles} />
-      <SignUp signup={signUp} openregister={openSignUp} />
-      <Login signin={signIn} openlogin={openSignIn} />
+      <div className="flex max-w-full" style={{ height: '91.5vh' }}>
+        <Navbar />
+        {auth ? (
+          <>
+            <Hero props={allProfiles} profile={profile} />
+          </>
+        ) : (
+          <Welcome />
+        )}
+      </div>
     </>
   );
 }
@@ -39,6 +47,9 @@ export default function Index() {
 export async function getServerSideProps() {
   const client = await getStandaloneApolloClient();
 
+  await client.query({
+    query: getCurrentUserQ,
+  });
   await client.query({
     query: getUsersQ,
   });

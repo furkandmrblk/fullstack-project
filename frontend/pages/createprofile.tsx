@@ -1,32 +1,24 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
-import { useRouter } from 'next/dist/client/router';
-import { useState } from 'react';
-import { getStandaloneApolloClient } from '../client';
-import { Navbar } from '../components/Navbar';
-import { LeftSidebar } from '../components/parts/LeftSidebar';
-import { RightSidebar } from '../components/parts/RightSidebar';
-import { CreateUserProfile } from '../components/CreateUserProfile';
+import { Navbar } from '../components/Auth/Navbar';
+import { LeftSidebar } from '../components/Layout/LeftSidebar';
+import { RightSidebar } from '../components/Layout/RightSidebar';
+import { CreateUserProfile } from '../components/Userprofile/CreateUserProfile';
 
 export default function CreateProfilePage() {
-  const [signUp, setSignUp] = useState(false);
-  const [signIn, setSignIn] = useState(false);
-
-  const openSignUp = () => {
-    setSignUp(!signUp);
-  };
-
-  const openSignIn = (e: any) => {
-    setSignIn(!signIn);
-    e.preventDefault();
-  };
-
   return (
     <>
-      <Navbar openregister={openSignUp} openlogin={openSignIn} />
       <div className="flex max-w-full" style={{ height: '91.5vh' }}>
-        <LeftSidebar />
-        <CreateUserProfile />
-        <RightSidebar />
+        <Navbar />
+
+        <div
+          className="container flex max-w-full justify-center items-start"
+          style={{ height: '91vh', marginTop: '5.235rem' }}
+        >
+          <LeftSidebar confetti={false} />
+          <div className="flex flex-wrap  w-[56vw] pt-[1.6rem]">
+            <CreateUserProfile />
+          </div>
+          <RightSidebar confetti={false} />
+        </div>
       </div>
     </>
   );

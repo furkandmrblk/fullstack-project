@@ -138,8 +138,6 @@ export const updateTokens = async (parent, args, context, info) => {
 };
 
 export const deleteUser = async (parent, args, context, info) => {
-  const { id } = args;
-
   if (!context.req.headers.cookie)
     return new createError.Unauthorized('Cookie was not found.');
 
@@ -159,21 +157,69 @@ export const deleteUser = async (parent, args, context, info) => {
   );
 
   // Get the current user with the id
+  const user = await User.findById(userId);
 
-  const user = await User.findById(id);
+  // Args
+  const password: string = args.password;
 
-  // Check if the user id matches with the provided id, if not do not let the user delete the account
+  const validPassword = await bcrypt.compare(password, user.password);
 
-  if (userId !== id) return new createError.NotFound('Could not delete user.');
+  if (!validPassword)
+    return new createError.Unauthorized('Incorrect password.');
 
   // Deleting the userprofile of the current user
   await UserProfile.findByIdAndDelete(user.userprofile);
 
   // Deleting the users account
-  await User.findByIdAndDelete(id);
+  await User.findByIdAndDelete(userId);
 
   // Blacklist the Refresh Token in our Redis Cache
   await blacklistRefreshToken(context.req, context.res, refreshToken);
 
   return 'Successfully deleted user.';
 };
+
+export const changePassword = async (parent, args, context, info) => {
+  try {
+    // Get Access Token
+    const accessToken = context.req.headers['authorization'];
+
+    if (!accessToken)
+      throw new createError.BadRequest('Access Token was not found.');
+
+    // Verify Access Token
+    const userId = await verifyAccessToken(
+      context.req,
+      context.res,
+      accessToken
+    );
+
+    const user = await User.findById(userId);
+
+    const { password, oldPassword } = args;
+
+    // Check if password is valid
+    const validPassword = await bcrypt.compare(oldPassword, user.password);
+
+    if (!validPassword)
+      return new createError.Unauthorized('Incorrect password.');
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const updates: any = {};
+
+    if (password !== undefined) {
+      updates.password = hashedPassword;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+    });
+
+    return updatedUser;
+  } catch (error) {
+    console.log(error);
+    
+  }
+}

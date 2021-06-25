@@ -40,6 +40,7 @@ export const createProfile = async (parent, args, context, info) => {
         favoriteAnime: favoriteAnime,
         favoriteManga: favoriteManga,
         favoriteChar: favoriteChar,
+
       });
 
       const user = User.findByIdAndUpdate(userId, { userprofile: userprofile });
@@ -71,11 +72,9 @@ export const updateProfile = async (parent, args, context, info) => {
     // get the current User
     const currentUser = await User.findById(userId);
 
-    // Get the userprofile ID
-    const { id } = args;
+    const id = currentUser.userprofile;
 
-    // Check if userprofile id matches current users userprofile id
-    if (currentUser.userprofile != id)
+    if (!currentUser.userprofile)
       return new createError.NotFound('Could not update userprofile.');
 
     // Get the updated data for the userprofile
@@ -115,6 +114,43 @@ export const updateProfile = async (parent, args, context, info) => {
       favoriteChar: profile.favoriteChar,
       user: currentUser,
     };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const changeUsername = async (parent, args, context, info) => {
+  try {
+    // Get Access Token
+    const accessToken = context.req.headers['authorization'];
+
+    if (!accessToken)
+      throw new createError.BadRequest('Access Token was not found.');
+
+    // Verify Access Token
+    const userId = await verifyAccessToken(
+      context.req,
+      context.res,
+      accessToken
+    );
+
+    const { username } = args;
+
+    const usernameExists = await User.findOne({username: username});
+
+    if(usernameExists) return new createError.Forbidden('Username is already taken.');
+
+    const updates: any = {};
+
+    if (username !== undefined) {
+      updates.username = username;
+    }
+
+    const user = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+    });
+
+    return user;
   } catch (error) {
     console.log(error);
   }
