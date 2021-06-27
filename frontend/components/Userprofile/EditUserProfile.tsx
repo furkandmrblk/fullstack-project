@@ -2,7 +2,14 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { ChromePicker } from 'react-color'
+import { ChromePicker } from 'react-color';
+import { addListM } from '../../graphql/Mutations';
+import { UserProfileArray } from './Parts/UserProfileArray';
+import {
+  tempArrayFinished,
+  tempArrayWatching,
+  tempArrayWatchlist,
+} from '../../pages/api';
 
 export const EditUserProfile = ({ props }) => {
   const router = useRouter();
@@ -16,22 +23,20 @@ export const EditUserProfile = ({ props }) => {
     favoriteChar: undefined,
   });
 
-  const { description, favoriteAnime, favoriteManga, favoriteChar } =
-  data;
+  const { description, favoriteAnime, favoriteManga, favoriteChar } = data;
 
   const onChange = (e: any) => {
     e.preventDefault();
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-
   const [pickColor, setPickedColor] = useState({ color: profile.color });
 
   const { color } = pickColor;
 
   const handleColorChange = (color) => {
-   setPickedColor({ color: color.hex });
-  }
+    setPickedColor({ color: color.hex });
+  };
 
   const [error, setError] = useState([]);
 
@@ -48,6 +53,40 @@ export const EditUserProfile = ({ props }) => {
       favoriteChar: favoriteChar,
       favoriteAnime: favoriteAnime,
       favoriteManga: favoriteManga,
+    },
+  });
+
+  const finishedMangas = [];
+  const watchingMangas = [];
+  const watchlistMangas = [];
+
+  const a = {
+    img: '/Finished.svg',
+    color: '#10B981',
+    version: 'finished',
+  };
+
+  const b = {
+    img: '/Watching.svg',
+    color: '#A78BFA',
+    version: 'watching',
+  };
+
+  const c = {
+    img: '/Watchlist.svg',
+    color: '#FCD34D',
+    version: 'watchlist',
+  };
+
+  const [addList] = useMutation(addListM, {
+    variables: {
+      finishedAnimes: tempArrayFinished,
+      watchingAnimes: tempArrayWatching,
+      watchlistAnimes: tempArrayWatchlist,
+
+      finishedMangas: finishedMangas,
+      watchingMangas: watchingMangas,
+      watchlistMangas: watchlistMangas,
     },
   });
 
@@ -68,6 +107,18 @@ export const EditUserProfile = ({ props }) => {
         },
       });
 
+      await addList({
+        variables: {
+          finishedAnimes: tempArrayFinished,
+          watchingAnimes: tempArrayWatching,
+          watchlistAnimes: tempArrayWatchlist,
+
+          finishedMangas: finishedMangas,
+          watchingMangas: watchingMangas,
+          watchlistMangas: watchlistMangas,
+        },
+      });
+
       await router.push('/userprofile');
       location.reload();
     } catch (err) {
@@ -82,10 +133,10 @@ export const EditUserProfile = ({ props }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex justify-center items-center bg-indigo-900 rounded-lg w-[56vw] h-[820px]"
+      className="flex justify-center items-start bg-indigo-900 rounded-lg w-[56vw] h-auto mb-4"
     >
       <div
-        className="flex flex-col items-start rounded-lg w-[56vw] h-[820px] p-16"
+        className="flex flex-col items-start rounded-lg w-[56vw] h-auto p-16"
         style={{
           background: `linear-gradient(270deg, ${color} -10%, rgba(67, 56, 202, 0) 100%)`,
         }}
@@ -126,7 +177,12 @@ export const EditUserProfile = ({ props }) => {
             <label className="text-base antialiased font-medium text-white mb-2">
               Background-Color
             </label>
-            <ChromePicker className="mb-8" disableAlpha color={color} onChangeComplete={handleColorChange} />
+            <ChromePicker
+              className="mb-8"
+              disableAlpha
+              color={color}
+              onChangeComplete={handleColorChange}
+            />
 
             <p className="text-base font-light text-gray-50 mb-2">
               favorite Anime
@@ -186,12 +242,18 @@ export const EditUserProfile = ({ props }) => {
           </div>
         </div>
 
+        <div className="grid grid-cols-3 gap-4">
+          <UserProfileArray props={a} />
+          <UserProfileArray props={b} />
+          <UserProfileArray props={c} />
+        </div>
+
         {/* Category */}
 
         {/* Watchlist */}
         <button
           type="submit"
-          className="absolute bottom-0 z-50 btn-lg text-white bg-green-600 hover:bg-green-700 w-30 mb-10 ml-[50rem]"
+          className="fixed bottom-0 z-50 btn-lg text-white bg-green-600 hover:bg-green-700 w-30 mb-10 ml-[50rem]"
         >
           Save Changes
         </button>

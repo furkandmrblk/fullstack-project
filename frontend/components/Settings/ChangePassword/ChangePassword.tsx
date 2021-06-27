@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react'
 import { z } from 'zod';
-import { changePasswordM } from '../Settings';
+import { changePasswordM } from '../../../graphql/Mutations';
 
 export const ChangePassword = ({ opensettings, openresetpw }) => {
     const [zodError, setZodError] = useState([]);

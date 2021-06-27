@@ -1,10 +1,11 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/dist/client/router';
 import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
+import { client } from '../../client';
+import { logoutUserM } from '../../graphql/Mutations';
+import { getCurrentUserProfileQ } from '../../graphql/Queries';
 import { setAccessToken } from '../../helpers/Tokens';
-import { logoutUserM } from '../../pages';
-import { getCurrentUserProfileQ } from '../../pages/userprofile';
 import { Context } from '../../reducer';
 import { Settings } from '../Settings/Settings';
 import { Login } from './Login';
@@ -68,17 +69,21 @@ export const Navbar = (): JSX.Element => {
     }
   };
 
-  const [logout, logoutResult] = useMutation(logoutUserM);
+
+  const [logout, logoutResult] = useMutation(logoutUserM, {
+    onCompleted() {
+        client.resetStore();
+        setAccessToken(null);
+        authContext.authDispatch('logout');
+        router.push('/');
+    }
+});
 
   const logoutCtx = async (e: any) => {
     e.preventDefault();
 
     try {
-      await logout();
-
-      setAccessToken(null);
-      authContext.authDispatch('logout');
-      await router.push('/');
+      await logout()
 
       if (open === true) {
         isOpen(!open);

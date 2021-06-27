@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { createUserM } from '../../pages';
 import { custom, z, ZodError } from 'zod';
+import { createUserM } from '../../graphql/Mutations';
 
 export const SignUp = ({ signup, openregister }): JSX.Element => {
   // Fetch Data From Inputs

@@ -5,6 +5,7 @@ import { Navbar } from '../../components/Auth/Navbar';
 import { LeftSidebar } from '../../components/Layout/LeftSidebar';
 import { RightSidebar } from '../../components/Layout/RightSidebar';
 import { UserProfile } from '../../components/Userprofile/UserProfile';
+import { getProfileQ } from '../../graphql/Queries';
 
 export default function ProfilePage({ slug }) {
   const id = slug.slug;
@@ -86,19 +87,3 @@ export async function getServerSideProps({ params }) {
     },
   };
 }
-
-export const getProfileQ = gql`
-  query getUserProfile($id: ID!) {
-    getUserProfile(id: $id) {
-      user {
-        username
-      }
-      id
-      description
-      color
-      favoriteAnime
-      favoriteManga
-      favoriteChar
-    }
-  }
-`;

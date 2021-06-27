@@ -1,4 +1,4 @@
-import { User } from '../../models/User';
+import { List, User } from '../../models/User';
 import { UserProfile } from '../../models/User';
 import createError from 'http-errors';
 import { verifyAccessToken } from '../../services/auth';
@@ -91,8 +91,6 @@ export const getCurrentUserProfile = async (parent, args, context, info) => {
   const currentUser = await User.findById(id);
 
   const userProfile: any = await UserProfile.findById(currentUser.userprofile);
-  console.log(userProfile);
-  
 
   return {
     id: userProfile.id,
@@ -130,6 +128,56 @@ export const getUserProfiles = async (parent, args, context, info) => {
   }
 
   return userprofiles;
+};
+
+// LIST
+
+export const getList = async (parent, args, context, info) => {
+  const { id } = args;
+
+  const list: any = List.findById(id);
+  const currentUser = User.findById(list.user);
+
+  return {
+    id: list.id,
+    finishedAnimes: list.finishedAnimes,
+    watchingAnimes: list.watchingAnimes,
+    watchlistAnimes: list.watchlistAnimes,
+
+    finishedMangas: list.finishedMangas,
+    watchingMangas: list.watchingMangas,
+    watchlistMangas: list.watchlistMangas,
+
+    user: currentUser,
+  };
+};
+
+export const getCurrentList = async (parent, args, context, info) => {
+  // Get Access Token
+  const accessToken = context.req.headers['authorization'];
+
+  if (!accessToken)
+    return new createError.Unauthorized('Access token was not found.');
+
+  // Get the user ID
+  const userId = await verifyAccessToken(context.req, context.res, accessToken);
+
+  const currentUser = await User.findById(userId);
+
+  const list: any = await List.findById(currentUser.list);
+
+  return {
+    id: list.id,
+    finishedAnimes: list.finishedAnimes,
+    watchingAnimes: list.watchingAnimes,
+    watchlistAnimes: list.watchlistAnimes,
+
+    finishedMangas: list.finishedMangas,
+    watchingMangas: list.watchingMangas,
+    watchlistMangas: list.watchlistMangas,
+
+    user: currentUser,
+  };
 };
 
 // Update Tokens richtig einsetzen [] (muss ich das beim Frontend einsetzen?)

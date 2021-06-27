@@ -16,14 +16,19 @@ export const typeDefs = gql`
     favoriteAnime: String
     favoriteManga: String
     favoriteChar: String
+  }
 
-    finishedAnime: [String]
-    watchingAnime: [String]
-    watchlistAnime: [String]
+  type List {
+    id: ID!
+    user: User!
+    
+    finishedAnimes: [String]
+    watchingAnimes: [String]
+    watchlistAnimes: [String]
 
-    finishedManga: [String]
-    watchingManga: [String]
-    watchlistManga: [String]
+    finishedMangas: [String]
+    watchingMangas: [String]
+    watchlistMangas: [String]
   }
 
   type AuthPayload {
@@ -38,6 +43,9 @@ export const typeDefs = gql`
     getUserProfile(id: ID!): UserProfile
     getUserProfiles: [UserProfile]
     getCurrentUserProfile: UserProfile
+
+    getList(id: ID!): List
+    getCurrentList: List
   }
 
   input UserInput {
@@ -51,14 +59,16 @@ export const typeDefs = gql`
     favoriteAnime: String
     favoriteManga: String
     favoriteChar: String
+  }
 
-    finishedAnime: [String]
-    watchingAnime: [String]
-    watchlistAnime: [String]
+  input ListInput {
+    finishedAnimes: [String]
+    watchingAnimes: [String]
+    watchlistAnimes: [String]
 
-    finishedManga: [String]
-    watchingManga: [String]
-    watchlistManga: [String]
+    finishedMangas: [String]
+    watchingMangas: [String]
+    watchlistMangas: [String]
   }
 
   type Mutation {
@@ -73,5 +83,7 @@ export const typeDefs = gql`
 
     createProfile(profile: ProfileInput): UserProfile
     updateProfile(profile: ProfileInput): UserProfile
+
+    addList(list: ListInput): List
   }
 `;

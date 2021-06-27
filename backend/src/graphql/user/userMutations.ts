@@ -1,6 +1,9 @@
 import createError from 'http-errors';
-import { User, UserProfile } from '../../models/User';
+import { List, User, UserProfile } from '../../models/User';
 import { verifyAccessToken } from '../../services/auth';
+import { updateTokens } from '../auth/authMutations';
+
+// PROFILE
 
 export const createProfile = async (parent, args, context, info) => {
   try {
@@ -45,7 +48,7 @@ export const createProfile = async (parent, args, context, info) => {
 
       const user = User.findByIdAndUpdate(userId, { userprofile: userprofile });
       (await user).save();
-      userprofile.save();
+      await userprofile.save();
 
       return userprofile;
     } else return new createError.BadRequest('Could not find user.');
@@ -119,6 +122,8 @@ export const updateProfile = async (parent, args, context, info) => {
   }
 };
 
+// USER
+
 export const changeUsername = async (parent, args, context, info) => {
   try {
     // Get Access Token
@@ -155,3 +160,71 @@ export const changeUsername = async (parent, args, context, info) => {
     console.log(error);
   }
 };
+
+// LIST
+
+export const addList = async (parent, args, context, info) => {
+  try {
+    // Get Access Token
+    const accessToken = context.req.headers['authorization'];
+
+    if (!accessToken)
+      throw new createError.BadRequest('Access Token was not found.');
+
+    // Verify Access Token
+    const userId = await verifyAccessToken(
+      context.req,
+      context.res,
+      accessToken
+    );
+
+    const currentUser = User.findById(userId);
+
+    if (!(await currentUser).list) {
+
+      const { finishedAnimes, watchingAnimes, watchlistAnimes, finishedMangas, watchingMangas, watchlistMangas } = args.list;
+
+      if(currentUser) {
+        const list = new List({
+          user: await currentUser,
+          finishedAnimes: finishedAnimes,
+          watchingAnimes: watchingAnimes,
+          watchlistAnimes: watchlistAnimes,
+
+          finishedMangas: finishedMangas,
+          watchingMangas: watchingMangas,
+          watchlistMangas: watchlistMangas,
+
+        });
+
+        const user = User.findByIdAndUpdate(userId, { list: list });
+        await (await user).save();
+        await list.save();
+
+        return list;
+      } else {
+        return new createError.BadRequest('User not found.')
+      }
+    } else {
+
+      const listId = (await currentUser).list;
+
+      const { finishedAnimes, watchingAnimes, watchlistAnimes, finishedMangas, watchingMangas, watchlistMangas } = args.list;
+
+      const list = await List.findByIdAndUpdate(listId, {
+        finishedAnimes: finishedAnimes,
+        watchingAnimes: watchingAnimes,
+        watchlistAnimes: watchlistAnimes,
+
+        finishedMangas: finishedMangas,
+        watchingMangas: watchingMangas,
+        watchlistMangas: watchlistMangas,
+      });
+
+    return list;
+    }
+  } catch (error) {
+    console.log(error);
+    
+  }
+}

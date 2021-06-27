@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client';
 import React, { useContext, useState } from 'react';
 import { z } from 'zod';
+import { loginUserM } from '../../graphql/Mutations';
 import { setAccessToken } from '../../helpers/Tokens';
-import { loginUserM } from '../../pages';
 import { Context } from '../../reducer';
 
 export const Login = ({ openlogin, signin }): JSX.Element => {

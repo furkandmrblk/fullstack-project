@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { changeUsernameM } from '../Settings';
+import { changeUsernameM } from '../../../graphql/Mutations';
 
 export const ChangeUsername = ({ openchangename, opensettings }) => {
   const [error, setError] = useState([]);

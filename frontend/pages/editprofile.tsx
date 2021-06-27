@@ -4,7 +4,7 @@ import { LeftSidebar } from '../components/Layout/LeftSidebar';
 import { RightSidebar } from '../components/Layout/RightSidebar';
 import { EditUserProfile } from '../components/Userprofile/EditUserProfile';
 import { useQuery } from '@apollo/client';
-import { getCurrentUserProfileQ } from './userprofile';
+import { getCurrentUserProfileQ } from '../graphql/Queries';
 
 export default function EditProfilePage() {
   const getProfile = useQuery(getCurrentUserProfileQ);

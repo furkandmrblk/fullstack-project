@@ -34,6 +34,7 @@ export const createUser = async (parent, args, context, info) => {
       username: username,
       password: hashedPassword,
       userprofile: null,
+      list: null,
     });
 
     await user.save();

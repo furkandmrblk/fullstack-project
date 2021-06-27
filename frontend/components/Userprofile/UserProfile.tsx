@@ -1,4 +1,7 @@
+import { useQuery } from '@apollo/client';
 import React from 'react';
+import { getCurrentListQ } from '../../graphql/Queries';
+import { UserProfileList } from './Parts/UserProfileList';
 
 export const UserProfile = ({ props }) => {
   const data = props;
@@ -7,13 +10,40 @@ export const UserProfile = ({ props }) => {
     return <p className="text-white">Loading...</p>;
   }
 
-  console.log(data);
+  const getList = useQuery(getCurrentListQ);
+
+  if (getList.loading) {
+    return <p>Loading...</p>;
+  }
+
+  const listData = getList.data.getCurrentList;
+
+  const a = {
+    img: '/Finished.svg',
+    color: '#10B981',
+    version: 'finished',
+    name: 'Finished',
+  };
+
+  const b = {
+    img: '/Watching.svg',
+    color: '#A78BFA',
+    version: 'watching',
+    name: 'Watching',
+  };
+
+  const c = {
+    img: '/Watchlist.svg',
+    color: '#FCD34D',
+    version: 'watchlist',
+    name: 'Watchlist',
+  };
 
   return (
     <>
-      <div className="flex justify-center items-center bg-indigo-900 rounded-lg w-[56vw] h-[820px]">
+      <div className="flex justify-center items-center bg-indigo-900 rounded-lg w-[56vw] h-auto mb-4">
         <div
-          className="flex flex-col items-start rounded-lg w-[56vw] h-[820px] p-16"
+          className="flex flex-col items-start rounded-lg w-[56vw] h-auto p-16"
           style={{
             background: `linear-gradient(270deg, ${data.color} -10%, rgba(67, 56, 202, 0) 100%)`,
           }}
@@ -116,7 +146,9 @@ export const UserProfile = ({ props }) => {
                     width: '2rem',
                   }}
                 />
-                <h1 className="text-sm font-light italic text-gray-50">45</h1>
+                <h1 className="text-sm font-light italic text-gray-50">
+                  {listData.finishedAnimes.length}
+                </h1>
               </div>
               <div
                 className="flex items-center justify-between bg-gray-700 rounded-lg w-48 p-[0.55rem] mb-1"
@@ -134,7 +166,9 @@ export const UserProfile = ({ props }) => {
                     width: '2rem',
                   }}
                 />
-                <h1 className="text-sm font-light italic text-gray-50">02</h1>
+                <h1 className="text-sm font-light italic text-gray-50">
+                  {listData.watchingAnimes.length}
+                </h1>
               </div>
               <div
                 className="flex items-center justify-between bg-gray-700 rounded-lg w-48 p-[0.55rem]"
@@ -152,9 +186,16 @@ export const UserProfile = ({ props }) => {
                     width: '2rem',
                   }}
                 />
-                <h1 className="text-sm font-light italic text-gray-50">23</h1>
+                <h1 className="text-sm font-light italic text-gray-50">
+                  {listData.watchlistAnimes.length}
+                </h1>
               </div>
             </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <UserProfileList props={a} data={listData} />
+            <UserProfileList props={b} data={listData} />
+            <UserProfileList props={c} data={listData} />
           </div>
         </div>
       </div>

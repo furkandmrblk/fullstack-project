@@ -1,11 +1,15 @@
 import { useMutation, useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/dist/client/router';
+import { getMaxListeners } from 'process';
+import { useEffect } from 'react';
 import { getStandaloneApolloClient } from '../client/standAloneClient';
 import { Navbar } from '../components/Auth/Navbar';
 import { LeftSidebar } from '../components/Layout/LeftSidebar';
 import { RightSidebar } from '../components/Layout/RightSidebar';
 import { UserProfile } from '../components/Userprofile/UserProfile';
+import { addListM } from '../graphql/Mutations';
+import { getCurrentListQ, getCurrentUserProfileQ } from '../graphql/Queries';
 
 export default function CurrentUserProfile() {
   const router = useRouter();
@@ -58,29 +62,3 @@ export async function getServerSideProps() {
     },
   };
 }
-
-// User Queries
-
-export const getCurrentUserProfileQ = gql`
-  query getCurrentUserProfile {
-    getCurrentUserProfile {
-      user {
-        username
-      }
-      id
-      description
-      color
-      favoriteChar
-      favoriteAnime
-      favoriteManga
-
-      finishedAnime
-      watchingAnime
-      watchlistAnime
-
-      finishedManga
-      watchingManga
-      watchlistManga
-    }
-  }
-`;

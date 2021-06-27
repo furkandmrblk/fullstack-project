@@ -22,6 +22,10 @@ const userSchema: Schema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserProfile',
   },
+  list: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'List',
+  },
 
   date: {
     type: Date,
@@ -52,14 +56,26 @@ const userProfileSchema: Schema = new Schema({
   },
   favoriteChar: {
     type: String,
+  }
+});
+
+const listSchema: Schema = new Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
-  // alphabet: {
-  //   type: [String],
-  //   enum: ['abc defg', 'jdff', '2323'],
-  // },
+  finishedAnimes: [String],
+  watchingAnimes: [String],
+  watchlistAnimes: [String],
+
+  finishedMangas: [String],
+  watchingMangas: [String],
+  watchlistMangas: [String],
 });
 
 let UserProfile = mongoose.model('UserProfile', userProfileSchema);
+let List = mongoose.model('List', listSchema);
 let User = mongoose.model<IUser>('User', userSchema);
 
-export { User, UserProfile };
+export { User, UserProfile, List };

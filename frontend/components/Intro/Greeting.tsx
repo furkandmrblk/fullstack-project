@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client';
 import React, { useState } from 'react';
-import { getProfilesQ } from '../../pages';
-import { getCurrentUserQ } from '../Userprofile/CreateUserProfile';
 import { GreetingContainer } from './GreetingContainer';
 import { UserProfiles } from '../Userprofile/UserProfiles';
+import { getCurrentUserQ, getProfilesQ } from '../../graphql/Queries';
 
 export const Greeting = () => {
   const [browse, setBrowse] = useState(false);

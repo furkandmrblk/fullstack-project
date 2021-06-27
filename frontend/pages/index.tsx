@@ -6,7 +6,7 @@ import { Hero } from '../components/Layout/Hero';
 import { Navbar } from '../components/Auth/Navbar';
 import { Welcome } from '../components/Intro/Welcome';
 import { Context } from '../reducer';
-import { getCurrentUserQ } from '../components/Userprofile/CreateUserProfile';
+import { getProfilesQ } from '../graphql/Queries';
 
 export default function Index() {
   const authContext = useContext(Context);
@@ -18,12 +18,7 @@ export default function Index() {
   });
 
   const allProfiles = useQuery(getProfilesQ);
-
-  const profile = useQuery(getCurrentUserQ);
-
-  if (profile.loading) {
-    return <p>Loading...</p>;
-  }
+  
 
   return (
     <>
@@ -34,7 +29,7 @@ export default function Index() {
         <Navbar />
         {auth ? (
           <>
-            <Hero props={allProfiles} profile={profile} />
+            <Hero props={allProfiles} />
           </>
         ) : (
           <Welcome />
@@ -48,10 +43,7 @@ export async function getServerSideProps() {
   const client = await getStandaloneApolloClient();
 
   await client.query({
-    query: getCurrentUserQ,
-  });
-  await client.query({
-    query: getUsersQ,
+    query: getProfilesQ,
   });
 
   return {
@@ -61,65 +53,3 @@ export async function getServerSideProps() {
   };
 }
 
-// User Queries
-export const getUsersQ = gql`
-  query {
-    getUsers {
-      id
-      username
-      password
-    }
-  }
-`;
-
-export const getProfilesQ = gql`
-  query {
-    getUserProfiles {
-      user {
-        username
-      }
-      id
-      description
-      color
-      favoriteChar
-      favoriteAnime
-      favoriteManga
-    }
-  }
-`;
-
-// User Mutations
-
-export const createUserM = gql`
-  mutation createUser($username: String!, $password: String!) {
-    createUser(user: { username: $username, password: $password }) {
-      id
-      username
-      password
-    }
-  }
-`;
-
-export const loginUserM = gql`
-  mutation loginUser($username: String!, $password: String!) {
-    loginUser(user: { username: $username, password: $password }) {
-      accessToken
-    }
-  }
-`;
-
-export const logoutUserM = gql`
-  mutation {
-    logoutUser
-  }
-`;
-
-// Auth Mutation
-
-export const updateTokensM = gql`
-  mutation updateTokens {
-    updateTokens {
-      accessToken
-    }
-  }
-`;

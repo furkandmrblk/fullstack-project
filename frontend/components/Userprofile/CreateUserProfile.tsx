@@ -3,6 +3,8 @@ import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { ChromePicker } from 'react-color';
+import { getCurrentUserQ } from '../../graphql/Queries';
+import { createProfileM } from '../../graphql/Mutations';
 
 export const CreateUserProfile = () => {
   const router = useRouter();
@@ -14,8 +16,7 @@ export const CreateUserProfile = () => {
     favoriteChar: '',
   });
 
-  const { description, favoriteAnime, favoriteManga, favoriteChar } =
-    data;
+  const { description, favoriteAnime, favoriteManga, favoriteChar } = data;
 
   const onChange = (e: any) => {
     e.preventDefault();
@@ -27,8 +28,8 @@ export const CreateUserProfile = () => {
   const { color } = pickColor;
 
   const handleColorChange = (color) => {
-   setPickedColor({ color: color.hex });
-  }
+    setPickedColor({ color: color.hex });
+  };
 
   const [error, setError] = useState([]);
   const [error2, setError2] = useState([]);
@@ -44,7 +45,7 @@ export const CreateUserProfile = () => {
 
   const colorSchema = z.object({
     color: z.string().min(1, { message: 'Please choose a color.' }),
-  })
+  });
 
   const [createProfile, profileResult] = useMutation(createProfileM, {
     variables: {
@@ -108,10 +109,10 @@ export const CreateUserProfile = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex justify-center items-center bg-indigo-900 rounded-lg w-[56vw] h-[820px]"
+      className="flex justify-center items-center bg-indigo-900 rounded-lg w-[56vw] h-auto mb-4"
     >
       <div
-        className="flex flex-col items-start rounded-lg w-[56vw] h-[820px] p-16"
+        className="flex flex-col items-start rounded-lg w-[56vw] h-auto p-16"
         style={{
           background: `linear-gradient(270deg, ${color} -10%, rgba(67, 56, 202, 0) 100%)`,
         }}
@@ -152,7 +153,12 @@ export const CreateUserProfile = () => {
             <label className="text-base antialiased font-medium text-white mb-2">
               Background-Color
             </label>
-            <ChromePicker className="mb-2" disableAlpha color={color} onChangeComplete={handleColorChange} />
+            <ChromePicker
+              className="mb-2"
+              disableAlpha
+              color={color}
+              onChangeComplete={handleColorChange}
+            />
             {error2 ? (
               <p className="text-xs antialiased font-medium text-red-800 mt-2 mb-2">
                 {error2}
@@ -230,56 +236,3 @@ export const CreateUserProfile = () => {
     </form>
   );
 };
-
-// User Mutations
-
-export const createProfileM = gql`
-  mutation createProfile(
-    $description: String!
-    $color: String!
-    $favoriteChar: String
-    $favoriteAnime: String
-    $favoriteManga: String
-  ) {
-    createProfile(
-      profile: {
-        description: $description
-        color: $color
-        favoriteChar: $favoriteChar
-        favoriteAnime: $favoriteAnime
-        favoriteManga: $favoriteManga
-      }
-    ) {
-      user {
-        username
-      }
-      id
-      description
-      color
-      favoriteChar
-      favoriteAnime
-      favoriteManga
-    }
-  }
-`;
-
-export const uploadAvatarM = gql`
-  mutation uploadAvatar($file: Upload!) {
-    uploadAvatar(file: $file) {
-      Location
-    }
-  }
-`;
-
-// User Queries
-export const getCurrentUserQ = gql`
-  query getCurrentUser {
-    getCurrentUser {
-      id
-      username
-      userprofile {
-        id
-      }
-    }
-  }
-`;

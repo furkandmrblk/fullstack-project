@@ -13,11 +13,11 @@ export default function CreateProfilePage() {
           className="container flex max-w-full justify-center items-start"
           style={{ height: '91vh', marginTop: '5.235rem' }}
         >
-          <LeftSidebar confetti={false} />
+          <LeftSidebar confetti={true} />
           <div className="flex flex-wrap  w-[56vw] pt-[1.6rem]">
             <CreateUserProfile />
           </div>
-          <RightSidebar confetti={false} />
+          <RightSidebar confetti={true} />
         </div>
       </div>
     </>

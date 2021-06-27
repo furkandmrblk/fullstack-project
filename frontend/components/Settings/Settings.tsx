@@ -109,25 +109,3 @@ export const Settings = ({
   );
 };
 
-export const deleteUserM = gql`
-  mutation deleteUser($password: String!) {
-    deleteUser(password: $password)
-  }
-`;
-
-export const changeUsernameM = gql`
-  mutation changeUsername($username: String!) {
-    changeUsername(username: $username) {
-      username
-    }
-  }
-`;
-
-export const changePasswordM = gql`
-  mutation changePassword($password: String! $oldPassword: String!) {
-    changePassword(password: $password oldPassword: $oldPassword) {
-      username
-      password
-    } 
-  }
-`
