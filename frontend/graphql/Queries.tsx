@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 // User Queries
 
@@ -6,6 +6,7 @@ export const getProfileQ = gql`
   query getUserProfile($id: ID!) {
     getUserProfile(id: $id) {
       user {
+        id
         username
       }
       id
@@ -46,7 +47,6 @@ export const getCurrentUserProfileQ = gql`
       favoriteChar
       favoriteAnime
       favoriteManga
-
     }
   }
 `;
@@ -90,4 +90,23 @@ export const getCurrentListQ = gql`
       watchlistMangas
     }
   }
-`
+`;
+
+export const getListQ = gql`
+  query getList($id: ID!) {
+    getList(id: $id) {
+      id
+      user {
+        username
+      }
+
+      finishedAnimes
+      watchingAnimes
+      watchlistAnimes
+
+      finishedMangas
+      watchingMangas
+      watchlistMangas
+    }
+  }
+`;

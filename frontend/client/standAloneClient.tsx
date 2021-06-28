@@ -63,9 +63,19 @@ export async function getStandaloneApolloClient() {
     ssrMode: true,
     cache: new InMemoryCache({
       typePolicies: {
-        UserProfile: {
-          keyFields: ['id'],
-        },
+        // UserProfile: {
+        //   keyFields: [
+        //     'id',
+        //     'color',
+        //     'description',
+        //     'favoriteAnime',
+        //     'favoriteManga',
+        //     'favoriteChar',
+        //   ],
+        // },
+        // User: {
+        //   keyFields: ['id', 'username'],
+        // },
       },
     }),
     link: from([refreshLink, authLink, errorLink, httpLink]),

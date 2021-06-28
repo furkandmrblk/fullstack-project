@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/dist/client/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { ChromePicker } from 'react-color';
 import { addListM } from '../../graphql/Mutations';
@@ -10,6 +10,7 @@ import {
   tempArrayWatching,
   tempArrayWatchlist,
 } from '../../pages/api';
+import { getCurrentListQ } from '../../graphql/Queries';
 
 export const EditUserProfile = ({ props }) => {
   const router = useRouter();
@@ -130,6 +131,28 @@ export const EditUserProfile = ({ props }) => {
     }
   };
 
+  const getList = useQuery(getCurrentListQ);
+
+  if (getList.loading) {
+    return <p>Loading...</p>;
+  }
+
+  const listData = getList.data.getCurrentList;
+
+  if (
+    !tempArrayFinished[0] &&
+    !tempArrayWatching[0] &&
+    !tempArrayWatchlist[0]
+  ) {
+    listData.finishedAnimes.map((item: string) => tempArrayFinished.push(item));
+
+    listData.watchingAnimes.map((item: string) => tempArrayWatching.push(item));
+
+    listData.watchlistAnimes.map((item: string) =>
+      tempArrayWatchlist.push(item)
+    );
+  }
+
   return (
     <form
       onSubmit={onSubmit}
@@ -248,9 +271,6 @@ export const EditUserProfile = ({ props }) => {
           <UserProfileArray props={c} />
         </div>
 
-        {/* Category */}
-
-        {/* Watchlist */}
         <button
           type="submit"
           className="fixed bottom-0 z-50 btn-lg text-white bg-green-600 hover:bg-green-700 w-30 mb-10 ml-[50rem]"

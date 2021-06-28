@@ -1,22 +1,21 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
 import { getCurrentListQ } from '../../graphql/Queries';
+import {
+  tempArrayFinished,
+  tempArrayWatching,
+  tempArrayWatchlist,
+} from '../../pages/api';
 import { UserProfileList } from './Parts/UserProfileList';
 
-export const UserProfile = ({ props }) => {
+export const UserProfile = ({ props, list }) => {
   const data = props;
 
   if (!data) {
     return <p className="text-white">Loading...</p>;
   }
 
-  const getList = useQuery(getCurrentListQ);
-
-  if (getList.loading) {
-    return <p>Loading...</p>;
-  }
-
-  const listData = getList.data.getCurrentList;
+  const listData = list;
 
   const a = {
     img: '/Finished.svg',

@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { IUser } from '../interfaces/IUser';
 import { IUserProfile } from '../interfaces/IUserProfile';
+import { IList } from '../interfaces/IList';
 
 // This is our User Schema for our MongoDB Database
 
@@ -56,7 +57,7 @@ const userProfileSchema: Schema = new Schema({
   },
   favoriteChar: {
     type: String,
-  }
+  },
 });
 
 const listSchema: Schema = new Schema({
@@ -74,8 +75,11 @@ const listSchema: Schema = new Schema({
   watchlistMangas: [String],
 });
 
-let UserProfile = mongoose.model('UserProfile', userProfileSchema);
-let List = mongoose.model('List', listSchema);
+let UserProfile = mongoose.model<IUserProfile>(
+  'UserProfile',
+  userProfileSchema
+);
+let List = mongoose.model<IList>('List', listSchema);
 let User = mongoose.model<IUser>('User', userSchema);
 
 export { User, UserProfile, List };

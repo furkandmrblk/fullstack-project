@@ -7,8 +7,6 @@ import {
 } from '../../../pages/api';
 
 export const UserProfileList = ({ props, data }) => {
-  console.log(data);
-
   return (
     <>
       <div className="flex flex-col justify-start items-center bg-gray-700 rounded-lg w-[19.5rem] min-h-[21rem] p-6">

@@ -1,30 +1,36 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import Head from 'next/head';
 import { getStandaloneApolloClient } from '../../client/standAloneClient';
 import { Navbar } from '../../components/Auth/Navbar';
 import { LeftSidebar } from '../../components/Layout/LeftSidebar';
 import { RightSidebar } from '../../components/Layout/RightSidebar';
 import { UserProfile } from '../../components/Userprofile/UserProfile';
-import { getProfileQ } from '../../graphql/Queries';
+import { getListQ, getProfileQ } from '../../graphql/Queries';
 
 export default function ProfilePage({ slug }) {
   const id = slug.slug;
 
-  const { data, loading, error } = useQuery(getProfileQ, {
+  const getProfile = useQuery(getProfileQ, {
     variables: {
       id: id,
     },
   });
 
-  while (loading) {
+  if (getProfile.loading) {
     return <p className="text-white">Loading...</p>;
   }
 
-  if (error) {
-    return <p className="text-white">Oops! An error has occurred.</p>;
-  }
+  const userProfile = getProfile.data.getUserProfile;
+  const userId = userProfile.user.id;
 
-  const userProfile = data.getUserProfile;
+  const getList = useQuery(getListQ, {
+    variables: {
+      id: userId,
+    },
+  });
+
+  const listData = getList.data;
+  console.log(listData);
 
   return (
     <>
@@ -36,7 +42,7 @@ export default function ProfilePage({ slug }) {
         >
           <LeftSidebar confetti={false} />
           <div className="flex flex-wrap w-[56vw] pt-[1.6rem]">
-            <UserProfile props={userProfile} />
+            {/* <UserProfile props={userProfile} list={listData} /> */}
           </div>
           <RightSidebar confetti={false} />
         </div>
@@ -79,6 +85,11 @@ export async function getServerSideProps({ params }) {
     query: getProfileQ,
     variables: { id: params?.slug },
   });
+
+  // await client.query({
+  //   query: getListQ,
+  //   variables: { id: '' },
+  // });
 
   return {
     props: {

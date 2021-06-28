@@ -135,8 +135,8 @@ export const getUserProfiles = async (parent, args, context, info) => {
 export const getList = async (parent, args, context, info) => {
   const { id } = args;
 
-  const list: any = List.findById(id);
-  const currentUser = User.findById(list.user);
+  const currentUser = await User.findById(id);
+  const list: any = await List.findById(currentUser.list);
 
   return {
     id: list.id,

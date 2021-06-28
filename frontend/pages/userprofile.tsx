@@ -14,14 +14,15 @@ import { getCurrentListQ, getCurrentUserProfileQ } from '../graphql/Queries';
 export default function CurrentUserProfile() {
   const router = useRouter();
 
+  const getList = useQuery(getCurrentListQ);
   const getProfile = useQuery(getCurrentUserProfileQ);
 
   if (getProfile.loading) {
     return <p className="text-white">Loading...</p>;
   }
 
-  if (getProfile.error) {
-    console.log(getProfile.error);
+  if (getList.loading) {
+    return <p>Loading...</p>;
   }
 
   if (getProfile.data === undefined) {
@@ -29,6 +30,7 @@ export default function CurrentUserProfile() {
   }
 
   const userProfile = getProfile.data.getCurrentUserProfile;
+  const listData = getList.data.getCurrentList;
 
   return (
     <>
@@ -40,7 +42,7 @@ export default function CurrentUserProfile() {
         >
           <LeftSidebar confetti={false} />
           <div className="flex flex-wrap  w-[56vw] pt-[1.6rem]">
-            <UserProfile props={userProfile} />
+            <UserProfile props={userProfile} list={listData} />
           </div>
           <RightSidebar confetti={false} />
         </div>
@@ -54,6 +56,9 @@ export async function getServerSideProps() {
 
   await client.query({
     query: getCurrentUserProfileQ,
+  });
+  await client.query({
+    query: getCurrentListQ,
   });
 
   return {

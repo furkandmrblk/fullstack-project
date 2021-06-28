@@ -4,7 +4,8 @@ import { LeftSidebar } from '../components/Layout/LeftSidebar';
 import { RightSidebar } from '../components/Layout/RightSidebar';
 import { EditUserProfile } from '../components/Userprofile/EditUserProfile';
 import { useQuery } from '@apollo/client';
-import { getCurrentUserProfileQ } from '../graphql/Queries';
+import { getCurrentListQ, getCurrentUserProfileQ } from '../graphql/Queries';
+import { getStandaloneApolloClient } from '../client/standAloneClient';
 
 export default function EditProfilePage() {
   const getProfile = useQuery(getCurrentUserProfileQ);
@@ -33,4 +34,21 @@ export default function EditProfilePage() {
       </div>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const client = await getStandaloneApolloClient();
+
+  await client.query({
+    query: getCurrentUserProfileQ,
+  });
+  await client.query({
+    query: getCurrentListQ,
+  });
+
+  return {
+    props: {
+      apolloStaticCache: client.cache.extract(),
+    },
+  };
 }
