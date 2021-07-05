@@ -67,7 +67,7 @@ export const ChangeUsername = ({ openchangename, opensettings }) => {
         }}
         onClick={openchangename}
       />
-      <h1 className="text-xs w-64 text-center mb-3">
+      <h1 className="text-xs text-white w-64 text-center mb-3">
         So you want to change your username, huh. We hope that you will enjoy
         your new username! ✌️
       </h1>

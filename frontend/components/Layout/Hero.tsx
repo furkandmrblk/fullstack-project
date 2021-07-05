@@ -7,12 +7,11 @@ import { getStandaloneApolloClient } from '../../client/standAloneClient';
 import { getCurrentUserQ } from '../../graphql/Queries';
 import { useQuery } from '@apollo/client';
 
-export const Hero = ({ props }): JSX.Element => {
-
+export const Hero = ({ props, list }): JSX.Element => {
   const profile = useQuery(getCurrentUserQ);
 
   if (profile.loading) {
-    return <p>Loading...</p>
+    return <p>Loading...</p>;
   }
 
   let hasProfile: boolean = undefined;
@@ -23,15 +22,24 @@ export const Hero = ({ props }): JSX.Element => {
     hasProfile = false;
   }
 
-
   if (props.loading) {
     return <p>Loading...</p>;
   }
+  if (list.loading) {
+    return <p>Loading...</p>;
+  }
+
   if (props.error) {
     return <p>An error has occured. {props.error.message}</p>;
   }
 
-  const data = props.data.getUserProfiles;
+  if (list.error) {
+    return <p>An error has occured. {list.error.message}</p>;
+  }
+
+  const profiles = props.data.getUserProfiles;
+  const user = profile.data.getCurrentUser;
+  const lists = list.data.getLists;
 
   return (
     <>
@@ -42,19 +50,19 @@ export const Hero = ({ props }): JSX.Element => {
         {hasProfile ? (
           <>
             <LeftSidebar confetti={false} />
-            <div className="flex flex-wrap  w-[56vw]">
-              <MiddleScreen props={data} />
+            <div className="flex flex-wrap w-auto">
+              <MiddleScreen props={profiles} list={lists} />
             </div>
-            <RightSidebar confetti={false} />
+            <RightSidebar confetti={false} user={user} />
           </>
         ) : (
           <>
             {' '}
             <LeftSidebar confetti={true} />
-            <div className="flex justify-center flex-wrap  w-[56vw]">
-              <Greeting />
+            <div className="flex flex-col justify-center items-center  w-auto">
+              <Greeting list={lists} />
             </div>
-            <RightSidebar confetti={true} />
+            <RightSidebar confetti={true} user={user} />
           </>
         )}
       </div>

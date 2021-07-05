@@ -4,7 +4,7 @@ import { GreetingContainer } from './GreetingContainer';
 import { UserProfiles } from '../Userprofile/UserProfiles';
 import { getCurrentUserQ, getProfilesQ } from '../../graphql/Queries';
 
-export const Greeting = () => {
+export const Greeting = ({ list }) => {
   const [browse, setBrowse] = useState(false);
 
   const browseProfiles = () => {
@@ -30,9 +30,8 @@ export const Greeting = () => {
   return (
     <>
       <GreetingContainer data={data} browseProfiles={browseProfiles} />
-     
-      {browse ? <UserProfiles props={allProfiles} /> : null}
-      
+
+      {browse ? <UserProfiles props={allProfiles} list={list} /> : null}
     </>
   );
 };

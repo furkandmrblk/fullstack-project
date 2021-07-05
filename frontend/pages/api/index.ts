@@ -2,6 +2,67 @@ export const tempArrayFinished: string[] = [];
 export const tempArrayWatching: string[] = [];
 export const tempArrayWatchlist: string[] = [];
 
+let favoriteAnime: string = undefined;
+export function setAnime(value: string) {
+  favoriteAnime = value;
+}
+export function getAnime() {
+  return favoriteAnime;
+}
+
+let favoriteManga: string = undefined;
+export function setManga(value: string) {
+  favoriteManga = value;
+}
+export function getManga() {
+  return favoriteManga;
+}
+
+let favoriteChar: string = undefined;
+export function setChar(value: string) {
+  favoriteChar = value;
+}
+export function getChar() {
+  return favoriteChar;
+}
+
+export const topPickedAnimes: any[] = [];
+
+export function partition(arr, start = 0, end = arr.length - 1) {
+  // Let's choose the pivot to be the arr[start] element
+  let pivot = arr[start];
+  let swapIdx = start;
+
+  for (let i = start + 1; i <= end; i++) {
+    if (arr[i] < pivot) {
+      swapIdx++;
+      // Swap current element with the element at the new pivot index
+      [arr[i], arr[swapIdx]] = [arr[swapIdx], arr[i]];
+    }
+  }
+
+  // Swap the pivot element with the element at the pivotIndex index
+  [arr[swapIdx], arr[start]] = [arr[start], arr[swapIdx]];
+
+  // Return the index of the pivot element after swapping
+  return swapIdx;
+}
+
+export function quickSort(arr, left = 0, right = arr.length - 1) {
+  // Base case is that the left and right pointers don't overlap, after which we'll be left with an array of 1 item
+  if (left < right) {
+    let pivotIndex = partition(arr, left, right);
+
+    // For left subarray, which is everything to the left of the pivot element
+    quickSort(arr, left, pivotIndex - 1);
+
+    // For the right sub array, which is everything to the right of the pivot element
+    quickSort(arr, pivotIndex + 1, right);
+  }
+  // Return the array, when it's of length 1 i.e, left === right
+  return arr;
+}
+
 export const animeList: string[] = [
   'A Ben Mao',
   'A Brightening Life',
@@ -271,6 +332,165 @@ export const animeList: string[] = [
   'Akibakei Kanojo',
   'Akichi Asobi: Playground',
   'Akihabara Dennou-gumi',
+  'Akihabara Dennou-gumi: 2011-nen no Natsuyasumi',
+  'Akikan!',
+  'Akikan!: Kan Ippatsu!? Onsen Panic',
+  'Akiko',
+  'Akina to Onsen de H Shiyo!',
+  'Akindo Sei no Little Peso',
+  'Akira',
+  'Akita Kenritsu Iburi Gakkou Chuutou-bu',
+  'Akita Kenritsu Iburi Gakkou Chuutou-bu: Web-ban Omake',
+  'Akkun to Kanojo',
+  'Aku no Hana',
+  'Aku no Onna Kanbu',
+  'Aku no Onna Kanbu: Full Moon Night',
+  'Aku no Onna Kanbu: Full Moon Night R',
+  'Akubi Girl',
+  'Akudama Drive',
+  'Akuei to Gacchinpo',
+  'Akuei to Gacchinpo The Movie: Chelsea no Gyakushuu/Akuei to Mahou no Hammer',
+  'Akuei to Gacchinpo: Tenkomori',
+  'Akuei to Gacchinpo: Tenkomori - Maboroshi no Omake Episode',
+  'Akuemon',
+  'Akuma no Kairozu',
+  'Akuma no Kimuraa-hen',
+  'Akuma no Memumemu-chan',
+  'Akuma no Riddle',
+  'Akuma no Riddle: Shousha wa Dare? Nukiuchi Test',
+  'Akuma to Himegimi',
+  'Akuma Tou no Prince: Mitsume ga Tooru',
+  'Akuma-kun',
+  'Akuma-kun (Movie)',
+  'Akuma-kun: Youkoso Akuma Land e!!',
+  'Akuu Daisakusen Srungle',
+  'Al Caral no Isan',
+  'Aladdin to Mahou no Lamp no Koutsuu Anzen',
+  'Alan-kun no Koutsuu Rule wo Mamorou ne!',
+  'Aldnoah.Zero',
+  'Aldnoah.Zero 2nd Season',
+  'Aldnoah.Zero Extra Archives',
+  'Alexander Senki',
+  'Alexander Senki Movie',
+  'Alexandros no Ketsudan',
+  'Ali Baba to 40-hiki no Touzoku',
+  'Alice Gear Aegis: Doki! Actress Darake no Mermaid Grand Prix♥',
+  'Alice in Cyberland',
+  'Alice in Deadly School',
+  'Alice in Dreamland',
+  'Alice or Alice',
+  'Alice SOS',
+  'Alice Tantei Kyoku',
+  'Alice to Therese no Maboroshi Koujou',
+  'Alice to Zouroku',
+  'Alien 9',
+  'Alignment You! You! The Animation',
+  'All Out!',
+  'All That Gundam',
+  'All-Free kono Natsu Ichioshi Monogatari Campaign Kokuchi Douga',
+  'Allargando The Animation',
+  'Allegseuui Moheom',
+  'Allison to Lillia',
+  'Aloha! Youkai Watch: Rakuen Hawaii de Geragerapou!!',
+  'Alphard x Taka no Tsume',
+  'Alps Monogatari: Watashi no Annette',
+  'Alps Monogatari: Watashi no Annette Specials',
+  'Alps no Shoujo Heidi',
+  'Alps no Shoujo Heidi (1979)',
+  'Alps no Shoujo Heidi Pilot',
+  'Alps no Shoujo Heidi: Alm no Yama-hen',
+  'Alps no Shoujo Heidi: Heidi to Clara-hen',
+  'Altered Carbon: Resleeved',
+  'Ama Gli Animali',
+  'Amaama to Inazuma',
+  'Amada Anime Series: Super Mario Brothers',
+  'Amaenaide yo!!',
+  'Amaenaide yo!! Katsu!!',
+  'Amaenaide yo!! Katsu!!: Damasarenaide yo!!',
+  'Amaenaide yo!!: Yasumanaide yo!!',
+  'Amagami SS',
+  'Amagami SS OVA',
+  'Amagami SS+ Plus',
+  'Amagami SS+ Plus Picture Drama',
+  'Amagami SS+ Plus: Extra Episode+ Plus',
+  'Amagami SS: Tachibana Miya-hen - Imouto',
+  'Amagi Brilliant Park',
+  'Amagi Brilliant Park: Nonbirishiteiru Hima ga Nai!',
+  'Amagi Brilliant Park: Wakuwaku Mini Theater - Rakugaki Backstage',
+  'Amai Choubatsu: Watashi wa Kanshu Senyou Pet',
+  'Amakage',
+  'Amakano',
 ];
 
-export const mangaList: string[] = [];
+export const mangaList: string[] = [
+  'Shingeki no Kyojin',
+  'Berserk',
+  'One Piece',
+  'Tokyo Ghoul',
+  'Naruto',
+  'Boku no Hero Academia',
+  'One Punch-Man',
+  'Death Note',
+  'Bleach',
+  'Fairy Tail',
+  'Solo Leveling',
+  'Fullmetal Alchemist',
+  'Kimetsu no Yaiba',
+  'Vagabond',
+  'Deadman Wonderland',
+  'Jujutsu Kaisen',
+  'Shokugeki no Souma',
+  'Nanatsu no Taizai',
+  'Akame ga Kill!',
+  'Haikyuu!!',
+  "Hell's Paradise: Jigokuraku",
+  'Eleceed',
+  'Chainsaw Man',
+  'Ao Haru Ride',
+  'Tower of God',
+  'Tokyo Manji Revengers',
+  'The Beginning After The End',
+  'The Great Mage Returns After 4000 Years',
+  'Sss-Class Suicide Hunter',
+  'Second Life Ranker',
+  "Player Who Can't Level Up",
+];
+
+export const charList: string[] = [
+  'Monkey D. Luffy',
+  'Lelouch Lamperouge',
+  'Gojo Satoru',
+  'Yuuji Itadori',
+  'Gotz',
+  'Killua Zoldyck',
+  'Gon',
+  'Saitama',
+  'Genos',
+  'Sung Jin-Woo',
+  'Levi',
+  'Lawliet L',
+  'Itachi Uchiha',
+  'Roronoa Zoro',
+  'Naruto Uzumaki',
+  'Mikasa Ackerman',
+  'Eren Yeager',
+  'Rem',
+  'Ken Kaneki',
+  'Spike Spiegel',
+  'Megumin',
+  'Yato',
+  'Kazuto Kirigaya',
+  'Joseph Joestar',
+  'Hisoka Morow',
+  'Zero Two',
+  'Taiga Aisaka',
+  'Saber',
+  'Eikichi Onizuka',
+  'Son Goku',
+  'Trunks',
+  'Shouto Todoroki',
+  'Ichigo Kurosaki',
+  'Sasuka Uchiha',
+  'Izuku Midoriya',
+  'Violet Evergarden',
+];

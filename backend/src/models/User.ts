@@ -75,11 +75,45 @@ const listSchema: Schema = new Schema({
   watchlistMangas: [String],
 });
 
+const completeSchema: Schema = new Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+    max: 155,
+  },
+  color: {
+    type: String,
+    required: true,
+  },
+  favoriteAnime: {
+    type: String,
+  },
+  favoriteManga: {
+    type: String,
+  },
+  favoriteChar: {
+    type: String,
+  },
+  finishedAnimes: [String],
+  watchingAnimes: [String],
+  watchlistAnimes: [String],
+
+  finishedMangas: [String],
+  watchingMangas: [String],
+  watchlistMangas: [String],
+});
+
 let UserProfile = mongoose.model<IUserProfile>(
   'UserProfile',
   userProfileSchema
 );
 let List = mongoose.model<IList>('List', listSchema);
+let CompleteData = mongoose.model('CompleteData', completeSchema);
 let User = mongoose.model<IUser>('User', userSchema);
 
-export { User, UserProfile, List };
+export { User, UserProfile, List, CompleteData };

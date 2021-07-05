@@ -6,7 +6,7 @@ import { Hero } from '../components/Layout/Hero';
 import { Navbar } from '../components/Auth/Navbar';
 import { Welcome } from '../components/Intro/Welcome';
 import { Context } from '../reducer';
-import { getProfilesQ } from '../graphql/Queries';
+import { getListsQ, getProfilesQ } from '../graphql/Queries';
 
 export default function Index() {
   const authContext = useContext(Context);
@@ -18,7 +18,7 @@ export default function Index() {
   });
 
   const allProfiles = useQuery(getProfilesQ);
-  
+  const allLists = useQuery(getListsQ);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function Index() {
         <Navbar />
         {auth ? (
           <>
-            <Hero props={allProfiles} />
+            <Hero props={allProfiles} list={allLists} />
           </>
         ) : (
           <Welcome />
@@ -46,10 +46,13 @@ export async function getServerSideProps() {
     query: getProfilesQ,
   });
 
+  await client.query({
+    query: getListsQ,
+  });
+
   return {
     props: {
       apolloStaticCache: client.cache.extract(),
     },
   };
 }
-

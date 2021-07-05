@@ -39,12 +39,12 @@ export const DeleteUser = ({
 
   const [logout, logoutResult] = useMutation(logoutUserM, {
     onCompleted() {
-        client.resetStore();
-        setAccessToken(null);
-        authContext.authDispatch('logout');
-        router.push('/');
-    }
-});
+      client.resetStore();
+      setAccessToken(null);
+      authContext.authDispatch('logout');
+      router.push('/');
+    },
+  });
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -80,7 +80,7 @@ export const DeleteUser = ({
         }}
         onClick={opendelete}
       />
-      <h1 className="text-xs w-64 text-center mb-3">
+      <h1 className="text-xs text-white w-64 text-center mb-3">
         Are you sure that you want to delete your account? 😭 <br /> If you
         still want to continue please type in your{' '}
         <span className="font-bold">password</span> to delete your account.
@@ -93,7 +93,7 @@ export const DeleteUser = ({
           onChange={onChange}
           name="password"
           type="password"
-          className="text-base antialiased font-base text-black bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3"
+          className="text-base antialiased font-base text-black italic bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3"
         />
         {error ? (
           <>

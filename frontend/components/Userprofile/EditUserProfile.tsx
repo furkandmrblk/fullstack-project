@@ -6,11 +6,15 @@ import { ChromePicker } from 'react-color';
 import { addListM } from '../../graphql/Mutations';
 import { UserProfileArray } from './Parts/UserProfileArray';
 import {
+  getAnime,
+  getChar,
+  getManga,
   tempArrayFinished,
   tempArrayWatching,
   tempArrayWatchlist,
 } from '../../pages/api';
 import { getCurrentListQ } from '../../graphql/Queries';
+import { InputField } from './Parts/InputField';
 
 export const EditUserProfile = ({ props }) => {
   const router = useRouter();
@@ -18,13 +22,10 @@ export const EditUserProfile = ({ props }) => {
   const profile = props;
 
   const [data, setData] = useState({
-    description: undefined,
-    favoriteAnime: undefined,
-    favoriteManga: undefined,
-    favoriteChar: undefined,
+    description: props?.description,
   });
 
-  const { description, favoriteAnime, favoriteManga, favoriteChar } = data;
+  const { description } = data;
 
   const onChange = (e: any) => {
     e.preventDefault();
@@ -51,9 +52,9 @@ export const EditUserProfile = ({ props }) => {
     variables: {
       description: description,
       color: color,
-      favoriteChar: favoriteChar,
-      favoriteAnime: favoriteAnime,
-      favoriteManga: favoriteManga,
+      favoriteChar: getChar(),
+      favoriteAnime: getAnime(),
+      favoriteManga: getManga(),
     },
   });
 
@@ -95,16 +96,16 @@ export const EditUserProfile = ({ props }) => {
     e.preventDefault();
 
     try {
-      // editSchema.parse(data);
+      editSchema.parse(data);
       setError(null);
 
       await updateProfile({
         variables: {
           description: description,
           color: color,
-          favoriteChar: favoriteChar,
-          favoriteAnime: favoriteAnime,
-          favoriteManga: favoriteManga,
+          favoriteChar: getChar(),
+          favoriteAnime: getAnime(),
+          favoriteManga: getManga(),
         },
       });
 
@@ -124,10 +125,10 @@ export const EditUserProfile = ({ props }) => {
       location.reload();
     } catch (err) {
       console.log(err);
-      // if (err instanceof z.ZodError) {
-      //   let customError = err.flatten().fieldErrors;
-      //   setError(customError.description);
-      // }
+      if (err instanceof z.ZodError) {
+        let customError = err.flatten().fieldErrors;
+        setError(customError.description);
+      }
     }
   };
 
@@ -156,16 +157,16 @@ export const EditUserProfile = ({ props }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex justify-center items-start bg-indigo-900 rounded-lg w-[56vw] h-auto mb-4"
+      className="flex justify-center items-start bg-indigo-900 rounded-lg w-auto h-auto mb-4"
     >
       <div
-        className="flex flex-col items-start rounded-lg w-[56vw] h-auto p-16"
+        className="flex flex-col items-start rounded-lg w-auto h-auto pt-16 pb-16 pr-8 pl-8"
         style={{
           background: `linear-gradient(270deg, ${color} -10%, rgba(67, 56, 202, 0) 100%)`,
         }}
       >
         {/* Username, Description & Profile Picture */}
-        <div className="container flex justify-between items-center max-w-full mb-10">
+        <div className="container flex justify-between items-center max-w-full mb-6">
           <div className="flex flex-col items-start">
             <h1 className="text-6xl font-bold italic text-gray-50 mb-2">
               {profile.user.username}
@@ -176,7 +177,8 @@ export const EditUserProfile = ({ props }) => {
             <textarea
               onChange={onChange}
               name="description"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg resize-none p-2 mb-2"
+              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-80 h-20 rounded-lg resize-none p-2 mb-2"
+              value={data.description}
             />
             {error ? (
               <p className="text-xs antialiased font-medium text-red-800 mt-2 mb-2">
@@ -195,7 +197,7 @@ export const EditUserProfile = ({ props }) => {
           />
         </div>
 
-        <div className="container flex justify-between items-start max-w-full mb-10">
+        <div className="container flex justify-between items-start max-w-full mb-6">
           <div className="flex flex-col">
             <label className="text-base antialiased font-medium text-white mb-2">
               Background-Color
@@ -210,29 +212,29 @@ export const EditUserProfile = ({ props }) => {
             <p className="text-base font-light text-gray-50 mb-2">
               favorite Anime
             </p>
-            <input
-              onChange={onChange}
-              type="text"
-              name="favoriteAnime"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg p-1 mb-2"
+            <InputField
+              props={{
+                version: 'anime',
+                placeholder: `${props?.favoriteAnime || 'Search Anime...'}`,
+              }}
             />
             <p className="text-base font-light text-gray-50 mb-2">
               favorite Manga
             </p>
-            <input
-              onChange={onChange}
-              type="text"
-              name="favoriteManga"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg p-1 mb-2"
+            <InputField
+              props={{
+                version: 'manga',
+                placeholder: `${props?.favoriteManga || 'Search Manga...'}`,
+              }}
             />
             <p className="text-base font-light text-gray-50 mb-2">
               favorite Character
             </p>
-            <input
-              onChange={onChange}
-              type="text"
-              name="favoriteChar"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg p-1 mb-2"
+            <InputField
+              props={{
+                version: 'character',
+                placeholder: `${props?.favoriteChar || 'Search Character...'}`,
+              }}
             />
           </div>
           <div className="flex flex-col">

@@ -5,7 +5,7 @@ import { Navbar } from '../../components/Auth/Navbar';
 import { LeftSidebar } from '../../components/Layout/LeftSidebar';
 import { RightSidebar } from '../../components/Layout/RightSidebar';
 import { UserProfile } from '../../components/Userprofile/UserProfile';
-import { getListQ, getProfileQ } from '../../graphql/Queries';
+import { getCurrentUserQ, getListQ, getProfileQ } from '../../graphql/Queries';
 
 export default function ProfilePage({ slug }) {
   const id = slug.slug;
@@ -15,22 +15,19 @@ export default function ProfilePage({ slug }) {
       id: id,
     },
   });
+  const profile = useQuery(getCurrentUserQ);
+
+  if (profile.loading) {
+    return <p className="text-white">Loading...</p>;
+  }
 
   if (getProfile.loading) {
     return <p className="text-white">Loading...</p>;
   }
 
   const userProfile = getProfile.data.getUserProfile;
+  const user = profile.data.getCurrentUser;
   const userId = userProfile.user.id;
-
-  const getList = useQuery(getListQ, {
-    variables: {
-      id: userId,
-    },
-  });
-
-  const listData = getList.data;
-  console.log(listData);
 
   return (
     <>
@@ -41,10 +38,10 @@ export default function ProfilePage({ slug }) {
           style={{ height: '91vh', marginTop: '5.235rem' }}
         >
           <LeftSidebar confetti={false} />
-          <div className="flex flex-wrap w-[56vw] pt-[1.6rem]">
-            {/* <UserProfile props={userProfile} list={listData} /> */}
+          <div className="flex flex-wrap items-center justify-center w-[56vw] pt-[1.6rem]">
+            <UserProfile props={userProfile} list="" id={userId} />
           </div>
-          <RightSidebar confetti={false} />
+          <RightSidebar confetti={false} user={user} />
         </div>
       </div>
     </>
@@ -85,11 +82,6 @@ export async function getServerSideProps({ params }) {
     query: getProfileQ,
     variables: { id: params?.slug },
   });
-
-  // await client.query({
-  //   query: getListQ,
-  //   variables: { id: '' },
-  // });
 
   return {
     props: {

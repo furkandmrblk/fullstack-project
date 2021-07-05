@@ -9,12 +9,17 @@ import { LeftSidebar } from '../components/Layout/LeftSidebar';
 import { RightSidebar } from '../components/Layout/RightSidebar';
 import { UserProfile } from '../components/Userprofile/UserProfile';
 import { addListM } from '../graphql/Mutations';
-import { getCurrentListQ, getCurrentUserProfileQ } from '../graphql/Queries';
+import {
+  getCurrentListQ,
+  getCurrentUserProfileQ,
+  getCurrentUserQ,
+} from '../graphql/Queries';
 
 export default function CurrentUserProfile() {
   const router = useRouter();
 
   const getList = useQuery(getCurrentListQ);
+  const getCurrentUser = useQuery(getCurrentUserQ);
   const getProfile = useQuery(getCurrentUserProfileQ);
 
   if (getProfile.loading) {
@@ -25,11 +30,16 @@ export default function CurrentUserProfile() {
     return <p>Loading...</p>;
   }
 
+  if (getCurrentUser.loading) {
+    return <p>Loading...</p>;
+  }
+
   if (getProfile.data === undefined) {
     router.push('/createprofile');
   }
 
   const userProfile = getProfile.data.getCurrentUserProfile;
+  const user = getCurrentUser.data.getCurrentUser;
   const listData = getList.data.getCurrentList;
 
   return (
@@ -41,10 +51,10 @@ export default function CurrentUserProfile() {
           style={{ height: '91vh', marginTop: '5.235rem' }}
         >
           <LeftSidebar confetti={false} />
-          <div className="flex flex-wrap  w-[56vw] pt-[1.6rem]">
-            <UserProfile props={userProfile} list={listData} />
+          <div className="flex flex-wrap items-center justify-center  w-auto pt-6">
+            <UserProfile props={userProfile} list={listData} id="" />
           </div>
-          <RightSidebar confetti={false} />
+          <RightSidebar confetti={false} user={user} />
         </div>
       </div>
     </>

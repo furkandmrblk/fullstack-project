@@ -21,7 +21,26 @@ export const typeDefs = gql`
   type List {
     id: ID!
     user: User!
-    
+
+    finishedAnimes: [String]
+    watchingAnimes: [String]
+    watchlistAnimes: [String]
+
+    finishedMangas: [String]
+    watchingMangas: [String]
+    watchlistMangas: [String]
+  }
+
+  type CompleteData {
+    id: ID!
+    user: User!
+
+    description: String!
+    color: String!
+    favoriteAnime: String
+    favoriteManga: String
+    favoriteChar: String
+
     finishedAnimes: [String]
     watchingAnimes: [String]
     watchlistAnimes: [String]
@@ -45,6 +64,7 @@ export const typeDefs = gql`
     getCurrentUserProfile: UserProfile
 
     getList(id: ID!): List
+    getLists: [List]
     getCurrentList: List
   }
 
@@ -79,7 +99,7 @@ export const typeDefs = gql`
     deleteUser(password: String!): String
 
     changeUsername(username: String!): User
-    changePassword(oldPassword: String! password: String!): User
+    changePassword(oldPassword: String!, password: String!): User
 
     createProfile(profile: ProfileInput): UserProfile
     updateProfile(profile: ProfileInput): UserProfile

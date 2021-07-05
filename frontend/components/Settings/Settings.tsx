@@ -43,8 +43,8 @@ export const Settings = ({
     <>
       {settings ? (
         <>
-          <div className="fixed right-0 left-0 top-0 bottom-0 z-50 flex flex-col items-center h-80 w-80 mx-auto my-auto rounded-lg bg-indigo-100 p-5 ">
-            <h1 className="text-lg antialiased font-bold text-black mb-7">
+          <div className="fixed right-0 left-0 bottom-0 z-50 flex flex-col items-center h-auto  w-80 mx-auto mb-[40vh] rounded-lg bg-indigo-900 p-5 ">
+            <h1 className="text-lg antialiased font-bold text-white mb-7">
               Settings
             </h1>
             <div
@@ -76,7 +76,10 @@ export const Settings = ({
                   />
                 ) : null}
                 {resetPw ? (
-                  <ChangePassword openresetpw={openResetPw} opensettings={opensettings} />
+                  <ChangePassword
+                    openresetpw={openResetPw}
+                    opensettings={opensettings}
+                  />
                 ) : null}
               </>
             ) : (
@@ -84,19 +87,19 @@ export const Settings = ({
                 {' '}
                 <div
                   onClick={openChangeName}
-                  className="flex items-center justify-center text-black  bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3 cursor-pointer hover:bg-indigo-200 hover:border-indigo-200 transition duration-500 ease-in-out"
+                  className="flex items-center justify-center text-white  bg-indigo-500/40 rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3 cursor-pointer hover:bg-indigo-500/90 transition duration-500 ease-in-out"
                 >
                   <h1>Change Username</h1>
                 </div>
                 <div
                   onClick={openResetPw}
-                  className="flex items-center justify-center text-black  bg-white border-[1px] border-white rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3 cursor-pointer hover:bg-indigo-200 hover:border-indigo-200 transition duration-500 ease-in-out"
+                  className="flex items-center justify-center text-white bg-indigo-500/40 rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3 cursor-pointer hover:bg-indigo-500/90 transition duration-500 ease-in-out"
                 >
                   <h1>Reset Password</h1>
                 </div>
                 <div
                   onClick={openDelete}
-                  className="flex items-center justify-center text-white  bg-red-500 border-[1px] border-red-500 rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3 cursor-pointer hover:bg-red-700 transition duration-500 ease-in-out"
+                  className="flex items-center justify-center text-white  bg-red-500 rounded-lg outline-none w-64 h-[2.25rem]  px-4  mb-3 cursor-pointer hover:bg-red-700 transition duration-500 ease-in-out"
                 >
                   <h1>Delete Account</h1>
                 </div>{' '}
@@ -108,4 +111,3 @@ export const Settings = ({
     </>
   );
 };
-

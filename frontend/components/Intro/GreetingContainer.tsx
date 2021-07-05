@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const GreetingContainer = ({ data, browseProfiles }) => {
   return (
-    <div className="flex items-center justify-between p-8 bg-indigo-500 rounded-lg w-[56vw] h-72 mt-[1.6rem] mb-5">
+    <div className="flex items-center justify-between p-8 bg-indigo-500 rounded-lg w-[54.5vw] h-72 mt-[1.6rem] mb-5">
       <div className="flex flex-col items-start">
         <h1 className="text-base font-bold italic text-gray-50 mb-4">
           Welcome {data.username} !

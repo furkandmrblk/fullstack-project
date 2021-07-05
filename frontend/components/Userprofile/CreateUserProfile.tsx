@@ -3,20 +3,27 @@ import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { ChromePicker } from 'react-color';
-import { getCurrentUserQ } from '../../graphql/Queries';
-import { createProfileM } from '../../graphql/Mutations';
+import { getCurrentListQ, getCurrentUserQ } from '../../graphql/Queries';
+import { addListM, createProfileM } from '../../graphql/Mutations';
+import { UserProfileArray } from './Parts/UserProfileArray';
+import {
+  getAnime,
+  getChar,
+  getManga,
+  tempArrayFinished,
+  tempArrayWatching,
+  tempArrayWatchlist,
+} from '../../pages/api';
+import { InputField } from './Parts/InputField';
 
 export const CreateUserProfile = () => {
   const router = useRouter();
 
   const [data, setData] = useState({
     description: '',
-    favoriteAnime: '',
-    favoriteManga: '',
-    favoriteChar: '',
   });
 
-  const { description, favoriteAnime, favoriteManga, favoriteChar } = data;
+  const { description } = data;
 
   const onChange = (e: any) => {
     e.preventDefault();
@@ -51,9 +58,43 @@ export const CreateUserProfile = () => {
     variables: {
       description: description,
       color: color,
-      favoriteChar: favoriteChar,
-      favoriteAnime: favoriteAnime,
-      favoriteManga: favoriteManga,
+      favoriteChar: getChar(),
+      favoriteAnime: getAnime(),
+      favoriteManga: getManga(),
+    },
+  });
+
+  const finishedMangas = [];
+  const watchingMangas = [];
+  const watchlistMangas = [];
+
+  const a = {
+    img: '/Finished.svg',
+    color: '#10B981',
+    version: 'finished',
+  };
+
+  const b = {
+    img: '/Watching.svg',
+    color: '#A78BFA',
+    version: 'watching',
+  };
+
+  const c = {
+    img: '/Watchlist.svg',
+    color: '#FCD34D',
+    version: 'watchlist',
+  };
+
+  const [addList] = useMutation(addListM, {
+    variables: {
+      finishedAnimes: tempArrayFinished,
+      watchingAnimes: tempArrayWatching,
+      watchlistAnimes: tempArrayWatchlist,
+
+      finishedMangas: finishedMangas,
+      watchingMangas: watchingMangas,
+      watchlistMangas: watchlistMangas,
     },
   });
 
@@ -71,9 +112,21 @@ export const CreateUserProfile = () => {
         variables: {
           description: description,
           color: color,
-          favoriteChar: favoriteChar,
-          favoriteAnime: favoriteAnime,
-          favoriteManga: favoriteManga,
+          favoriteChar: getChar(),
+          favoriteAnime: getAnime(),
+          favoriteManga: getManga(),
+        },
+      });
+
+      await addList({
+        variables: {
+          finishedAnimes: tempArrayFinished,
+          watchingAnimes: tempArrayWatching,
+          watchlistAnimes: tempArrayWatchlist,
+
+          finishedMangas: finishedMangas,
+          watchingMangas: watchingMangas,
+          watchlistMangas: watchlistMangas,
         },
       });
 
@@ -109,10 +162,10 @@ export const CreateUserProfile = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex justify-center items-center bg-indigo-900 rounded-lg w-[56vw] h-auto mb-4"
+      className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4"
     >
       <div
-        className="flex flex-col items-start rounded-lg w-[56vw] h-auto p-16"
+        className="flex flex-col items-start rounded-lg w-auto h-auto pt-16 pb-16 pr-8 pl-8"
         style={{
           background: `linear-gradient(270deg, ${color} -10%, rgba(67, 56, 202, 0) 100%)`,
         }}
@@ -129,7 +182,7 @@ export const CreateUserProfile = () => {
             <textarea
               onChange={onChange}
               name="description"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg resize-none p-2 mb-2"
+              className="text-sm antialiased font-base text-white bg-gray-700 outline-none w-64 rounded-lg resize-none p-2 mb-2"
             />
             {error ? (
               <p className="text-xs antialiased font-medium text-red-800 mt-2 mb-2">
@@ -168,29 +221,23 @@ export const CreateUserProfile = () => {
             <p className="text-base font-light text-gray-50 mb-2">
               favorite Anime
             </p>
-            <input
-              onChange={onChange}
-              type="text"
-              name="favoriteAnime"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg p-1 mb-2"
+            <InputField
+              props={{ version: 'anime', placeholder: 'Search Anime...' }}
             />
             <p className="text-base font-light text-gray-50 mb-2">
               favorite Manga
             </p>
-            <input
-              onChange={onChange}
-              type="text"
-              name="favoriteManga"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg p-1 mb-2"
+            <InputField
+              props={{ version: 'manga', placeholder: 'Search Manga...' }}
             />
             <p className="text-base font-light text-gray-50 mb-2">
               favorite Character
             </p>
-            <input
-              onChange={onChange}
-              type="text"
-              name="favoriteChar"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-64 rounded-lg p-1 mb-2"
+            <InputField
+              props={{
+                version: 'character',
+                placeholder: 'Search Character...',
+              }}
             />
           </div>
           <div className="flex flex-col">
@@ -223,12 +270,15 @@ export const CreateUserProfile = () => {
           </div>
         </div>
 
-        {/* Category */}
+        <div className="grid grid-cols-3 gap-4">
+          <UserProfileArray props={a} />
+          <UserProfileArray props={b} />
+          <UserProfileArray props={c} />
+        </div>
 
-        {/* Watchlist */}
         <button
           type="submit"
-          className="absolute bottom-0 z-50 btn-lg text-white bg-green-600 hover:bg-green-700 w-30 mb-10 ml-[50rem]"
+          className="fixed bottom-0 z-50 btn-lg text-white bg-green-600 hover:bg-green-700 w-30 mb-10 ml-[50rem]"
         >
           Save Changes
         </button>

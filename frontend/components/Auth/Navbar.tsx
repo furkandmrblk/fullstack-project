@@ -69,21 +69,20 @@ export const Navbar = (): JSX.Element => {
     }
   };
 
-
   const [logout, logoutResult] = useMutation(logoutUserM, {
     onCompleted() {
-        client.resetStore();
-        setAccessToken(null);
-        authContext.authDispatch('logout');
-        router.push('/');
-    }
-});
+      client.resetStore();
+      setAccessToken(null);
+      authContext.authDispatch('logout');
+      router.push('/');
+    },
+  });
 
   const logoutCtx = async (e: any) => {
     e.preventDefault();
 
     try {
-      await logout()
+      await logout();
 
       if (open === true) {
         isOpen(!open);
@@ -112,11 +111,17 @@ export const Navbar = (): JSX.Element => {
         </Link>
         {auth ? (
           <>
-          <div className="flex justify-between items-center w-96">
-            <a className="text-base antialiased font-bold text-white" href="">News</a>
-            <a className="text-base antialiased font-bold text-white" href="">Upcoming Series</a>
-            <a className="text-base antialiased font-bold text-white" href="">Rankings</a>
-          </div>
+            <div className="flex justify-between items-center w-96">
+              <a className="text-base antialiased font-bold text-white" href="">
+                News
+              </a>
+              <a className="text-base antialiased font-bold text-white" href="">
+                Upcoming Series
+              </a>
+              <a className="text-base antialiased font-bold text-white" href="">
+                Rankings
+              </a>
+            </div>
             <div className="flex justify-between items-center w-32">
               <div className="cursor-pointer" onClick={openProfileMenu}>
                 <svg
@@ -170,7 +175,7 @@ export const Navbar = (): JSX.Element => {
           paddingBottom: open ? '' : '0',
           transition: 'all 350ms ease-in-out',
         }}
-        className="container fixed mt-[5.3rem] z-50 h-32 w-36 bg-indigo-900 right-0 rounded-bl-md flex flex-col justify-start items-center p-5 overflow-hidden whitespace-nowrap"
+        className="fixed mt-[5.3rem] z-[99] h-32 w-36 bg-indigo-900 right-0 rounded-bl-md flex flex-col justify-start items-center p-5 overflow-hidden whitespace-nowrap"
       >
         <button
           onClick={openSettings}
@@ -193,7 +198,7 @@ export const Navbar = (): JSX.Element => {
           paddingBottom: open2 ? '' : '0',
           transition: 'all 350ms ease-in-out',
         }}
-        className="container fixed mt-[5.3rem] mr-[9rem] z-[99] h-32 w-36 bg-indigo-900 right-0 rounded-bl-md rounded-br-md flex flex-col justify-start items-center p-5 overflow-hidden whitespace-nowrap"
+        className="fixed mt-[5.3rem] mr-[9rem] z-[99] h-32 w-36 bg-indigo-900 right-0 rounded-bl-md rounded-br-md flex flex-col justify-start items-center p-5 overflow-hidden whitespace-nowrap"
       >
         {hasProfile ? (
           <>

@@ -4,6 +4,7 @@ import createError from 'http-errors';
 import { verifyAccessToken } from '../../services/auth';
 import { IUserProfile } from '../../interfaces/IUserProfile';
 import { IUser } from '../../interfaces/IUser';
+import { IList } from '../../interfaces/IList';
 
 export const getUser = async (parent, args, context, info) => {
   const { id } = args;
@@ -136,7 +137,7 @@ export const getList = async (parent, args, context, info) => {
   const { id } = args;
 
   const currentUser = await User.findById(id);
-  const list: any = await List.findById(currentUser.list);
+  const list = await List.findById(currentUser.list);
 
   return {
     id: list.id,
@@ -150,6 +151,33 @@ export const getList = async (parent, args, context, info) => {
 
     user: currentUser,
   };
+};
+
+export const getLists = async (parent, args, context, info) => {
+  const listRecords = await List.find();
+  let lists = [];
+
+  for (let i = 0; i < listRecords.length; i++) {
+    const currentList = await List.findById(listRecords[i].id);
+    const user = await User.findById(currentList.user);
+
+    const list = {
+      id: currentList.id,
+      finishedAnimes: currentList.finishedAnimes,
+      watchingAnimes: currentList.watchingAnimes,
+      watchlistAnimes: currentList.watchlistAnimes,
+
+      finishedMangas: currentList.finishedMangas,
+      watchingMangas: currentList.watchingMangas,
+      watchlistMangas: currentList.watchlistMangas,
+
+      user: user,
+    };
+
+    lists.push(list);
+  }
+
+  return lists;
 };
 
 export const getCurrentList = async (parent, args, context, info) => {
@@ -179,20 +207,3 @@ export const getCurrentList = async (parent, args, context, info) => {
     user: currentUser,
   };
 };
-
-// Update Tokens richtig einsetzen [] (muss ich das beim Frontend einsetzen?)
-// getUsers & getUserProfiles richtig fetchen [x]
-
-// Später TO-DOS
-// Socials reinbringen []
-// Drop Downs reinbringen []
-// Profile Picture reinbringen []
-
-// Start with Frontend
-//  -Design verbessern [x]
-//  -PC View hardcoden [x]
-//  -GraphQL mit einbringen []
-//  -Authentication []
-//  -UserProfiles []
-
-// fetch policies apollo client cache

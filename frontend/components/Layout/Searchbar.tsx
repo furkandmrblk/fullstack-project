@@ -4,7 +4,7 @@ export const Searchbar = (): JSX.Element => {
   return (
     <>
       {/* Searchbar */}
-      <div className="flex items-center w-72 rounded-lg bg-indigo-900 pt-2 pb-2 pr-4 pl-4 mb-5">
+      <div className="flex items-center w-72 rounded-lg bg-indigo-900 pt-2 pb-2 pr-4 pl-4 mb-5 2xl:w-[270px]">
         <input
           className="text-base antialiased font-base text-white italic bg-indigo-900 outline-none w-64 placeholder-gray-100"
           placeholder="Search"

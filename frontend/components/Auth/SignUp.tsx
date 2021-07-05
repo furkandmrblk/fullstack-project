@@ -78,8 +78,8 @@ export const SignUp = ({ signup, openregister }): JSX.Element => {
     <>
       {signup ? (
         <>
-          <div className="fixed right-0 left-0 top-0 bottom-0 z-50 flex flex-col items-center h-64 w-80 mx-auto my-auto rounded-lg bg-indigo-100 p-5 ">
-            <h1 className="text-lg antialiased font-bold italic text-black mb-7">
+          <div className="fixed right-0 left-0 top-0 bottom-0 z-50 flex flex-col items-center h-64 w-80 mx-auto my-auto rounded-lg bg-indigo-900 p-5 ">
+            <h1 className="text-lg text-white antialiased font-bold mb-7">
               Sign Up
             </h1>
             <div

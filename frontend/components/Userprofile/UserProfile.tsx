@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
-import { getCurrentListQ } from '../../graphql/Queries';
+import { getCurrentListQ, getListQ } from '../../graphql/Queries';
 import {
   tempArrayFinished,
   tempArrayWatching,
@@ -8,14 +8,26 @@ import {
 } from '../../pages/api';
 import { UserProfileList } from './Parts/UserProfileList';
 
-export const UserProfile = ({ props, list }) => {
+export const UserProfile = ({ props, list, id }) => {
   const data = props;
+
+  const userId = id;
+
+  const getList = useQuery(getListQ, {
+    variables: {
+      id: userId,
+    },
+  });
+
+  if (getList.loading) {
+    return <p>Loading...</p>;
+  }
 
   if (!data) {
     return <p className="text-white">Loading...</p>;
   }
 
-  const listData = list;
+  const listData = list || getList.data.getList;
 
   const a = {
     img: '/Finished.svg',
@@ -40,9 +52,9 @@ export const UserProfile = ({ props, list }) => {
 
   return (
     <>
-      <div className="flex justify-center items-center bg-indigo-900 rounded-lg w-[56vw] h-auto mb-4">
+      <div className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4">
         <div
-          className="flex flex-col items-start rounded-lg w-[56vw] h-auto p-16"
+          className="flex flex-col items-start rounded-lg w-full h-auto pt-16 pb-16 pr-8 pl-8"
           style={{
             background: `linear-gradient(270deg, ${data.color} -10%, rgba(67, 56, 202, 0) 100%)`,
           }}
@@ -52,7 +64,7 @@ export const UserProfile = ({ props, list }) => {
               <h1 className="text-6xl font-bold text-gray-50 mb-2">
                 {data.user.username}
               </h1>
-              <p className="text-lg font-extralight text-gray-50">
+              <p className="text-lg font-extralight text-gray-50 max-w-2xl">
                 {data.description}
               </p>
             </div>
@@ -71,10 +83,10 @@ export const UserProfile = ({ props, list }) => {
             <div className="flex flex-col">
               {data.favoriteAnime ? (
                 <>
-                  <p className="text-lg font-bold italic text-gray-50 mb-1">
+                  <p className="text-lg font-bold  text-gray-50 mb-1">
                     favorite Anime
                   </p>
-                  <p className="text-base font-light italic text-gray-50 mb-5">
+                  <p className="text-base font-light  text-gray-50 mb-5">
                     {data.favoriteAnime}
                   </p>{' '}
                 </>
@@ -82,10 +94,10 @@ export const UserProfile = ({ props, list }) => {
               {data.favoriteManga ? (
                 <>
                   {' '}
-                  <p className="text-lg font-bold italic text-gray-50 mb-1">
+                  <p className="text-lg font-bold  text-gray-50 mb-1">
                     favorite Manga
                   </p>
-                  <p className="text-base font-light italic text-gray-50 mb-5">
+                  <p className="text-base font-light  text-gray-50 mb-5">
                     {data.favoriteManga}
                   </p>{' '}
                 </>
@@ -93,10 +105,10 @@ export const UserProfile = ({ props, list }) => {
               {data.favoriteChar ? (
                 <>
                   {' '}
-                  <p className="text-lg font-bold italic text-gray-50 mb-1">
+                  <p className="text-lg font-bold  text-gray-50 mb-1">
                     favorite Character
                   </p>
-                  <p className="text-base font-light italic text-gray-50">
+                  <p className="text-base font-light  text-gray-50">
                     {data.favoriteChar}
                   </p>{' '}
                 </>
@@ -105,32 +117,32 @@ export const UserProfile = ({ props, list }) => {
             <div className="flex flex-col">
               <div className="flex justify-between items-center w-48">
                 <div
-                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800 transition duration-500 ease-in-out cursor-pointer"
+                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800/80 transition duration-500 ease-in-out cursor-pointer"
                   style={{
                     filter: 'drop-shadow(1px 1px 5px rgba(0, 0, 0, 0.5))',
                   }}
                 />
                 <div
-                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800 transition duration-500 ease-in-out cursor-pointer"
+                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800/80 transition duration-500 ease-in-out cursor-pointer"
                   style={{
                     filter: 'drop-shadow(1px 1px 5px rgba(0, 0, 0, 0.5))',
                   }}
                 />
                 <div
-                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800 transition duration-500 ease-in-out cursor-pointer"
+                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800/80 transition duration-500 ease-in-out cursor-pointer"
                   style={{
                     filter: 'drop-shadow(1px 1px 5px rgba(0, 0, 0, 0.5))',
                   }}
                 />
                 <div
-                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800 transition duration-500 ease-in-out cursor-pointer"
+                  className="bg-gray-700 h-10 w-10 rounded-lg mb-3 hover:bg-gray-800/80 transition duration-500 ease-in-out cursor-pointer"
                   style={{
                     filter: 'drop-shadow(1px 1px 5px rgba(0, 0, 0, 0.5))',
                   }}
                 />
               </div>
               <div
-                className="flex items-center justify-between bg-gray-700 rounded-lg w-48 p-[0.55rem] mb-1"
+                className="flex items-center justify-between bg-gray-700 hover:bg-gray-800/80 transition duration-500 ease-in-out rounded-lg w-48 p-[0.55rem] mb-1"
                 style={{
                   filter: 'drop-shadow(1px 1px 5px rgba(0, 0, 0, 0.5))',
                 }}
@@ -150,7 +162,7 @@ export const UserProfile = ({ props, list }) => {
                 </h1>
               </div>
               <div
-                className="flex items-center justify-between bg-gray-700 rounded-lg w-48 p-[0.55rem] mb-1"
+                className="flex items-center justify-between bg-gray-700 hover:bg-gray-800/80 transition duration-500 ease-in-out rounded-lg w-48 p-[0.55rem] mb-1"
                 style={{
                   filter: 'drop-shadow(1px 1px 5px rgba(0, 0, 0, 0.5))',
                 }}
@@ -170,7 +182,7 @@ export const UserProfile = ({ props, list }) => {
                 </h1>
               </div>
               <div
-                className="flex items-center justify-between bg-gray-700 rounded-lg w-48 p-[0.55rem]"
+                className="flex items-center justify-between bg-gray-700 hover:bg-gray-800/80 transition duration-500 ease-in-out rounded-lg w-48 p-[0.55rem]"
                 style={{
                   filter: 'drop-shadow(1px 1px 5px rgba(0, 0, 0, 0.5))',
                 }}

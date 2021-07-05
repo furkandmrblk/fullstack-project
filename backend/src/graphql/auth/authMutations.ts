@@ -2,7 +2,7 @@ import {
   loginValidation,
   registerValidation,
 } from '../../api/middlewares/validation';
-import { User, UserProfile } from '../../models/User';
+import { List, User, UserProfile } from '../../models/User';
 import createError from 'http-errors';
 import bcrypt from 'bcrypt';
 import {
@@ -171,6 +171,9 @@ export const deleteUser = async (parent, args, context, info) => {
   // Deleting the userprofile of the current user
   await UserProfile.findByIdAndDelete(user.userprofile);
 
+  // Deleting the list of the current user
+  await List.findByIdAndDelete(user.list);
+
   // Deleting the users account
   await User.findByIdAndDelete(userId);
 
@@ -221,6 +224,5 @@ export const changePassword = async (parent, args, context, info) => {
     return updatedUser;
   } catch (error) {
     console.log(error);
-    
   }
-}
+};

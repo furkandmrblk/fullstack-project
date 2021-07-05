@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   animeList,
   tempArrayFinished,
@@ -15,6 +13,15 @@ export const UserProfileArray = ({ props }) => {
   const openSearch = (e: any) => {
     e.preventDefault();
     setSearch(!search);
+  };
+
+  const removeItem = (arr: string[], value?: string) => {
+    let currentItem = arr.indexOf(value);
+    if (currentItem > -1) {
+      arr.splice(currentItem, 1);
+    }
+
+    return arr;
   };
 
   return (
@@ -60,7 +67,6 @@ export const UserProfileArray = ({ props }) => {
                       {' '}
                       <p
                         key={index}
-                        id={index.toString()}
                         onClick={(e) => {
                           e.preventDefault();
                           if (
@@ -78,7 +84,7 @@ export const UserProfileArray = ({ props }) => {
                             setSearch(false);
                           }
                         }}
-                        className="mt-1 py-[0.15rem] px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                        className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
                       >
                         {anime}
                       </p>{' '}
@@ -89,7 +95,6 @@ export const UserProfileArray = ({ props }) => {
                       {' '}
                       <p
                         key={index}
-                        id={index.toString()}
                         onClick={(e) => {
                           e.preventDefault();
 
@@ -108,7 +113,7 @@ export const UserProfileArray = ({ props }) => {
                             setSearch(false);
                           }
                         }}
-                        className="mt-1 py-[0.15rem] px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                        className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
                       >
                         {anime}
                       </p>{' '}
@@ -119,7 +124,6 @@ export const UserProfileArray = ({ props }) => {
                       {' '}
                       <p
                         key={index}
-                        id={index.toString()}
                         onClick={(e) => {
                           e.preventDefault();
                           if (
@@ -137,7 +141,7 @@ export const UserProfileArray = ({ props }) => {
                             setSearch(false);
                           }
                         }}
-                        className="mt-1 py-[0.15rem] px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                        className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
                       >
                         {anime}
                       </p>{' '}
@@ -155,7 +159,11 @@ export const UserProfileArray = ({ props }) => {
             {tempArrayFinished.map((item: string, index) => (
               <div
                 key={index}
-                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 border-[1px] border-gray-600 rounded-md outline-none max-w-full h-[2.25rem] px-4 mb-1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  removeItem(tempArrayFinished, item);
+                }}
+                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
               >
                 {item}
               </div>
@@ -168,7 +176,7 @@ export const UserProfileArray = ({ props }) => {
             {tempArrayWatching.map((item: string, index) => (
               <div
                 key={index}
-                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 border-[1px] border-gray-600 rounded-md outline-none max-w-full h-[2.25rem] px-4 mb-1"
+                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
               >
                 {item}
               </div>
@@ -181,7 +189,7 @@ export const UserProfileArray = ({ props }) => {
             {tempArrayWatchlist.map((item: string, index) => (
               <div
                 key={index}
-                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 border-[1px] border-gray-600 rounded-md outline-none max-w-full h-[2.25rem] px-4 mb-1"
+                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
               >
                 {item}
               </div>

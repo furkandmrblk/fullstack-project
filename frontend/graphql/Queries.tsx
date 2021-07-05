@@ -23,6 +23,7 @@ export const getProfilesQ = gql`
   query {
     getUserProfiles {
       user {
+        id
         username
       }
       id
@@ -95,8 +96,26 @@ export const getCurrentListQ = gql`
 export const getListQ = gql`
   query getList($id: ID!) {
     getList(id: $id) {
-      id
       user {
+        username
+      }
+
+      finishedAnimes
+      watchingAnimes
+      watchlistAnimes
+
+      finishedMangas
+      watchingMangas
+      watchlistMangas
+    }
+  }
+`;
+
+export const getListsQ = gql`
+  query getLists {
+    getLists {
+      user {
+        id
         username
       }
 

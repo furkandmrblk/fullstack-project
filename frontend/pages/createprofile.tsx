@@ -14,10 +14,10 @@ export default function CreateProfilePage() {
           style={{ height: '91vh', marginTop: '5.235rem' }}
         >
           <LeftSidebar confetti={true} />
-          <div className="flex flex-wrap  w-[56vw] pt-[1.6rem]">
+          <div className="flex flex-wrap items-center justify-center  w-auto pt-6">
             <CreateUserProfile />
           </div>
-          <RightSidebar confetti={true} />
+          <RightSidebar confetti={true} user="" />
         </div>
       </div>
     </>
