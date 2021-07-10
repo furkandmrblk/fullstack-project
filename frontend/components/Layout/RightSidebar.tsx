@@ -1,6 +1,6 @@
 import React from 'react';
 import { Friendlist } from './SidebarComponents/Friendlist';
-import { FriendRequests } from './SidebarComponents/FriendRequests';
+import { NotesBlock } from './SidebarComponents/NotesBlock';
 import { WelcomeBlock } from './SidebarComponents/WelcomeBlock';
 
 export const RightSidebar = ({ confetti, user }): JSX.Element => {
@@ -21,8 +21,8 @@ export const RightSidebar = ({ confetti, user }): JSX.Element => {
       ) : (
         <>
           <WelcomeBlock user={data} />
-          <FriendRequests />
           <Friendlist />
+          {/* <NotesBlock /> */}
         </>
       )}
     </div>

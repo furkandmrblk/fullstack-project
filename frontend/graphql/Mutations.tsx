@@ -1,7 +1,6 @@
-import { gql } from "@apollo/client"
+import { gql } from '@apollo/client';
 
 // Auth Mutations
-
 
 export const createUserM = gql`
   mutation createUser($username: String!, $password: String!) {
@@ -35,7 +34,6 @@ export const updateTokensM = gql`
   }
 `;
 
-
 export const deleteUserM = gql`
   mutation deleteUser($password: String!) {
     deleteUser(password: $password)
@@ -51,13 +49,13 @@ export const changeUsernameM = gql`
 `;
 
 export const changePasswordM = gql`
-  mutation changePassword($password: String! $oldPassword: String!) {
-    changePassword(password: $password oldPassword: $oldPassword) {
+  mutation changePassword($password: String!, $oldPassword: String!) {
+    changePassword(password: $password, oldPassword: $oldPassword) {
       username
       password
-    } 
+    }
   }
-`
+`;
 
 // User Mutations
 
@@ -94,8 +92,24 @@ export const createProfileM = gql`
 // List Mutations
 
 export const addListM = gql`
-  mutation addList($finishedAnimes: [String], $watchingAnimes: [String], $watchlistAnimes: [String], $finishedMangas: [String], $watchingMangas: [String], $watchlistMangas: [String]) {
-    addList(list: { finishedAnimes: $finishedAnimes, watchingAnimes: $watchingAnimes, watchlistAnimes: $watchlistAnimes, finishedMangas: $finishedMangas, watchingMangas: $watchingMangas, watchlistMangas: $watchlistMangas }) {
+  mutation addList(
+    $finishedAnimes: [String]
+    $watchingAnimes: [String]
+    $watchlistAnimes: [String]
+    $finishedMangas: [String]
+    $watchingMangas: [String]
+    $watchlistMangas: [String]
+  ) {
+    addList(
+      list: {
+        finishedAnimes: $finishedAnimes
+        watchingAnimes: $watchingAnimes
+        watchlistAnimes: $watchlistAnimes
+        finishedMangas: $finishedMangas
+        watchingMangas: $watchingMangas
+        watchlistMangas: $watchlistMangas
+      }
+    ) {
       id
       finishedAnimes
       watchingAnimes
@@ -105,4 +119,30 @@ export const addListM = gql`
       watchlistMangas
     }
   }
-`
+`;
+
+// Friend Request & Friendlist Mutations
+
+export const sendFriendRequest = gql`
+  mutation sendFriendRequest($username: String) {
+    sendFriendRequest(request: { username: $username }) {
+      incomingUserId
+    }
+  }
+`;
+export const acceptFriendRequest = gql`
+  mutation acceptFriendRequest($accept: Boolean, $id: String) {
+    acceptFriendRequest(accept: { accept: $accept, id: $id }) {
+      user {
+        username
+      }
+      friends
+    }
+  }
+`;
+
+export const deleteFriend = gql`
+  mutation deleteFriend($id: ID!) {
+    deleteFriend(id: $id)
+  }
+`;

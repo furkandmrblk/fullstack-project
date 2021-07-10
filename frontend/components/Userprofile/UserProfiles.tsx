@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
+import Image from 'next/image';
+import { getBadge, setBadge } from '../../pages/api';
+import AdminBadge from '../../public/admin2.svg';
 
 export const UserProfiles = ({ props, list }): JSX.Element => {
   const data = props;
+
   const listData = list;
 
   let allData = data.map((singleProfile) =>
@@ -38,9 +42,33 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
                   >
                     <div className="container flex items-center justify-between max-w-full mb-6">
                       <div className="flex flex-col">
-                        <h1 className="text-xl font-bold italic text-gray-50 mb-1 2xl:text-sm">
-                          {profile.singleProfile.user.username}
-                        </h1>
+                        <div className="flex items-center justify-start">
+                          <h1 className="text-xl font-bold italic text-gray-50 mb-1 mr-2 2xl:text-sm">
+                            {profile.singleProfile.user.username}
+                          </h1>
+                          <div className="flex items-start justify-between">
+                            {setBadge(
+                              profile.singleList.finishedAnimes.length
+                            ) !== undefined ? (
+                              <div className="mb-[0.15rem]">
+                                <Image
+                                  src={getBadge()}
+                                  height="13"
+                                  width="13"
+                                />
+                              </div>
+                            ) : null}
+                            {profile.singleProfile.user.isAdmin === true ? (
+                              <span className="ml-1">
+                                <Image
+                                  src={AdminBadge}
+                                  height="13"
+                                  width="13"
+                                />
+                              </span>
+                            ) : null}
+                          </div>
+                        </div>
                         <p className="text-xs font-light text-gray-50 max-w-[11.5rem] 2xl:max-w-[7rem]">
                           {profile.singleProfile.description}
                         </p>

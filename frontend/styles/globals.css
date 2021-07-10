@@ -50,3 +50,51 @@ a {
   border: 1.5px solid white;
   border-radius: 3px;
 }
+
+body::-webkit-scrollbar {
+  width: 12px; /* width of the entire scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+  background: #312e81; /* color of the tracking area */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #818cf8; /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 3px solid #818cf8; /* creates padding around scroll thumb */
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: #4b5563; /* color of the tracking area */
+  border-radius: 20px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #1f2937; /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 3px solid #1f2937; /* creates padding around scroll thumb */
+}
+
+.scrollbar-blue::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+.scrollbar-blue::-webkit-scrollbar-track {
+  background: #818cf8; /* color of the tracking area */
+  border-radius: 20px;
+}
+
+.scrollbar-blue::-webkit-scrollbar-thumb {
+  background-color: #312e81; /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 3px solid #312e81; /* creates padding around scroll thumb */
+}
+
+.btn-side {
+  @apply flex items-center justify-center text-sm rounded-lg transition duration-500 ease-in-out;
+}

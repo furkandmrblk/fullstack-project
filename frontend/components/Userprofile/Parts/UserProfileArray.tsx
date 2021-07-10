@@ -26,7 +26,7 @@ export const UserProfileArray = ({ props }) => {
 
   return (
     <>
-      <div className="flex flex-col justify-start items-center bg-gray-700 rounded-lg w-[19.5rem] min-h-[21rem] p-6">
+      <div className="flex flex-col justify-start items-center bg-gray-700 rounded-lg w-[19.5rem] h-[24rem] p-6">
         <div className="container flex justify-between max-w-full items-center mb-4">
           <input
             onClick={openSearch}
@@ -153,49 +153,48 @@ export const UserProfileArray = ({ props }) => {
           </>
         ) : null}
 
-        {props.version === 'finished' ? (
-          <>
-            {' '}
-            {tempArrayFinished.map((item: string, index) => (
-              <div
-                key={index}
-                onClick={(e) => {
-                  e.preventDefault();
-                  removeItem(tempArrayFinished, item);
-                }}
-                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
-              >
-                {item}
-              </div>
-            ))}
-          </>
-        ) : null}
-        {props.version === 'watching' ? (
-          <>
-            {' '}
-            {tempArrayWatching.map((item: string, index) => (
-              <div
-                key={index}
-                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
-              >
-                {item}
-              </div>
-            ))}
-          </>
-        ) : null}
-        {props.version === 'watchlist' ? (
-          <>
-            {' '}
-            {tempArrayWatchlist.map((item: string, index) => (
-              <div
-                key={index}
-                className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
-              >
-                {item}
-              </div>
-            ))}
-          </>
-        ) : null}
+        <div className="scrollbar container h-full overflow-y-scroll pr-2">
+          {props.version === 'finished' ? (
+            <>
+              {' '}
+              {tempArrayFinished.map((item: string, index) => (
+                <div
+                  key={index}
+                  onClick={() => removeItem(tempArrayFinished, item)}
+                  className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
+                >
+                  {item}
+                </div>
+              ))}
+            </>
+          ) : null}
+          {props.version === 'watching' ? (
+            <>
+              {' '}
+              {tempArrayWatching.map((item: string, index) => (
+                <div
+                  key={index}
+                  className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
+                >
+                  {item}
+                </div>
+              ))}
+            </>
+          ) : null}
+          {props.version === 'watchlist' ? (
+            <>
+              {' '}
+              {tempArrayWatchlist.map((item: string, index) => (
+                <div
+                  key={index}
+                  className="container flex justify-start items-center text-sm antialiased font-base text-white  bg-gray-600 hover:bg-red-600/50 transition duration-500 ease-in-out rounded-md outline-none max-w-full min-h-[2.25rem] px-4 mb-1 cursor-pointer"
+                >
+                  {item}
+                </div>
+              ))}
+            </>
+          ) : null}
+        </div>
       </div>
     </>
   );

@@ -1,10 +1,7 @@
-import { List, User } from '../../models/User';
+import { FriendList, FriendRequest, List, User } from '../../models/User';
 import { UserProfile } from '../../models/User';
 import createError from 'http-errors';
 import { verifyAccessToken } from '../../services/auth';
-import { IUserProfile } from '../../interfaces/IUserProfile';
-import { IUser } from '../../interfaces/IUser';
-import { IList } from '../../interfaces/IList';
 
 export const getUser = async (parent, args, context, info) => {
   const { id } = args;
@@ -206,4 +203,98 @@ export const getCurrentList = async (parent, args, context, info) => {
 
     user: currentUser,
   };
+};
+
+export const getFriendRequests = async (parent, args, context, info) => {
+  try {
+    // Get Access Token
+    const accessToken = context.req.headers['authorization'];
+
+    if (!accessToken)
+      return new createError.Unauthorized('Access token was not found.');
+
+    // Get the user ID
+    const userId = await verifyAccessToken(
+      context.req,
+      context.res,
+      accessToken
+    );
+
+    const user = await User.findById(userId);
+
+    let requestingUsers = [];
+
+    if (user.friendrequest !== null) {
+      const friendRequests = await FriendRequest.findById(user.friendrequest);
+
+      for (let i = 0; i < friendRequests.incomingUserId.length; i++) {
+        let currentItem = friendRequests.incomingUserId[i];
+        let currentRequest = await User.findById(currentItem);
+
+        let requestId = currentRequest.id;
+
+        let requestUsername = currentRequest.username;
+
+        requestingUsers.push({
+          incomingUserId: requestId,
+          incomingUser: requestUsername,
+        });
+      }
+
+      return requestingUsers;
+    }
+    return null;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Query Friends
+export const getFriendList = async (parent, args, context, info) => {
+  try {
+    // Get Access Token
+    const accessToken = context.req.headers['authorization'];
+
+    if (!accessToken)
+      return new createError.Unauthorized('Access token was not found.');
+
+    // Get the user ID
+    const userId = await verifyAccessToken(
+      context.req,
+      context.res,
+      accessToken
+    );
+
+    const user = await User.findById(userId);
+
+    let friendlistArray: object[] = [];
+
+    if (user.friendlist !== null) {
+      const friendlist = await FriendList.findById(user.friendlist);
+
+      for (let i = 0; i < friendlist.friends.length; i++) {
+        let currentFriendId = friendlist.friends[i];
+
+        let currentFriend = await User.findById(currentFriendId);
+
+        const userprofile = await UserProfile.findById(
+          currentFriend.userprofile
+        );
+
+        let friendData = {
+          id: currentFriend.id,
+          username: currentFriend.username,
+          userprofile: userprofile,
+        };
+
+        if (!friendlistArray.includes(friendData)) {
+          friendlistArray.push(friendData);
+        }
+      }
+      return friendlistArray;
+    }
+    return null;
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -1,13 +1,17 @@
 import React from 'react';
 import { useState } from 'react';
+import { getNumber, setNumber } from '../../../pages/api';
+import { HomeIcon } from '@heroicons/react/solid';
 
 export const WelcomeBlock = ({ user }) => {
   const [mood, setMood] = useState('');
 
   const superHappy: string[] = [
     "Yeeey! That's great to see that you are doing really well. Have fun on aniSpot too! ✌️",
-    "Let's go! Whatever made your day that great, we wish that it continues like this. 🌈",
+    "Let's go! Whatever made your day great, we wish for you that it continues like this. 🌈",
     "Uuuuhh, today's a perfect day huh. Let's keep up the positivity and have a great time! ✨",
+    "That's what we like to see! Live your best life & be the happiest version of yourself! ⚡️",
+    "Period. You shouldn't settle for less happiness. Go achieve your dreams! 🥳",
   ];
   const happy: string[] = [
     "Nice! We hope you'll have fun on aniSpot too! 🥰",
@@ -27,22 +31,31 @@ export const WelcomeBlock = ({ user }) => {
   const superBad: string[] = [
     "Uh, so it's really bad today.. don't worry! Talk about it with your friends or family, listen to some music or watch some animes.. We wish you the best.. 🥺",
     "Don't be sad.. There are fantastic days waiting just for you! We know that you're strong & that you will get through this.. 🤗",
-    "Ugh, that sucks.. But you shouldn't worry too much! As you probably know, you will forget about this & live your best life! Don't drop this.. 👑 We wish you the absolute best! 🥰",
+    "Ugh, that sucks.. But you shouldn't worry too much! As you probably know, you will forget about this & live your best life! Don't drop this.. 👑",
   ];
 
   const selectRandomElement = (arr: string[]) => {
-    const randomElement: number = Math.floor(Math.random() * arr.length);
+    let randomElement: number = Math.floor(Math.random() * arr.length);
+
+    while (randomElement === getNumber()) {
+      randomElement = Math.floor(Math.random() * arr.length);
+    }
+
+    setNumber(randomElement);
 
     return setMood(arr[randomElement]);
   };
 
   return (
     <>
-      <div className="flex flex-col items-start justify-center w-full h-auto rounded-lg text-white bg-indigo-700/50 p-6 mb-4">
-        <h1 className="text-base font-bold mb-6">
-          {' '}
-          Welcome back <span className="italic">{user.username}</span>!
-        </h1>
+      <div className="flex flex-col items-start justify-start w-full min-h-[14rem] rounded-lg text-white bg-indigo-700/50 p-6 mb-4">
+        <div className="flex items-start justify-between w-full">
+          <h1 className="text-base font-bold mb-6">
+            {' '}
+            Welcome back <span className="italic">{user.username}</span>!
+          </h1>
+          <HomeIcon className="h-5 w-5 cursor-pointer" />
+        </div>
 
         <h1 className="text-base mb-2">How was your day?</h1>
 
@@ -52,7 +65,7 @@ export const WelcomeBlock = ({ user }) => {
               e.preventDefault();
               selectRandomElement(superHappy);
             }}
-            className="cursor-pointer"
+            className="cursor-pointer select-none"
           >
             🥳
           </h1>
@@ -61,7 +74,7 @@ export const WelcomeBlock = ({ user }) => {
               e.preventDefault();
               selectRandomElement(happy);
             }}
-            className="cursor-pointer"
+            className="cursor-pointer select-none"
           >
             😊
           </h1>
@@ -70,7 +83,7 @@ export const WelcomeBlock = ({ user }) => {
               e.preventDefault();
               selectRandomElement(moderate);
             }}
-            className="cursor-pointer"
+            className="cursor-pointer select-none"
           >
             😐
           </h1>
@@ -79,7 +92,7 @@ export const WelcomeBlock = ({ user }) => {
               e.preventDefault();
               selectRandomElement(bad);
             }}
-            className="cursor-pointer"
+            className="cursor-pointer select-none"
           >
             😖
           </h1>
@@ -88,12 +101,16 @@ export const WelcomeBlock = ({ user }) => {
               e.preventDefault();
               selectRandomElement(superBad);
             }}
-            className="cursor-pointer"
+            className="cursor-pointer select-none"
           >
             😭
           </h1>
         </div>
-        {mood ? <h1 className="text-xs text-justify">{mood}</h1> : null}
+        {mood ? (
+          <h1 className="text-xs text-justify bg-indigo-700/30 rounded-lg p-2">
+            {mood}
+          </h1>
+        ) : null}
       </div>
     </>
   );

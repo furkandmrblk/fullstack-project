@@ -10,6 +10,8 @@ import { Context } from '../../reducer';
 import { Settings } from '../Settings/Settings';
 import { Login } from './Login';
 import { SignUp } from './SignUp';
+import { AdjustmentsIcon, LogoutIcon } from '@heroicons/react/outline';
+import { UserCircleIcon, PencilAltIcon } from '@heroicons/react/solid';
 
 export const Navbar = (): JSX.Element => {
   const router = useRouter();
@@ -175,20 +177,20 @@ export const Navbar = (): JSX.Element => {
           paddingBottom: open ? '' : '0',
           transition: 'all 350ms ease-in-out',
         }}
-        className="fixed mt-[5.3rem] z-[99] h-32 w-36 bg-indigo-900 right-0 rounded-bl-md flex flex-col justify-start items-center p-5 overflow-hidden whitespace-nowrap"
+        className="fixed mt-[5.3rem] z-[99] h-28 w-36 bg-indigo-900 right-0 rounded-bl-md flex flex-col justify-start items-start pt-6 pb-6 pl-6 overflow-hidden whitespace-nowrap"
       >
         <button
           onClick={openSettings}
-          className="text-base italic antialiased font-medium text-white my-1"
+          className="flex items-center justify-start text-base italic antialiased font-medium text-white my-1"
         >
-          Settings
+          <AdjustmentsIcon className="h-5 w-5 mr-2" /> <span>Settings</span>
         </button>
+
         <a
           onClick={logoutCtx}
-          href=""
-          className="text-base italic antialiased font-medium text-white my-1"
+          className="flex items-center justify-start text-base italic antialiased font-medium text-white my-1"
         >
-          Logout
+          <LogoutIcon className="h-5 w-5 mr-2" /> <span>Logout</span>
         </a>
       </div>
       <div
@@ -198,22 +200,24 @@ export const Navbar = (): JSX.Element => {
           paddingBottom: open2 ? '' : '0',
           transition: 'all 350ms ease-in-out',
         }}
-        className="fixed mt-[5.3rem] mr-[9rem] z-[99] h-32 w-36 bg-indigo-900 right-0 rounded-bl-md rounded-br-md flex flex-col justify-start items-center p-5 overflow-hidden whitespace-nowrap"
+        className="fixed mt-[5.3rem] mr-[9rem] z-[99] h-28 w-36 bg-indigo-900 right-0 rounded-bl-md rounded-br-md flex flex-col justify-start items-start pt-6 pb-6 pl-5 overflow-hidden whitespace-nowrap"
       >
         {hasProfile ? (
           <>
             <a
               href="/userprofile"
-              className="text-base italic antialiased font-medium text-white my-1"
+              className="flex items-center justify-start text-base italic antialiased font-medium text-white my-1"
             >
-              My Profile
+              <UserCircleIcon className="h-5 w-5 mr-2" />{' '}
+              <span>My Profile</span>
             </a>
 
             <a
               href="/editprofile"
-              className="text-base italic antialiased font-medium text-white my-1"
+              className="flex items-center justify-start text-base italic antialiased font-medium text-white my-1"
             >
-              Edit Profile
+              <PencilAltIcon className="h-5 w-5 mr-2" />{' '}
+              <span>Edit Profile</span>
             </a>
           </>
         ) : (

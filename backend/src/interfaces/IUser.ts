@@ -5,4 +5,7 @@ export interface IUser extends Document {
   password: string;
   userprofile: Object;
   list: Object;
+  friendlist: Object;
+  friendrequest: Object;
+  isAdmin: boolean;
 }

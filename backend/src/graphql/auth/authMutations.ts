@@ -2,7 +2,13 @@ import {
   loginValidation,
   registerValidation,
 } from '../../api/middlewares/validation';
-import { List, User, UserProfile } from '../../models/User';
+import {
+  FriendList,
+  FriendRequest,
+  List,
+  User,
+  UserProfile,
+} from '../../models/User';
 import createError from 'http-errors';
 import bcrypt from 'bcrypt';
 import {
@@ -13,6 +19,7 @@ import {
   blacklistRefreshToken,
   verifyAccessToken,
 } from '../../services/auth';
+import config from '../../config';
 
 export const createUser = async (parent, args, context, info) => {
   try {
@@ -35,6 +42,9 @@ export const createUser = async (parent, args, context, info) => {
       password: hashedPassword,
       userprofile: null,
       list: null,
+      friendlist: null,
+      friendrequest: null,
+      isAdmin: false,
     });
 
     await user.save();
@@ -174,6 +184,12 @@ export const deleteUser = async (parent, args, context, info) => {
   // Deleting the list of the current user
   await List.findByIdAndDelete(user.list);
 
+  // Deleting the friendlist of the current user
+  await FriendList.findByIdAndDelete(user.friendlist);
+
+  // Deleting the friend requests of the current user
+  await FriendRequest.findByIdAndDelete(user.friendrequest);
+
   // Deleting the users account
   await User.findByIdAndDelete(userId);
 
@@ -224,5 +240,55 @@ export const changePassword = async (parent, args, context, info) => {
     return updatedUser;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const updateAllUsers = async (parent, args, context, info) => {
+  try {
+    const { key } = args;
+
+    if (key === config.masterKey) {
+      const allUsers = await User.find();
+
+      for (let i = 0; i < allUsers.length; i++) {
+        let currentUser = allUsers[i];
+        const user = await User.findById(currentUser.id);
+
+        // if (!user.isAdmin) {
+        //   user.set({ isAdmin: false });
+        //   await user.save();
+        // }
+
+        if (!user.userprofile) {
+          user.set({ userprofile: null });
+          await user.save();
+        }
+
+        if (!user.list) {
+          user.set({ list: null });
+          await user.save();
+        }
+
+        if (!user.friendlist) {
+          user.set({ friendlist: null });
+
+          await user.save();
+        }
+
+        if (!user.friendrequest) {
+          user.set({ friendrequest: null });
+          await user.save();
+        }
+      }
+
+      return 'Updated all users successfully.';
+    } else {
+      return new createError.Forbidden(
+        'You have no permission to execute this command!'
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    return 'Could not update users.';
   }
 };

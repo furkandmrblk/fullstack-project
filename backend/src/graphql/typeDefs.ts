@@ -6,6 +6,10 @@ export const typeDefs = gql`
     username: String!
     password: String!
     userprofile: UserProfile
+    list: List
+    friendlist: FriendList
+    friendrequest: FriendRequest
+    isAdmin: Boolean
   }
 
   type UserProfile {
@@ -31,23 +35,23 @@ export const typeDefs = gql`
     watchlistMangas: [String]
   }
 
-  type CompleteData {
+  type FriendList {
     id: ID!
     user: User!
 
-    description: String!
-    color: String!
-    favoriteAnime: String
-    favoriteManga: String
-    favoriteChar: String
+    friends: [String]
+  }
 
-    finishedAnimes: [String]
-    watchingAnimes: [String]
-    watchlistAnimes: [String]
+  type FriendRequest {
+    id: ID!
+    user: User!
 
-    finishedMangas: [String]
-    watchingMangas: [String]
-    watchlistMangas: [String]
+    incomingUserId: String
+  }
+
+  type FriendRequests {
+    incomingUser: String
+    incomingUserId: String
   }
 
   type AuthPayload {
@@ -66,6 +70,9 @@ export const typeDefs = gql`
     getList(id: ID!): List
     getLists: [List]
     getCurrentList: List
+
+    getFriendRequests: [FriendRequests]
+    getFriendList: [User]
   }
 
   input UserInput {
@@ -91,7 +98,18 @@ export const typeDefs = gql`
     watchlistMangas: [String]
   }
 
+  input RequestInput {
+    username: String
+  }
+
+  input AcceptInput {
+    accept: Boolean
+    id: String
+  }
+
   type Mutation {
+    updateAllUsers(key: String): String
+
     createUser(user: UserInput): User
     loginUser(user: UserInput): AuthPayload
     logoutUser: Boolean
@@ -105,5 +123,9 @@ export const typeDefs = gql`
     updateProfile(profile: ProfileInput): UserProfile
 
     addList(list: ListInput): List
+
+    sendFriendRequest(request: RequestInput): FriendRequest
+    acceptFriendRequest(accept: AcceptInput): FriendList
+    deleteFriend(id: ID!): String
   }
 `;

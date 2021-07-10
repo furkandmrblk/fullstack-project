@@ -177,7 +177,7 @@ export const EditUserProfile = ({ props }) => {
             <textarea
               onChange={onChange}
               name="description"
-              className="text-sm antialiased font-base text-white italic bg-gray-700 outline-none w-80 h-20 rounded-lg resize-none p-2 mb-2"
+              className="text-sm antialiased font-base text-white bg-gray-700 outline-none w-80 h-20 rounded-lg resize-none p-2 mb-2"
               value={data.description}
             />
             {error ? (

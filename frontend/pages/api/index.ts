@@ -1,6 +1,65 @@
+import Badge1 from '../../public/badge1.svg';
+import Badge10 from '../../public/badge10.svg';
+import Badge25 from '../../public/badge25.svg';
+import Badge50 from '../../public/badge50.svg';
+import Badge75 from '../../public/badge75.svg';
+import Badge100 from '../../public/badge100.svg';
+import Badge150 from '../../public/badge150.svg';
+import Badge200 from '../../public/badge200.svg';
+import Badge250 from '../../public/badge250.svg';
+import Badge500 from '../../public/badge500.svg';
+import Badge750 from '../../public/badge750.svg';
+import Badge1000 from '../../public/badge1000.svg';
+
 export const tempArrayFinished: string[] = [];
 export const tempArrayWatching: string[] = [];
 export const tempArrayWatchlist: string[] = [];
+
+let Badge: StaticImageData = undefined;
+
+export function setBadge(value: number) {
+  if (value >= 1000) {
+    Badge = Badge1000;
+  } else if (value >= 750) {
+    Badge = Badge750;
+  } else if (value >= 500) {
+    Badge = Badge500;
+  } else if (value >= 250) {
+    Badge = Badge250;
+  } else if (value >= 200) {
+    Badge = Badge200;
+  } else if (value >= 150) {
+    Badge = Badge150;
+  } else if (value >= 100) {
+    Badge = Badge100;
+  } else if (value >= 75) {
+    Badge = Badge75;
+  } else if (value >= 50) {
+    Badge = Badge50;
+  } else if (value >= 25) {
+    Badge = Badge25;
+  } else if (value >= 10) {
+    Badge = Badge10;
+  } else if (value >= 1) {
+    Badge = Badge1;
+  } else {
+    Badge = undefined;
+  }
+
+  return Badge;
+}
+
+export function getBadge() {
+  return Badge;
+}
+
+let randomNumber: number = undefined;
+export function setNumber(value: number) {
+  randomNumber = value;
+}
+export function getNumber() {
+  return randomNumber;
+}
 
 let favoriteAnime: string = undefined;
 export function setAnime(value: string) {
@@ -461,7 +520,7 @@ export const charList: string[] = [
   'Lelouch Lamperouge',
   'Gojo Satoru',
   'Yuuji Itadori',
-  'Gotz',
+  'Guts',
   'Killua Zoldyck',
   'Gon',
   'Saitama',
@@ -493,4 +552,6 @@ export const charList: string[] = [
   'Sasuka Uchiha',
   'Izuku Midoriya',
   'Violet Evergarden',
+  'Josuke Higashikata',
+  'Natsu Dragneel',
 ];

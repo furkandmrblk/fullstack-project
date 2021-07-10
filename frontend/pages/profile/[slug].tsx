@@ -27,7 +27,6 @@ export default function ProfilePage({ slug }) {
 
   const userProfile = getProfile.data.getUserProfile;
   const user = profile.data.getCurrentUser;
-  const userId = userProfile.user.id;
 
   return (
     <>
@@ -39,7 +38,7 @@ export default function ProfilePage({ slug }) {
         >
           <LeftSidebar confetti={false} />
           <div className="flex flex-wrap items-center justify-center w-[56vw] pt-[1.6rem]">
-            <UserProfile props={userProfile} list="" id={userId} />
+            <UserProfile props={userProfile} list="" />
           </div>
           <RightSidebar confetti={false} user={user} />
         </div>

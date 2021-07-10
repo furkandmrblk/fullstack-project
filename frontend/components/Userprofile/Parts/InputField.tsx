@@ -72,7 +72,7 @@ export const InputField = ({ props }) => {
                       setAnime(anime);
                       setSearch(false);
                     }}
-                    className="mt-1 py-[0.15rem] px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                    className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
                   >
                     {anime}
                   </p>
@@ -91,7 +91,7 @@ export const InputField = ({ props }) => {
                       setManga(manga);
                       setSearch(false);
                     }}
-                    className="mt-1 py-[0.15rem] px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                    className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
                   >
                     {manga}
                   </p>
@@ -110,7 +110,7 @@ export const InputField = ({ props }) => {
                       setChar(char);
                       setSearch(false);
                     }}
-                    className="mt-1 py-[0.15rem] px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                    className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
                   >
                     {char}
                   </p>

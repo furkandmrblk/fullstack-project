@@ -1,21 +1,19 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
-import { getCurrentListQ, getListQ } from '../../graphql/Queries';
-import {
-  tempArrayFinished,
-  tempArrayWatching,
-  tempArrayWatchlist,
-} from '../../pages/api';
+import { getListQ } from '../../graphql/Queries';
 import { UserProfileList } from './Parts/UserProfileList';
+import Image from 'next/image';
+import FriendsAndFamilyBadge from '../../public/friendsAndFamily.svg';
+import AdminBadge from '../../public/admin2.svg';
+import { getBadge, setBadge } from '../../pages/api';
 
-export const UserProfile = ({ props, list, id }) => {
+export const UserProfile = ({ props, list }) => {
   const data = props;
-
-  const userId = id;
+  console.log(props);
 
   const getList = useQuery(getListQ, {
     variables: {
-      id: userId,
+      id: props.user.id,
     },
   });
 
@@ -61,9 +59,21 @@ export const UserProfile = ({ props, list, id }) => {
         >
           <div className="container flex justify-between items-center max-w-full mb-10">
             <div className="flex flex-col items-start">
-              <h1 className="text-6xl font-bold text-gray-50 mb-2">
-                {data.user.username}
-              </h1>
+              <div className="flex items-center">
+                <h1 className="text-6xl font-bold text-gray-50 mb-2 mr-8">
+                  {data.user.username}
+                </h1>
+                <div className="flex items-start justify-between">
+                  {setBadge(listData.finishedAnimes.length) !== undefined ? (
+                    <Image src={getBadge()} height="25" width="25" />
+                  ) : null}
+                  {data.user.isAdmin === true ? (
+                    <span className="ml-2">
+                      <Image src={AdminBadge} height="25" width="25" />
+                    </span>
+                  ) : null}
+                </div>
+              </div>
               <p className="text-lg font-extralight text-gray-50 max-w-2xl">
                 {data.description}
               </p>

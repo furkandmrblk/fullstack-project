@@ -8,6 +8,7 @@ export const getProfileQ = gql`
       user {
         id
         username
+        isAdmin
       }
       id
       description
@@ -25,6 +26,7 @@ export const getProfilesQ = gql`
       user {
         id
         username
+        isAdmin
       }
       id
       description
@@ -126,6 +128,28 @@ export const getListsQ = gql`
       finishedMangas
       watchingMangas
       watchlistMangas
+    }
+  }
+`;
+
+// Friend Request & Friendlist Queries
+export const getFriendRequests = gql`
+  query getFriendRequests {
+    getFriendRequests {
+      incomingUser
+      incomingUserId
+    }
+  }
+`;
+
+export const getFriendList = gql`
+  query getFriendList {
+    getFriendList {
+      id
+      username
+      userprofile {
+        id
+      }
     }
   }
 `;

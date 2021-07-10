@@ -27,6 +27,9 @@ export default {
   redisPort: process.env.REDIS_PORT,
   redisHost: process.env.REDIS_HOST,
 
+  // Update All Users Key
+  masterKey: process.env.UPDATE_USERS_KEY,
+
   // AWS S3 Stuff
   s3: {
     credentials: {
