@@ -10,6 +10,9 @@ export const typeDefs = gql`
     friendlist: FriendList
     friendrequest: FriendRequest
     isAdmin: Boolean
+    date: String
+    lastTimeOnline: String
+    isOnline: Boolean
   }
 
   type UserProfile {

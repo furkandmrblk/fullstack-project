@@ -123,14 +123,14 @@ export const addListM = gql`
 
 // Friend Request & Friendlist Mutations
 
-export const sendFriendRequest = gql`
+export const sendFriendRequestM = gql`
   mutation sendFriendRequest($username: String) {
     sendFriendRequest(request: { username: $username }) {
       incomingUserId
     }
   }
 `;
-export const acceptFriendRequest = gql`
+export const acceptFriendRequestM = gql`
   mutation acceptFriendRequest($accept: Boolean, $id: String) {
     acceptFriendRequest(accept: { accept: $accept, id: $id }) {
       user {
@@ -141,7 +141,7 @@ export const acceptFriendRequest = gql`
   }
 `;
 
-export const deleteFriend = gql`
+export const deleteFriendM = gql`
   mutation deleteFriend($id: ID!) {
     deleteFriend(id: $id)
   }

@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import React, { useContext, useState } from 'react';
 import { z } from 'zod';
 import { loginUserM } from '../../graphql/Mutations';
@@ -7,6 +7,7 @@ import { Context } from '../../reducer';
 
 export const Login = ({ openlogin, signin }): JSX.Element => {
   const authContext = useContext(Context);
+  const client = useApolloClient();
 
   const [data, setData] = useState({
     username: '',
@@ -31,6 +32,9 @@ export const Login = ({ openlogin, signin }): JSX.Element => {
   });
 
   const [login, loginResult] = useMutation(loginUserM, {
+    async onCompleted() {
+      await client.resetStore();
+    },
     variables: {
       username: username,
       password: password,

@@ -57,99 +57,101 @@ export const UserProfileArray = ({ props }) => {
           <>
             {' '}
             <div
-              className="absolute flex flex-col justify-start items-start overflow-y-scroll overflow-x-hidden text-sm antialiased font-base text-white italic bg-gray-700 rounded-bl-md rounded-tl-md outline-none w-[16.5rem] h-[15rem] py-1 px-1 mt-12"
+              className="absolute bg-gray-700 rounded-md outline-none mt-12 p-1"
               style={{ border: `1px solid ${props.color}` }}
             >
-              {animeList.map((anime, index) => (
-                <>
-                  {props.version === 'finished' ? (
-                    <>
-                      {' '}
-                      <p
-                        key={index}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (
-                            tempArrayFinished.includes(anime) ||
-                            tempArrayWatching.includes(anime) ||
-                            tempArrayWatchlist.includes(anime)
-                          ) {
-                            setSearch(false);
-                            setError(
-                              'You already have this anime in your list.'
-                            );
-                          } else {
-                            setError(null);
-                            tempArrayFinished.push(anime);
-                            setSearch(false);
-                          }
-                        }}
-                        className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
-                      >
-                        {anime}
-                      </p>{' '}
-                    </>
-                  ) : null}
-                  {props.version === 'watching' ? (
-                    <>
-                      {' '}
-                      <p
-                        key={index}
-                        onClick={(e) => {
-                          e.preventDefault();
+              <div className="flex flex-col justify-start items-start overflow-y-scroll scrollbar overflow-x-hidden text-sm antialiased font-base text-white italic w-[16rem] h-[15rem]">
+                {animeList.map((anime, index) => (
+                  <>
+                    {props.version === 'finished' ? (
+                      <>
+                        {' '}
+                        <p
+                          key={index}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (
+                              tempArrayFinished.includes(anime) ||
+                              tempArrayWatching.includes(anime) ||
+                              tempArrayWatchlist.includes(anime)
+                            ) {
+                              setSearch(false);
+                              setError(
+                                'You already have this anime in your list.'
+                              );
+                            } else {
+                              setError(null);
+                              tempArrayFinished.push(anime);
+                              setSearch(false);
+                            }
+                          }}
+                          className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                        >
+                          {anime}
+                        </p>{' '}
+                      </>
+                    ) : null}
+                    {props.version === 'watching' ? (
+                      <>
+                        {' '}
+                        <p
+                          key={index}
+                          onClick={(e) => {
+                            e.preventDefault();
 
-                          if (
-                            tempArrayFinished.includes(anime) ||
-                            tempArrayWatching.includes(anime) ||
-                            tempArrayWatchlist.includes(anime)
-                          ) {
-                            setSearch(false);
-                            setError(
-                              'You already have this anime in your list.'
-                            );
-                          } else {
-                            setError(null);
-                            tempArrayWatching.push(anime);
-                            setSearch(false);
-                          }
-                        }}
-                        className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
-                      >
-                        {anime}
-                      </p>{' '}
-                    </>
-                  ) : null}
-                  {props.version === 'watchlist' ? (
-                    <>
-                      {' '}
-                      <p
-                        key={index}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (
-                            tempArrayFinished.includes(anime) ||
-                            tempArrayWatching.includes(anime) ||
-                            tempArrayWatchlist.includes(anime)
-                          ) {
-                            setSearch(false);
-                            setError(
-                              'You already have this anime in your list.'
-                            );
-                          } else {
-                            setError(null);
-                            tempArrayWatchlist.push(anime);
-                            setSearch(false);
-                          }
-                        }}
-                        className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
-                      >
-                        {anime}
-                      </p>{' '}
-                    </>
-                  ) : null}
-                </>
-              ))}
-            </div>{' '}
+                            if (
+                              tempArrayFinished.includes(anime) ||
+                              tempArrayWatching.includes(anime) ||
+                              tempArrayWatchlist.includes(anime)
+                            ) {
+                              setSearch(false);
+                              setError(
+                                'You already have this anime in your list.'
+                              );
+                            } else {
+                              setError(null);
+                              tempArrayWatching.push(anime);
+                              setSearch(false);
+                            }
+                          }}
+                          className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                        >
+                          {anime}
+                        </p>{' '}
+                      </>
+                    ) : null}
+                    {props.version === 'watchlist' ? (
+                      <>
+                        {' '}
+                        <p
+                          key={index}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (
+                              tempArrayFinished.includes(anime) ||
+                              tempArrayWatching.includes(anime) ||
+                              tempArrayWatchlist.includes(anime)
+                            ) {
+                              setSearch(false);
+                              setError(
+                                'You already have this anime in your list.'
+                              );
+                            } else {
+                              setError(null);
+                              tempArrayWatchlist.push(anime);
+                              setSearch(false);
+                            }
+                          }}
+                          className="mt-1 py-[0.15rem] w-full px-4 rounded-md hover:bg-gray-600 transition duration-500 ease-in-out cursor-pointer"
+                        >
+                          {anime}
+                        </p>{' '}
+                      </>
+                    ) : null}
+                  </>
+                ))}
+              </div>
+            </div>
           </>
         ) : null}
 

@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getBadge, setBadge } from '../../pages/api';
+import {
+  getBadge,
+  getLoyaltyBadge,
+  getRegisteredTime,
+  registeredFor,
+  setBadge,
+  setLoyaltyBadge,
+} from '../../pages/api';
 import AdminBadge from '../../public/admin2.svg';
 
 export const UserProfiles = ({ props, list }): JSX.Element => {
@@ -35,18 +42,24 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
               <div className="flex items-center justify-center">
                 <div className="flex rounded-lg bg-indigo-900">
                   <div
-                    className="flex flex-col items-start rounded-lg h-[290px] w-[335px] p-6 2xl:w-[270px] 2xl:h-[270px]"
+                    className="flex flex-col items-start rounded-lg h-[290px] w-[335px] p-6 2xl:w-[350px] 2xl:h-[290px]"
                     style={{
                       background: `linear-gradient(270deg, ${profile.singleProfile.color} -10%, rgba(67, 56, 202, 0) 100%)`,
                     }}
                   >
-                    <div className="container flex items-center justify-between max-w-full mb-6">
+                    <div className="container flex items-start justify-between max-w-full mb-6">
                       <div className="flex flex-col">
                         <div className="flex items-center justify-start">
-                          <h1 className="text-xl font-bold italic text-gray-50 mb-1 mr-2 2xl:text-sm">
-                            {profile.singleProfile.user.username}
-                          </h1>
-                          <div className="flex items-start justify-between">
+                          {profile.singleProfile.user.isAdmin === true ? (
+                            <h1 className="text-xl font-bold italic text-red-700/80 mb-1 mr-2 2xl:text-sm">
+                              {profile.singleProfile.user.username}
+                            </h1>
+                          ) : (
+                            <h1 className="text-xl font-bold italic text-white mb-1 mr-2 2xl:text-sm">
+                              {profile.singleProfile.user.username}
+                            </h1>
+                          )}
+                          <div className="flex items-center justify-between">
                             {setBadge(
                               profile.singleList.finishedAnimes.length
                             ) !== undefined ? (
@@ -62,14 +75,25 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
                               <span className="ml-1">
                                 <Image
                                   src={AdminBadge}
-                                  height="13"
+                                  height="15"
                                   width="13"
                                 />
                               </span>
                             ) : null}
+                            {/* {setLoyaltyBadge(
+                              registeredFor(profile.singleProfile.user.date)
+                            ) !== undefined ? (
+                              <span className="ml-1 mb-[0.2rem]">
+                                <Image
+                                  src={getLoyaltyBadge()}
+                                  height="13"
+                                  width="13"
+                                />
+                              </span>
+                            ) : null} */}
                           </div>
                         </div>
-                        <p className="text-xs font-light text-gray-50 max-w-[11.5rem] 2xl:max-w-[7rem]">
+                        <p className="text-xs font-light text-gray-50 max-w-[11.5rem]">
                           {profile.singleProfile.description}
                         </p>
                       </div>

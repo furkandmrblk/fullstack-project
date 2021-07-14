@@ -5,17 +5,28 @@ import { UserProfileList } from './Parts/UserProfileList';
 import Image from 'next/image';
 import FriendsAndFamilyBadge from '../../public/friendsAndFamily.svg';
 import AdminBadge from '../../public/admin2.svg';
-import { getBadge, setBadge } from '../../pages/api';
+import {
+  getBadge,
+  getLoyaltyBadge,
+  getRegisteredTime,
+  registeredFor,
+  setBadge,
+  setLoyaltyBadge,
+} from '../../pages/api';
+import { useEffect } from 'react';
 
 export const UserProfile = ({ props, list }) => {
   const data = props;
-  console.log(props);
 
   const getList = useQuery(getListQ, {
     variables: {
       id: props.user.id,
     },
   });
+
+  useEffect(() => {
+    registeredFor(data.user.date);
+  }, []);
 
   if (getList.loading) {
     return <p>Loading...</p>;
@@ -50,7 +61,7 @@ export const UserProfile = ({ props, list }) => {
 
   return (
     <>
-      <div className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4">
+      <div className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3">
         <div
           className="flex flex-col items-start rounded-lg w-full h-auto pt-16 pb-16 pr-8 pl-8"
           style={{
@@ -59,10 +70,16 @@ export const UserProfile = ({ props, list }) => {
         >
           <div className="container flex justify-between items-center max-w-full mb-10">
             <div className="flex flex-col items-start">
-              <div className="flex items-center">
-                <h1 className="text-6xl font-bold text-gray-50 mb-2 mr-8">
-                  {data.user.username}
-                </h1>
+              <div className="flex items-center 2xl:mb-2">
+                {data.user.isAdmin === true ? (
+                  <h1 className="text-6xl font-bold text-red-700/80 mb-2 mr-8">
+                    {data.user.username}
+                  </h1>
+                ) : (
+                  <h1 className="text-6xl font-bold text-white mb-2 mr-8">
+                    {data.user.username}
+                  </h1>
+                )}
                 <div className="flex items-start justify-between">
                   {setBadge(listData.finishedAnimes.length) !== undefined ? (
                     <Image src={getBadge()} height="25" width="25" />
@@ -72,9 +89,14 @@ export const UserProfile = ({ props, list }) => {
                       <Image src={AdminBadge} height="25" width="25" />
                     </span>
                   ) : null}
+                  {setLoyaltyBadge(getRegisteredTime()) !== undefined ? (
+                    <span className="ml-2">
+                      <Image src={getLoyaltyBadge()} height="25" width="25" />
+                    </span>
+                  ) : null}
                 </div>
               </div>
-              <p className="text-lg font-extralight text-gray-50 max-w-2xl">
+              <p className="text-lg font-extralight text-gray-50 max-w-2xl 2xl:max-w-lg">
                 {data.description}
               </p>
             </div>
@@ -213,7 +235,7 @@ export const UserProfile = ({ props, list }) => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-4 2xl:grid-cols-2">
             <UserProfileList props={a} data={listData} />
             <UserProfileList props={b} data={listData} />
             <UserProfileList props={c} data={listData} />

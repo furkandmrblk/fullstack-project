@@ -2,7 +2,6 @@ import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/dist/client/router';
 import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
-import { client } from '../../client';
 import { logoutUserM } from '../../graphql/Mutations';
 import { getCurrentUserProfileQ } from '../../graphql/Queries';
 import { setAccessToken } from '../../helpers/Tokens';
@@ -72,8 +71,7 @@ export const Navbar = (): JSX.Element => {
   };
 
   const [logout, logoutResult] = useMutation(logoutUserM, {
-    onCompleted() {
-      client.resetStore();
+    async onCompleted() {
       setAccessToken(null);
       authContext.authDispatch('logout');
       router.push('/');
@@ -114,15 +112,17 @@ export const Navbar = (): JSX.Element => {
         {auth ? (
           <>
             <div className="flex justify-between items-center w-96">
-              <a className="text-base antialiased font-bold text-white" href="">
+              <h1 className="text-base antialiased font-bold text-white cursor-pointer">
                 News
-              </a>
-              <a className="text-base antialiased font-bold text-white" href="">
+              </h1>
+              <h1 className="text-base antialiased font-bold text-white cursor-pointer">
                 Upcoming Series
-              </a>
-              <a className="text-base antialiased font-bold text-white" href="">
-                Rankings
-              </a>
+              </h1>
+              <Link href="/rankings">
+                <h1 className="text-base antialiased font-bold text-white cursor-pointer">
+                  Rankings
+                </h1>
+              </Link>
             </div>
             <div className="flex justify-between items-center w-32">
               <div className="cursor-pointer" onClick={openProfileMenu}>

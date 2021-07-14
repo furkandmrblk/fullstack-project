@@ -277,19 +277,13 @@ export const sendFriendRequest = async (parent, args, context, info) => {
 
     const requestedUser = await User.findOne({ username: username });
 
-    const friendlist = await FriendList.findById(user.friendlist);
+    if (user.friendlist !== null) {
+      const friendlist = await FriendList.findById(user.friendlist);
 
-    if (friendlist.friends.includes(requestedUser.id))
-      return new createError.BadRequest(
-        `You are already friends with ${username}.`
-      );
-
-    let friendlistArray: string[] = [];
-
-    if (friendlist) {
-      friendlist.friends.map((friend: any) => {
-        friendlistArray.push(friend.username);
-      });
+      if (friendlist.friends.includes(requestedUser.id))
+        return new createError.BadRequest(
+          `You are already friends with ${username}.`
+        );
     }
 
     const friendRequest = await FriendRequest.findById(

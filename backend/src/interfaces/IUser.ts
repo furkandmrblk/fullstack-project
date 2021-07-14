@@ -8,4 +8,7 @@ export interface IUser extends Document {
   friendlist: Object;
   friendrequest: Object;
   isAdmin: boolean;
+  date: string;
+  lastTimeOnline: any;
+  isOnline: boolean;
 }

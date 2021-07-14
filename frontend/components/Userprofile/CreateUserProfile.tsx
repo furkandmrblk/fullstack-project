@@ -162,10 +162,10 @@ export const CreateUserProfile = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4"
+      className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3"
     >
       <div
-        className="flex flex-col items-start rounded-lg w-auto h-auto pt-16 pb-16 pr-8 pl-8"
+        className="flex flex-col items-start rounded-lg w-full h-auto pt-16 pb-16 pr-8 pl-8"
         style={{
           background: `linear-gradient(270deg, ${color} -10%, rgba(67, 56, 202, 0) 100%)`,
         }}
@@ -270,7 +270,7 @@ export const CreateUserProfile = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 2xl:grid-cols-2">
           <UserProfileArray props={a} />
           <UserProfileArray props={b} />
           <UserProfileArray props={c} />
@@ -278,7 +278,7 @@ export const CreateUserProfile = () => {
 
         <button
           type="submit"
-          className="fixed bottom-0 z-50 btn-lg text-white bg-green-600 hover:bg-green-700 w-30 mb-10 ml-[50rem]"
+          className="fixed bottom-0 z-50 btn-lg text-white bg-green-600 hover:bg-green-700 w-30 mb-10 ml-[50rem] 2xl:ml-[35rem]"
         >
           Save Changes
         </button>

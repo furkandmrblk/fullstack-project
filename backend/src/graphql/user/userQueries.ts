@@ -28,6 +28,9 @@ export const getUsers = async () => {
       id: currentUser.id,
       username: currentUser.username,
       password: currentUser.password,
+      date: currentUser.date,
+      lastTimeOnline: currentUser.lastTimeOnline,
+      isOnline: currentUser.isOnline,
       userprofile: profile,
     };
 
@@ -55,6 +58,9 @@ export const getCurrentUser = async (parent, args, context, info) => {
     id: currentUser.id,
     username: currentUser.username,
     password: currentUser.password,
+    isAdmin: currentUser.isAdmin,
+    lastTimeOnline: currentUser.lastTimeOnline,
+    isOnline: currentUser.isOnline,
     userprofile: profile,
   };
 };

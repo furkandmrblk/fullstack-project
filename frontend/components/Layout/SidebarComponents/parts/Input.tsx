@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { UserAddIcon, PlusCircleIcon } from '@heroicons/react/solid';
 import { useMutation } from '@apollo/client';
-import { sendFriendRequest } from '../../../../graphql/Mutations';
+import { sendFriendRequestM } from '../../../../graphql/Mutations';
 
 export const Input = ({ props }) => {
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const [sendRequest] = useMutation(sendFriendRequest, {
+  const [sendRequest] = useMutation(sendFriendRequestM, {
     variables: {
       username: username,
     },
@@ -27,12 +27,14 @@ export const Input = ({ props }) => {
       });
 
       setSuccess(`Successfully send friend request to ${username}.`);
+      setUsername('');
       setTimeout(() => {
         setSuccess(null);
       }, 2500);
     } catch (error) {
       setSuccess(null);
       setError(error.message);
+      setUsername('');
       setTimeout(() => {
         setError(null);
       }, 2500);
@@ -47,11 +49,13 @@ export const Input = ({ props }) => {
             className="text-sm text-black flex items-center justify-start bg-white rounded-lg outline-none w-[16.25rem]"
             type="text"
             name="username"
+            value={username}
             onChange={(e) => {
               e.preventDefault();
               setUsername(e.target.value);
             }}
             placeholder={props.placeholder}
+            autoComplete="off"
           />
           {props.icon === 'friendlist' ? (
             <button type="submit" className="flex items-center justify-center">

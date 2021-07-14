@@ -45,6 +45,8 @@ export const createUser = async (parent, args, context, info) => {
       friendlist: null,
       friendrequest: null,
       isAdmin: false,
+      lastTimeOnline: new Date(),
+      isOnline: false,
     });
 
     await user.save();
@@ -69,6 +71,10 @@ export const loginUser = async (parent, args, context, info) => {
 
     const userId = user.id;
 
+    const isOnline = await User.findByIdAndUpdate(userId, { isOnline: true });
+
+    await isOnline.save();
+
     // Check if password is valid
     const validPassword = await bcrypt.compare(password, user.password);
 
@@ -92,6 +98,26 @@ export const loginUser = async (parent, args, context, info) => {
 
 export const logoutUser = async (parent, args, context, info) => {
   try {
+    // Get Access Token
+    const accessToken = context.req.headers['authorization'];
+
+    if (!accessToken)
+      throw new createError.BadRequest('Access Token was not found.');
+
+    // Verify Access Token
+    const userId = await verifyAccessToken(
+      context.req,
+      context.res,
+      accessToken
+    );
+
+    const user = await User.findByIdAndUpdate(userId, {
+      lastTimeOnline: new Date(),
+      isOnline: false,
+    });
+
+    await user.save();
+
     // Get Refresh Token
     const tokens = context.req.headers.cookie.split(' ');
     const x = tokens[0];
@@ -184,7 +210,35 @@ export const deleteUser = async (parent, args, context, info) => {
   // Deleting the list of the current user
   await List.findByIdAndDelete(user.list);
 
-  // Deleting the friendlist of the current user
+  // Deleting the friendlist of the current user & the user from the friends friendlist
+  const friendlist = await FriendList.findById(user.friendlist);
+
+  // let currentUsersFriends = [];
+
+  // friendlist.friends.map((friend) => {
+  //   currentUsersFriends.push(friend);
+  // });
+
+  // for (let i = 0; i < currentUsersFriends.length; i++) {
+  //   let friendId = currentUsersFriends[i];
+  //   // find friend
+  //   let friend = await User.findById(friendId);
+  //   console.log('Freund');
+  //   console.log(friend);
+
+  //   // find friends friendlists
+  //   let friendsFriendlist = await FriendList.findById(friend.friendlist);
+  //   // if current user is in the friend list delete him
+  //   if (friendsFriendlist.friends.includes(user.id)) {
+  //     let currentFriend = friendsFriendlist.friends.indexOf(user.id);
+
+  //     if (currentFriend > -1) {
+  //       friendsFriendlist.friends.splice(currentFriend, 1);
+  //     }
+  //   }
+  //   return 'Deleted user from friend lists.';
+  // }
+
   await FriendList.findByIdAndDelete(user.friendlist);
 
   // Deleting the friend requests of the current user
@@ -258,6 +312,11 @@ export const updateAllUsers = async (parent, args, context, info) => {
         //   user.set({ isAdmin: false });
         //   await user.save();
         // }
+
+        if (!user.isOnline) {
+          user.set({ isOnline: false });
+          await user.save();
+        }
 
         if (!user.userprofile) {
           user.set({ userprofile: null });

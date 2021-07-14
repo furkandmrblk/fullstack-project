@@ -11,9 +11,179 @@ import Badge500 from '../../public/badge500.svg';
 import Badge750 from '../../public/badge750.svg';
 import Badge1000 from '../../public/badge1000.svg';
 
+import WeekBadge from '../../public/1week.svg';
+import TwoWeeksBadge from '../../public/2weeks.svg';
+import MonthBadge from '../../public/1month.svg';
+import YearBadge from '../../public/1year.svg';
+import TwoYearsBadge from '../../public/2years.svg';
+
 export const tempArrayFinished: string[] = [];
 export const tempArrayWatching: string[] = [];
 export const tempArrayWatchlist: string[] = [];
+
+// USER INFORMATION
+
+let usersOnline: number = 0;
+
+export const setOnlineUsers = (isOnline: boolean) => {
+  if (isOnline === true) usersOnline = usersOnline + 1;
+};
+
+export const getOnlineUsers = () => {
+  return usersOnline;
+};
+
+export const lastTimeOnline = (userLastTimeOnline: number) => {
+  let dateNow = new Date().toString();
+  let parsedDateNow = Date.parse(dateNow);
+
+  let diff = parsedDateNow - userLastTimeOnline;
+
+  let seconds = Math.floor(diff / 1000),
+    minutes = Math.floor(seconds / 60),
+    hours = Math.floor(minutes / 60),
+    days = Math.floor(hours / 24),
+    months = Math.floor(days / 30),
+    years = Math.floor(days / 365);
+
+  seconds %= 60;
+  minutes %= 60;
+  hours %= 24;
+  days %= 30;
+  months %= 12;
+
+  let user = undefined;
+
+  if (
+    years === 0 &&
+    months === 0 &&
+    days === 0 &&
+    hours === 0 &&
+    minutes === 0
+  ) {
+    user = seconds + ' seconds';
+  } else if (years === 0 && months === 0 && days === 0 && hours === 0) {
+    user = minutes + ' minutes ' + seconds + ' seconds';
+  } else if (years === 0 && months === 0 && days === 0) {
+    user = hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds';
+  } else if (years === 0 && months === 0) {
+    user =
+      days +
+      ' days ' +
+      hours +
+      ' hours ' +
+      minutes +
+      ' minutes ' +
+      seconds +
+      ' seconds';
+  } else if (years === 0) {
+    user =
+      months +
+      ' months ' +
+      days +
+      ' days ' +
+      hours +
+      ' hours ' +
+      minutes +
+      ' minutes ' +
+      seconds +
+      ' seconds';
+  } else {
+    user =
+      years +
+      ' years ' +
+      months +
+      ' months ' +
+      days +
+      ' days ' +
+      hours +
+      ' hours ' +
+      minutes +
+      ' minutes ' +
+      seconds +
+      ' seconds';
+  }
+
+  return user;
+};
+
+let registeredTime = {
+  years: 0,
+  months: 0,
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+};
+
+export const registeredFor = (userDate: number) => {
+  let dateNow = new Date().toString();
+  let parsedDateNow = Date.parse(dateNow);
+
+  let diff = parsedDateNow - userDate;
+
+  let seconds = Math.floor(diff / 1000),
+    minutes = Math.floor(seconds / 60),
+    hours = Math.floor(minutes / 60),
+    days = Math.floor(hours / 24),
+    months = Math.floor(days / 30),
+    years = Math.floor(days / 365);
+
+  seconds %= 60;
+  minutes %= 60;
+  hours %= 24;
+  days %= 30;
+  months %= 12;
+
+  registeredTime.years = years;
+
+  registeredTime.months = months;
+
+  registeredTime.days = days;
+
+  registeredTime.hours = hours;
+
+  registeredTime.minutes = minutes;
+
+  registeredTime.seconds = seconds;
+
+  return registeredTime;
+};
+
+export const getRegisteredTime = () => {
+  return registeredTime;
+};
+
+let LoyaltyBadge: StaticImageData = undefined;
+
+export const setLoyaltyBadge = (value: {
+  years: number;
+  months: number;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}) => {
+  if (value.years >= 2) {
+    LoyaltyBadge = TwoYearsBadge;
+  } else if (value.years >= 1) {
+    LoyaltyBadge = YearBadge;
+  } else if (value.months >= 1 && value.years === 0) {
+    LoyaltyBadge = MonthBadge;
+  } else if (value.days >= 14 && value.months === 0) {
+    LoyaltyBadge = TwoWeeksBadge;
+  } else if (value.days >= 7 && value.months === 0) {
+    LoyaltyBadge = WeekBadge;
+  }
+
+  return LoyaltyBadge;
+};
+
+export const getLoyaltyBadge = () => {
+  return LoyaltyBadge;
+};
+
+// BADGES
 
 let Badge: StaticImageData = undefined;
 
@@ -53,6 +223,8 @@ export function getBadge() {
   return Badge;
 }
 
+// USERPROFILE
+
 let randomNumber: number = undefined;
 export function setNumber(value: number) {
   randomNumber = value;
@@ -84,6 +256,8 @@ export function setChar(value: string) {
 export function getChar() {
   return favoriteChar;
 }
+
+// SORTING ALGORITHM
 
 export const topPickedAnimes: any[] = [];
 
@@ -121,6 +295,8 @@ export function quickSort(arr, left = 0, right = arr.length - 1) {
   // Return the array, when it's of length 1 i.e, left === right
   return arr;
 }
+
+// ANIME, MANGA & CHARACTER ARRAYS
 
 export const animeList: string[] = [
   'A Ben Mao',

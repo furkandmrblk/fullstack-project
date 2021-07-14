@@ -8,7 +8,10 @@ export const getProfileQ = gql`
       user {
         id
         username
+        date
         isAdmin
+        lastTimeOnline
+        isOnline
       }
       id
       description
@@ -26,7 +29,10 @@ export const getProfilesQ = gql`
       user {
         id
         username
+        date
         isAdmin
+        lastTimeOnline
+        isOnline
       }
       id
       description
@@ -42,7 +48,12 @@ export const getCurrentUserProfileQ = gql`
   query getCurrentUserProfile {
     getCurrentUserProfile {
       user {
+        id
         username
+        date
+        isAdmin
+        lastTimeOnline
+        isOnline
       }
       id
       description
@@ -60,6 +71,9 @@ export const getUsersQ = gql`
       id
       username
       password
+      date
+      lastTimeOnline
+      isOnline
     }
   }
 `;
@@ -69,6 +83,10 @@ export const getCurrentUserQ = gql`
     getCurrentUser {
       id
       username
+      date
+      isAdmin
+      lastTimeOnline
+      isOnline
       userprofile {
         id
       }
@@ -98,6 +116,7 @@ export const getCurrentListQ = gql`
 export const getListQ = gql`
   query getList($id: ID!) {
     getList(id: $id) {
+      id
       user {
         username
       }

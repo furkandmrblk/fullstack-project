@@ -45,6 +45,14 @@ const userSchema: Schema = new Schema({
     type: Date,
     default: Date.now,
   },
+  isOnline: {
+    type: Boolean,
+  },
+
+  lastTimeOnline: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 const userProfileSchema: Schema = new Schema({

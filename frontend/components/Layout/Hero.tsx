@@ -5,18 +5,16 @@ import { RightSidebar } from './RightSidebar';
 import { Greeting } from '../Intro/Greeting';
 import { getStandaloneApolloClient } from '../../client/standAloneClient';
 import { getCurrentUserQ } from '../../graphql/Queries';
-import { useQuery } from '@apollo/client';
+import Link from 'next/link';
 
-export const Hero = ({ props, list }): JSX.Element => {
-  const profile = useQuery(getCurrentUserQ);
-
+export const Hero = ({ props, list, profile }): JSX.Element => {
   if (profile.loading) {
     return <p>Loading...</p>;
   }
 
   let hasProfile: boolean = undefined;
 
-  if (profile.data.getCurrentUser.userprofile !== null) {
+  if (profile.data && profile.data.getCurrentUser.userprofile !== null) {
     hasProfile = true;
   } else {
     hasProfile = false;
@@ -41,12 +39,11 @@ export const Hero = ({ props, list }): JSX.Element => {
   const user = profile.data.getCurrentUser;
   const lists = list.data.getLists;
 
+  const isAdmin: boolean = profile.data.getCurrentUser.isAdmin;
+
   return (
     <>
-      <div
-        className="container flex max-w-full justify-center items-start"
-        style={{ height: '91vh', marginTop: '5.235rem' }}
-      >
+      <div className="container flex max-w-full justify-center items-start h-[91vh] mt-[5.235rem] 2xl:mt-[4.55rem]">
         {hasProfile ? (
           <>
             <LeftSidebar confetti={false} />
@@ -66,6 +63,13 @@ export const Hero = ({ props, list }): JSX.Element => {
           </>
         )}
       </div>
+      {isAdmin === true ? (
+        <Link href="/admindashboard">
+          <button className="z-[1000] fixed bottom-0 right-0 mb-4 mr-[27.5rem] btn-lg bg-gray-800 text-white hover:bg-black">
+            Dashboard
+          </button>
+        </Link>
+      ) : null}
     </>
   );
 };

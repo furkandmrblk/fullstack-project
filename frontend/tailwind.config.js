@@ -13,13 +13,15 @@ module.exports = {
       black: colors.black,
       gray: colors.coolGray,
       green: colors.green,
+      yellow: colors.yellow,
       red: colors.red,
+      customIndigo: '#6B5FD6',
     },
     screens: {
       '3xl': { max: '1919px' },
       // => @media (max-width: 1920px) { ... }
 
-      '2xl': { max: '1535px' },
+      '2xl': { max: '1735px' },
       // => @media (max-width: 1535px) { ... }
 
       xl: { max: '1279px' },

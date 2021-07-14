@@ -3,7 +3,7 @@ import React from 'react';
 export const UserProfileList = ({ props, data }) => {
   return (
     <>
-      <div className="flex flex-col justify-start items-start bg-gray-700 hover:bg-gray-800/80 transition duration-500 ease-in-out rounded-lg w-[19.5rem] h-[24rem] overflow-hidden p-6">
+      <div className="flex flex-col justify-start items-start bg-gray-700 hover:bg-gray-800/80 transition duration-500 ease-in-out rounded-lg w-[19.5rem] h-[24rem] overflow-hidden p-6 2xl:w-[22.5rem]">
         <div className="container flex justify-between max-w-full items-center mb-4">
           <div
             className="flex justify-start items-center text-base antialiased font-base bg-none rounded-md outline-none w-[13.5rem] h-[2.25rem] px-4"

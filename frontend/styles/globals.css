@@ -15,6 +15,7 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 body {
+  font-family: 'Roboto', sans-serif;
   background-color: #eef2ff;
   padding: 0;
   margin: 0;
@@ -97,4 +98,19 @@ body::-webkit-scrollbar-thumb {
 
 .btn-side {
   @apply flex items-center justify-center text-sm rounded-lg transition duration-500 ease-in-out;
+}
+
+.scrollbar-db::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+.scrollbar-db::-webkit-scrollbar-track {
+  background: #4b5563; /* color of the tracking area */
+  border-radius: 20px;
+}
+
+.scrollbar-db::-webkit-scrollbar-thumb {
+  background-color: #111827; /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 3px solid #111827; /* creates padding around scroll thumb */
 }

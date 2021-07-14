@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PlusCircleIcon, XCircleIcon } from '@heroicons/react/solid';
 import { useMutation, useQuery } from '@apollo/client';
 import { getFriendRequests } from '../../../../graphql/Queries';
-import { acceptFriendRequest } from '../../../../graphql/Mutations';
+import { acceptFriendRequestM } from '../../../../graphql/Mutations';
 
 export const FriendRequest = () => {
   const [id, setId] = useState('');
@@ -11,7 +11,7 @@ export const FriendRequest = () => {
   const [success, setSuccess] = useState('');
 
   const getRequests = useQuery(getFriendRequests);
-  const [acceptRequest] = useMutation(acceptFriendRequest, {
+  const [acceptRequest] = useMutation(acceptFriendRequestM, {
     variables: {
       accept: accept,
       id: id,
