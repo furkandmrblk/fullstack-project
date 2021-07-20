@@ -1,15 +1,31 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { setSearchResult } from '../../pages/api';
 
-export const Searchbar = (): JSX.Element => {
+export const Searchbar = ({ props }): JSX.Element => {
+  const [data, setData] = useState();
+
+  const onChange = (e: any) => {
+    e.preventDefault();
+    setData(e.target.value);
+  };
+
+  const submitSearch = () => {
+    setSearchResult(data);
+  };
+
   return (
     <>
       {/* Searchbar */}
       <div className="flex items-center w-72 rounded-lg bg-indigo-900 pt-2 pb-2 pr-4 pl-4 mb-5 2xl:w-[270px]">
         <input
+          onChange={onChange}
           className="text-base antialiased font-base text-white italic bg-indigo-900 outline-none w-64 placeholder-gray-100"
           placeholder="Search"
         />
         <svg
+          onClick={submitSearch}
           className="cursor-pointer"
           width="20"
           height="20"

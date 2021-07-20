@@ -152,7 +152,7 @@ export const getListsQ = gql`
 `;
 
 // Friend Request & Friendlist Queries
-export const getFriendRequests = gql`
+export const getFriendRequestsQ = gql`
   query getFriendRequests {
     getFriendRequests {
       incomingUser
@@ -161,7 +161,7 @@ export const getFriendRequests = gql`
   }
 `;
 
-export const getFriendList = gql`
+export const getFriendListQ = gql`
   query getFriendList {
     getFriendList {
       id
@@ -169,6 +169,17 @@ export const getFriendList = gql`
       userprofile {
         id
       }
+    }
+  }
+`;
+
+// News
+export const getNewsQ = gql`
+  query getNews {
+    getNews {
+      title
+      text
+      date
     }
   }
 `;

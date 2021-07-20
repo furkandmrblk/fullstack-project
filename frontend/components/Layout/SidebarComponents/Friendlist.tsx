@@ -5,7 +5,7 @@ import Image from 'next/image';
 import dogPicture from '../../../public/dogundraw.svg';
 import { FriendRequest } from './parts/FriendRequest';
 import { useMutation, useQuery } from '@apollo/client';
-import { getFriendList } from '../../../graphql/Queries';
+import { getFriendListQ } from '../../../graphql/Queries';
 import Link from 'next/link';
 import { deleteFriendM } from '../../../graphql/Mutations';
 
@@ -17,8 +17,9 @@ export const Friendlist = () => {
 
   const [error, setError] = useState('');
   const [showDelete, setShowDelete] = useState(false);
+  const [openDeleteModal, setDeleteModal] = useState(false);
 
-  const getFriends = useQuery(getFriendList);
+  const getFriends = useQuery(getFriendListQ);
   const [deleteFriend] = useMutation(deleteFriendM, {
     variables: {
       id: data.id,
@@ -60,12 +61,23 @@ export const Friendlist = () => {
 
   return (
     <>
-      <div className="flex flex-col items-start justify-start w-full h-auto max-h-[34.35rem] 2xl:max-h-[27.75rem] rounded-lg text-white bg-indigo-700/50 p-6 mb-4">
+      <div className="relative flex flex-col items-start justify-start w-full h-auto max-h-[34.35rem] 2xl:max-h-[27.75rem] rounded-lg text-white bg-indigo-700/50 p-6 mb-4">
         <div className="flex items-start justify-between w-full mb-6">
           <h1>Friendlist</h1>
           <UsersIcon className="h-5 w-5 cursor-pointer" />
         </div>
-        <Input props={inputProps} />
+        <div className="flex items-center width-auto">
+          <Input props={inputProps} />
+          <PencilAltIcon
+            onClick={(e) => {
+              e.preventDefault();
+              setShowDelete(!showDelete);
+            }}
+            className="ml-4 mb-3 cursor-pointer hover:text-gray-300 transition duration-500 ease-in-out"
+            height="25"
+            width="25"
+          />
+        </div>
         <FriendRequest />
         {getFriends.data.getFriendList !== null ? (
           <>
@@ -74,19 +86,26 @@ export const Friendlist = () => {
                 (friend: any, index: number) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between group w-full bg-indigo-700/30 hover:bg-indigo-800/40 transition duration-500 ease-in-out rounded-lg pt-2 pb-2 pl-4 pr-4 mb-2"
+                    className="flex items-center justify-between w-full bg-indigo-700/30 hover:bg-indigo-800/40 transition duration-500 ease-in-out rounded-lg pt-2 pb-2 pl-4 pr-4 mb-2"
                   >
                     <h1 className="w-full rounded-lg">{friend.username}</h1>
-                    <form onSubmit={onSubmit} className="flex items-center">
+                    <div className="flex items-center">
                       {showDelete ? (
                         <>
                           {' '}
-                          <button
-                            type="submit"
+                          <a
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setData({
+                                id: friend.id,
+                                user: friend.username,
+                              });
+                              setDeleteModal(true);
+                            }}
                             className="btn-side text-white antialiased bg-red-500 hover:bg-red-600 pt-1 pb-1 pl-2 pr-2 mr-4"
                           >
                             Delete
-                          </button>
+                          </a>
                           <XIcon
                             className="cursor-pointer"
                             onClick={(e) => {
@@ -101,19 +120,6 @@ export const Friendlist = () => {
                       ) : (
                         <>
                           {' '}
-                          <PencilAltIcon
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setShowDelete(true);
-                              setData({
-                                id: friend.id,
-                                user: friend.username,
-                              });
-                            }}
-                            className="hidden mr-4 cursor-pointer group-hover:block"
-                            height="20"
-                            width="20"
-                          />
                           <Link href={href + friend.userprofile.id}>
                             <button className="btn-side text-black antialiased bg-white hover:bg-indigo-900 hover:text-white pt-1 pb-1 pl-2 pr-2">
                               Visit
@@ -121,10 +127,39 @@ export const Friendlist = () => {
                           </Link>
                         </>
                       )}
-                    </form>
+                    </div>
                   </div>
                 )
               )}
+              {openDeleteModal ? (
+                <>
+                  <form
+                    onSubmit={onSubmit}
+                    className="absolute top-0 mt-40 h-28 flex flex-col justify-start items-center bg-indigo-700 rounded-lg text-white text-xs antialiased p-4"
+                  >
+                    <XIcon
+                      className="cursor-pointer w-full ml-60 mb-2"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setDeleteModal(false);
+                        setData({ id: undefined, user: undefined });
+                      }}
+                      height="14"
+                      width="14"
+                    />
+                    <h1 className="mb-4">
+                      Are you sure that you want to delete {data.user}?
+                    </h1>
+
+                    <button
+                      type="submit"
+                      className="flex items-center justify-center btn-side bg-red-500 hover:bg-red-600 pt-1 pb-1 pl-2 pr-2"
+                    >
+                      Delete
+                    </button>
+                  </form>
+                </>
+              ) : null}
             </div>
           </>
         ) : (

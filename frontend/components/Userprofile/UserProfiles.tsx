@@ -6,6 +6,7 @@ import {
   getBadge,
   getLoyaltyBadge,
   getRegisteredTime,
+  getSearchResult,
   registeredFor,
   setBadge,
   setLoyaltyBadge,
@@ -32,7 +33,7 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4 3xl:grid-cols-2 mb-4 3xl:gap-3">
+      <div className="grid grid-cols-3 gap-4 3xl:grid-cols-2 mb-4 3xl:gap-3 2xl:grid-cols-2 2xl:gap-5">
         {/* Userprofile Card */}
         {allData
           .slice(0)
@@ -40,18 +41,18 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
           .map((profile) => (
             <div key={profile.singleProfile.id}>
               <div className="flex items-center justify-center">
-                <div className="flex rounded-lg bg-indigo-900">
+                <div className="flex rounded-lg bg-profileIndigo">
                   <div
-                    className="flex flex-col items-start rounded-lg h-[290px] w-[335px] p-6 2xl:w-[350px] 2xl:h-[290px]"
+                    className="flex flex-col items-start rounded-lg h-[290px] w-[335px] p-6 2xl:w-[400px] 2xl:h-[290px]"
                     style={{
-                      background: `linear-gradient(270deg, ${profile.singleProfile.color} -10%, rgba(67, 56, 202, 0) 100%)`,
+                      background: `linear-gradient(144deg, rgba(67, 56, 202, 0) 10%, ${profile.singleProfile.color} 100%)`,
                     }}
                   >
                     <div className="container flex items-start justify-between max-w-full mb-6">
                       <div className="flex flex-col">
                         <div className="flex items-center justify-start">
                           {profile.singleProfile.user.isAdmin === true ? (
-                            <h1 className="text-xl font-bold italic text-red-700/80 mb-1 mr-2 2xl:text-sm">
+                            <h1 className="text-xl font-bold italic text-red-700 mb-1 mr-2 2xl:text-sm">
                               {profile.singleProfile.user.username}
                             </h1>
                           ) : (
@@ -80,7 +81,7 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
                                 />
                               </span>
                             ) : null}
-                            {/* {setLoyaltyBadge(
+                            {setLoyaltyBadge(
                               registeredFor(profile.singleProfile.user.date)
                             ) !== undefined ? (
                               <span className="ml-1 mb-[0.2rem]">
@@ -90,7 +91,7 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
                                   width="13"
                                 />
                               </span>
-                            ) : null} */}
+                            ) : null}
                           </div>
                         </div>
                         <p className="text-xs font-light text-gray-50 max-w-[11.5rem]">
@@ -233,14 +234,14 @@ export const UserProfiles = ({ props, list }): JSX.Element => {
                   </div>
                 </div>
                 <div
-                  className="z-[-1] rounded-lg h-[290px] w-[335px] ml-[-21rem] 2xl:w-[270px] 2xl:h-[270px] 2xl:ml-[-16.5rem] filter blur-[15px]"
+                  className="z-[-1] rounded-lg h-[290px] w-[335px] ml-[-21rem] 2xl:w-[270px] 2xl:h-[270px] 2xl:ml-[-17rem] filter blur-[15px]"
                   style={{
                     backgroundColor: `${profile.singleProfile.color}`,
                   }}
                 />
               </div>
             </div>
-          ))}
+          ))}{' '}
       </div>
     </>
   );

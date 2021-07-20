@@ -65,7 +65,7 @@ export const Hero = ({ props, list, profile }): JSX.Element => {
       </div>
       {isAdmin === true ? (
         <Link href="/admindashboard">
-          <button className="z-[1000] fixed bottom-0 right-0 mb-4 mr-[27.5rem] btn-lg bg-gray-800 text-white hover:bg-black">
+          <button className="z-[1000] fixed bottom-0 right-0 mb-4 mr-[27.5rem] btn text-sm bg-gray-800 text-white hover:bg-black">
             Dashboard
           </button>
         </Link>

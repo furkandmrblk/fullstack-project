@@ -34,7 +34,7 @@ export default function ProfilePage({ slug }) {
         <Navbar />
         <div className="container flex max-w-full justify-center items-start h-[91vh] mt-[5.235rem] 2xl:mt-[4.55rem]">
           <LeftSidebar confetti={false} />
-          <div className="flex flex-wrap items-center justify-center w-[56vw] pt-[1.6rem]">
+          <div className="flex flex-wrap items-center justify-center w-[56vw] pt-[1.6rem] 2xl:pt-9">
             <UserProfile props={userProfile} list="" />
           </div>
           <RightSidebar confetti={false} user={user} />

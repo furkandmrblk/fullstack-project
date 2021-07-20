@@ -48,8 +48,8 @@ export default function CurrentUserProfile() {
         <Navbar />
         <div className="container flex max-w-full justify-center items-start h-[91vh] mt-[5.235rem] 2xl:mt-[4.55rem]">
           <LeftSidebar confetti={false} />
-          <div className="flex flex-wrap items-center justify-center  w-auto pt-6">
-            <UserProfile props={userProfile} list={listData} id="" />
+          <div className="flex flex-wrap items-center justify-center  w-auto pt-6 2xl:pt-9">
+            <UserProfile props={userProfile} list={listData} />
           </div>
           <RightSidebar confetti={false} user={user} />
         </div>

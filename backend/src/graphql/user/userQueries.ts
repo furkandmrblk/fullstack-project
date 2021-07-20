@@ -211,49 +211,49 @@ export const getCurrentList = async (parent, args, context, info) => {
   };
 };
 
-export const getFriendRequests = async (parent, args, context, info) => {
-  try {
-    // Get Access Token
-    const accessToken = context.req.headers['authorization'];
+// export const getFriendRequests = async (parent, args, context, info) => {
+//   try {
+//     // Get Access Token
+//     const accessToken = context.req.headers['authorization'];
 
-    if (!accessToken)
-      return new createError.Unauthorized('Access token was not found.');
+//     if (!accessToken)
+//       return new createError.Unauthorized('Access token was not found.');
 
-    // Get the user ID
-    const userId = await verifyAccessToken(
-      context.req,
-      context.res,
-      accessToken
-    );
+//     // Get the user ID
+//     const userId = await verifyAccessToken(
+//       context.req,
+//       context.res,
+//       accessToken
+//     );
 
-    const user = await User.findById(userId);
+//     const user = await User.findById(userId);
 
-    let requestingUsers = [];
+//     let requestingUsers = [];
 
-    if (user.friendrequest !== null) {
-      const friendRequests = await FriendRequest.findById(user.friendrequest);
+//     if (user.friendrequest !== null) {
+//       const friendRequests = await FriendRequest.findById(user.friendrequest);
 
-      for (let i = 0; i < friendRequests.incomingUserId.length; i++) {
-        let currentItem = friendRequests.incomingUserId[i];
-        let currentRequest = await User.findById(currentItem);
+//       for (let i = 0; i < friendRequests.incomingUserId.length; i++) {
+//         let currentItem = friendRequests.incomingUserId[i];
+//         let currentRequest = await User.findById(currentItem);
 
-        let requestId = currentRequest.id;
+//         let requestId = currentRequest.id;
 
-        let requestUsername = currentRequest.username;
+//         let requestUsername = currentRequest.username;
 
-        requestingUsers.push({
-          incomingUserId: requestId,
-          incomingUser: requestUsername,
-        });
-      }
+//         requestingUsers.push({
+//           incomingUserId: requestId,
+//           incomingUser: requestUsername,
+//         });
+//       }
 
-      return requestingUsers;
-    }
-    return null;
-  } catch (error) {
-    console.log(error);
-  }
-};
+//       return requestingUsers;
+//     }
+//     return null;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 // Query Friends
 export const getFriendList = async (parent, args, context, info) => {

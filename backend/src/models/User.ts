@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import bcrypt from 'bcrypt';
 import { IUser } from '../interfaces/IUser';
 import { IUserProfile } from '../interfaces/IUserProfile';
 import { IList } from '../interfaces/IList';

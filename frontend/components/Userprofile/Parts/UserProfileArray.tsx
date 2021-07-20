@@ -26,11 +26,11 @@ export const UserProfileArray = ({ props }) => {
 
   return (
     <>
-      <div className="flex flex-col justify-start items-center bg-gray-700 rounded-lg w-[19.5rem] h-[24rem] p-6">
+      <div className="flex flex-col justify-start items-center bg-gray-700 rounded-lg w-[19.5rem] h-[24rem] p-6 2xl:w-[22.5rem]">
         <div className="container flex justify-between max-w-full items-center mb-4">
           <input
             onClick={openSearch}
-            className="text-base antialiased font-base text-white italic bg-gray-700 rounded-md outline-none w-[13.5rem] h-[2.25rem] px-4"
+            className="text-base antialiased font-base text-white italic bg-gray-700 rounded-md outline-none w-[13.5rem] h-[2.25rem] px-4 2xl:w-[16.5rem]"
             style={{ border: `1px solid ${props.color}` }}
             placeholder="Search Anime.."
           />

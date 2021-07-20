@@ -46,7 +46,7 @@ export const Input = ({ props }) => {
       <form onSubmit={onSubmit}>
         <div className="flex items-center justify-between bg-white rounded-lg pt-2 pb-2 pr-4 pl-4 mb-2">
           <input
-            className="text-sm text-black flex items-center justify-start bg-white rounded-lg outline-none w-[16.25rem]"
+            className="text-sm text-black flex items-center justify-start bg-white rounded-lg outline-none w-[13.75rem]"
             type="text"
             name="username"
             value={username}

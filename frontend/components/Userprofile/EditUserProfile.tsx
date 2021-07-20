@@ -157,20 +157,26 @@ export const EditUserProfile = ({ props }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex justify-center items-start bg-indigo-900 rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3"
+      className="flex justify-center items-start bg-profileIndigo rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3"
     >
       <div
         className="flex flex-col items-start rounded-lg w-full h-auto pt-16 pb-16 pr-8 pl-8"
         style={{
-          background: `linear-gradient(270deg, ${color} -10%, rgba(67, 56, 202, 0) 100%)`,
+          background: `linear-gradient(144deg, rgba(67, 56, 202, 0) 10%, ${color} 100%)`,
         }}
       >
         {/* Username, Description & Profile Picture */}
         <div className="container flex justify-between items-center max-w-full mb-6">
           <div className="flex flex-col items-start 2xl:mb-2">
-            <h1 className="text-6xl font-bold italic text-gray-50 mb-2">
-              {profile.user.username}
-            </h1>
+            {profile.user.isAdmin ? (
+              <h1 className="text-6xl font-bold italic text-red-700 mb-2">
+                {profile.user.username}
+              </h1>
+            ) : (
+              <h1 className="text-6xl font-bold italic text-gray-50 mb-2">
+                {profile.user.username}
+              </h1>
+            )}
             <label className="text-base font-light text-gray-50 mb-2">
               Description
             </label>

@@ -9,6 +9,7 @@ import {
   getBadge,
   getLoyaltyBadge,
   getRegisteredTime,
+  lastTimeOnline,
   registeredFor,
   setBadge,
   setLoyaltyBadge,
@@ -23,10 +24,6 @@ export const UserProfile = ({ props, list }) => {
       id: props.user.id,
     },
   });
-
-  useEffect(() => {
-    registeredFor(data.user.date);
-  }, []);
 
   if (getList.loading) {
     return <p>Loading...</p>;
@@ -61,22 +58,22 @@ export const UserProfile = ({ props, list }) => {
 
   return (
     <>
-      <div className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3">
+      <div className="flex justify-center items-center bg-profileIndigo rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3">
         <div
           className="flex flex-col items-start rounded-lg w-full h-auto pt-16 pb-16 pr-8 pl-8"
           style={{
-            background: `linear-gradient(270deg, ${data.color} -10%, rgba(67, 56, 202, 0) 100%)`,
+            background: `linear-gradient(144deg, rgba(67, 56, 202, 0) 10%, ${data.color} 100%)`,
           }}
         >
           <div className="container flex justify-between items-center max-w-full mb-10">
             <div className="flex flex-col items-start">
               <div className="flex items-center 2xl:mb-2">
                 {data.user.isAdmin === true ? (
-                  <h1 className="text-6xl font-bold text-red-700/80 mb-2 mr-8">
+                  <h1 className="text-6xl font-bold text-red-700 mb-2 mr-8">
                     {data.user.username}
                   </h1>
                 ) : (
-                  <h1 className="text-6xl font-bold text-white mb-2 mr-8">
+                  <h1 className="text-6xl font-bold text-white mb-2 mr-5">
                     {data.user.username}
                   </h1>
                 )}
@@ -89,7 +86,8 @@ export const UserProfile = ({ props, list }) => {
                       <Image src={AdminBadge} height="25" width="25" />
                     </span>
                   ) : null}
-                  {setLoyaltyBadge(getRegisteredTime()) !== undefined ? (
+                  {setLoyaltyBadge(registeredFor(data.user.date)) !==
+                  undefined ? (
                     <span className="ml-2">
                       <Image src={getLoyaltyBadge()} height="25" width="25" />
                     </span>
@@ -100,15 +98,31 @@ export const UserProfile = ({ props, list }) => {
                 {data.description}
               </p>
             </div>
-            <div
-              className="rounded-full bg-gray-200 h-48 w-48"
-              style={{
-                backgroundImage: `url('/kpop.jpeg')`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-              }}
-            />
+            <div className="flex flex-col items-center justify-start text-xs">
+              <div
+                className="relative rounded-full bg-gray-200 h-48 w-48"
+                style={{
+                  backgroundImage: `url('/kpop.jpeg')`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                }}
+              >
+                {data.user.isOnline ? (
+                  <div className="absolute bottom-0 right-0 rounded-full bg-green-600 h-7 w-7 mb-3 mr-5" />
+                ) : (
+                  <div className="absolute bottom-0 right-0 rounded-full bg-gray-500 h-7 w-7 mb-3 mr-5" />
+                )}
+              </div>
+              {data.user.isOnline ? null : (
+                <h1 className=" mt-2 text-white bg-white/10 rounded-md p-1">
+                  Last time online:{' '}
+                  <span className="text-white">
+                    {lastTimeOnline(data.user.lastTimeOnline)}
+                  </span>
+                </h1>
+              )}
+            </div>
           </div>
 
           <div className="container flex justify-between items-start max-w-full mb-10">

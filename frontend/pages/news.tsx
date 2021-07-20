@@ -4,13 +4,11 @@ import { getStandaloneApolloClient } from '../client/standAloneClient';
 import { Navbar } from '../components/Auth/Navbar';
 import { LeftSidebar } from '../components/Layout/LeftSidebar';
 import { RightSidebar } from '../components/Layout/RightSidebar';
-import { Main } from '../components/Rankings/Main';
+import { Main } from '../components/News/Main';
 import { getCurrentUserQ, getProfilesQ } from '../graphql/Queries';
 
-export default function Rankings() {
+export default function News() {
   const profile = useQuery(getCurrentUserQ);
-  const allProfiles = useQuery(getProfilesQ);
-
   if (profile.loading) return <p>Loading...</p>;
 
   const user = profile.data.getCurrentUser;
@@ -18,13 +16,13 @@ export default function Rankings() {
   return (
     <>
       <Head>
-        <title>aniSpot - Rankings</title>
+        <title>aniSpot - News</title>
       </Head>
       <div className="flex max-w-full" style={{ height: '91.5vh' }}>
         <Navbar />
         <div className="container flex max-w-full justify-center items-start h-[91vh] mt-[5.235rem]">
           <LeftSidebar confetti={false} />
-          <Main favorites={allProfiles} />
+          <Main />
           <RightSidebar confetti={false} user={user} />
         </div>
       </div>
@@ -34,10 +32,6 @@ export default function Rankings() {
 
 export async function getServerSideProps() {
   const client = await getStandaloneApolloClient();
-
-  await client.query({
-    query: getProfilesQ,
-  });
 
   await client.query({
     query: getCurrentUserQ,

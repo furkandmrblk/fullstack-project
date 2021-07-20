@@ -1,10 +1,13 @@
 import express, { Request, Response, NextFunction, Application } from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { typeDefs } from '../graphql/typeDefs';
-import { resolvers } from '../graphql/resolvers';
+import { roots } from '../graphql/resolvers';
 import createError from 'http-errors';
 import cors from 'cors';
 import config from '../config';
+import ws from 'ws';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import { execute, subscribe } from 'graphql';
 
 // Our Express-Apollo-Server is getting started here (:
 
@@ -13,7 +16,7 @@ export default async () => {
 
   const apolloServer = new ApolloServer({
     typeDefs,
-    resolvers: resolvers as any,
+    resolvers: roots as any,
     context: ({ req, res }) => ({ req, res }),
   });
 
@@ -60,7 +63,23 @@ export default async () => {
 
   const port = config.port;
 
-  app.listen(port, () =>
-    console.log(`Server is ready at http://localhost:${port}`)
-  );
+  const server = app.listen(port, () => {
+    const wsServer = new ws.Server({
+      server: server,
+      path: '/graphql',
+    });
+
+    useServer(
+      {
+        schema: typeDefs as any,
+        roots,
+        context: ({ extra }) => ({ req: extra.request }),
+        // execute,
+        // subscribe,
+      },
+      wsServer
+    );
+
+    console.log(`Server is ready at http://localhost:${port}`);
+  });
 };

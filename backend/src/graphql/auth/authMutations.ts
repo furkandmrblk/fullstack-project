@@ -20,6 +20,7 @@ import {
   verifyAccessToken,
 } from '../../services/auth';
 import config from '../../config';
+import { IUser } from '../../interfaces/IUser';
 
 export const createUser = async (parent, args, context, info) => {
   try {
@@ -37,7 +38,7 @@ export const createUser = async (parent, args, context, info) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = new User({
+    const user: IUser = new User({
       username: username,
       password: hashedPassword,
       userprofile: null,
@@ -213,6 +214,8 @@ export const deleteUser = async (parent, args, context, info) => {
   // Deleting the friendlist of the current user & the user from the friends friendlist
   const friendlist = await FriendList.findById(user.friendlist);
 
+  // Mach das nicht an, zerstört Users Friendlist und alle die mit dem befreundet sind
+
   // let currentUsersFriends = [];
 
   // friendlist.friends.map((friend) => {
@@ -350,4 +353,20 @@ export const updateAllUsers = async (parent, args, context, info) => {
     console.log(error);
     return 'Could not update users.';
   }
+};
+
+// Warn & Ban User
+
+// 3 Warning-System => User has warnings & ban property?
+// On login, if you click x you delete the warning from the data structure. WarningCount property counts the warnings in total.
+// At 3 Warnings, a User gets banned automatically
+
+// Implement warnings, warnCount, ban on updateUsers & on registerUser
+export const warnUser = async (parent, args, context, info) => {
+  return;
+};
+
+// Just ban the User
+export const banUser = async (parent, args, context, info) => {
+  return;
 };

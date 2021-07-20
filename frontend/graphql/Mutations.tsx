@@ -146,3 +146,15 @@ export const deleteFriendM = gql`
     deleteFriend(id: $id)
   }
 `;
+
+// News
+
+export const createNewsM = gql`
+  mutation createNews($title: String, $text: String) {
+    createNews(news: { title: $title, text: $text }) {
+      title
+      text
+      date
+    }
+  }
+`;

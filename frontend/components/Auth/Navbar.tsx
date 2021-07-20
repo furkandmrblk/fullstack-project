@@ -112,11 +112,13 @@ export const Navbar = (): JSX.Element => {
         {auth ? (
           <>
             <div className="flex justify-between items-center w-96">
+              <Link href="/news">
+                <h1 className="text-base antialiased font-bold text-white cursor-pointer">
+                  News
+                </h1>
+              </Link>
               <h1 className="text-base antialiased font-bold text-white cursor-pointer">
-                News
-              </h1>
-              <h1 className="text-base antialiased font-bold text-white cursor-pointer">
-                Upcoming Series
+                Discussion Board
               </h1>
               <Link href="/rankings">
                 <h1 className="text-base antialiased font-bold text-white cursor-pointer">

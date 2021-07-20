@@ -32,7 +32,7 @@ export default function EditProfilePage() {
 
         <div className="container flex max-w-full justify-center items-start h-[91vh] mt-[5.235rem] 2xl:mt-[4.55rem]">
           <LeftSidebar confetti={false} />
-          <div className="flex flex-wrap items-center justify-center  w-auto pt-6">
+          <div className="flex flex-wrap items-center justify-center  w-auto pt-6 2xl:pt-9">
             <EditUserProfile props={profile} />
           </div>
           <RightSidebar confetti={false} user={user} />

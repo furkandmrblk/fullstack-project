@@ -162,12 +162,12 @@ export const CreateUserProfile = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex justify-center items-center bg-indigo-900 rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3"
+      className="flex justify-center items-center bg-profileIndigo rounded-lg w-auto h-auto mb-4 2xl:w-[47.5vw] 2xl:mb-3"
     >
       <div
         className="flex flex-col items-start rounded-lg w-full h-auto pt-16 pb-16 pr-8 pl-8"
         style={{
-          background: `linear-gradient(270deg, ${color} -10%, rgba(67, 56, 202, 0) 100%)`,
+          background: `linear-gradient(144deg, rgba(67, 56, 202, 0) 10%, ${color} 100%)`,
         }}
       >
         {/* Username, Description & Profile Picture */}

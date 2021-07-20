@@ -1,10 +1,12 @@
 import {
   ApolloClient,
+  split,
   createHttpLink,
   from,
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
+
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 
 import {
@@ -17,7 +19,44 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 
-const refreshLink = new TokenRefreshLink({
+// import { WebSocketLink } from '@apollo/client/link/ws';
+
+import { getMainDefinition } from '@apollo/client/utilities';
+import { WebSocketLink } from './WebSocket';
+import WebSocket from 'ws';
+
+const wsLink = new WebSocketLink({
+  url: 'ws://localhost:4000/graphql',
+  connectionParams: () => {
+    const accessToken = getAccessToken().valueOf();
+
+    if (!accessToken) return {};
+
+    return {
+      Authorization: accessToken ? `Bearer ${accessToken}` : '',
+    };
+  },
+  webSocketImpl: WebSocket,
+});
+
+const httpLink = createHttpLink({
+  uri: 'http://localhost:4000/graphql',
+  credentials: 'include',
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink
+);
+
+const refreshLink: any = new TokenRefreshLink({
   accessTokenField: 'accessToken',
   isTokenValidOrUndefined: () => accessTokenExpired(),
   fetchAccessToken: () => fetchAccessToken(),
@@ -30,8 +69,6 @@ const refreshLink = new TokenRefreshLink({
   handleError: (err: Error) => {
     console.log('An error occurred');
     console.log(err);
-
-    // Implement logout()
   },
 });
 
@@ -56,20 +93,13 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql',
-  credentials: 'include',
-});
-
 export const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   ssrMode: true,
   cache: new InMemoryCache(),
-  link: from([refreshLink, authLink, errorLink, httpLink]),
+  link: from([refreshLink, authLink, errorLink, splitLink]),
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'cache-and-network',
     },
   },
 });
-
-//  Cache ist Zwischenspeicher, der getStandaloneApolloClient wird nur bei build time benutzt.

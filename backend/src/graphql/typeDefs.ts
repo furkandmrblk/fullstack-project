@@ -57,6 +57,12 @@ export const typeDefs = gql`
     incomingUserId: String
   }
 
+  type News {
+    title: String
+    text: String
+    date: String
+  }
+
   type AuthPayload {
     accessToken: String!
   }
@@ -74,8 +80,9 @@ export const typeDefs = gql`
     getLists: [List]
     getCurrentList: List
 
-    getFriendRequests: [FriendRequests]
     getFriendList: [User]
+
+    getNews: [News]
   }
 
   input UserInput {
@@ -110,6 +117,19 @@ export const typeDefs = gql`
     id: String
   }
 
+  input NewsInput {
+    title: String
+    text: String
+  }
+
+  input WarnInput {
+    id: String
+  }
+
+  input BanInput {
+    id: String
+  }
+
   type Mutation {
     updateAllUsers(key: String): String
 
@@ -130,5 +150,14 @@ export const typeDefs = gql`
     sendFriendRequest(request: RequestInput): FriendRequest
     acceptFriendRequest(accept: AcceptInput): FriendList
     deleteFriend(id: ID!): String
+
+    createNews(news: NewsInput): News
+
+    warnUser(warn: WarnInput): String
+    banUser(ban: BanInput): String
+  }
+
+  type Subscription {
+    getFriendRequests: [FriendRequests]
   }
 `;

@@ -16,6 +16,7 @@ module.exports = {
       yellow: colors.yellow,
       red: colors.red,
       customIndigo: '#6B5FD6',
+      profileIndigo: 'rgba(79,70,229,1)',
     },
     screens: {
       '3xl': { max: '1919px' },

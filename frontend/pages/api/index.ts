@@ -21,6 +21,18 @@ export const tempArrayFinished: string[] = [];
 export const tempArrayWatching: string[] = [];
 export const tempArrayWatchlist: string[] = [];
 
+// SEARCH ALGORITHM
+
+let searchResult: string = undefined;
+
+export const setSearchResult = (value: string) => {
+  searchResult = value;
+};
+
+export const getSearchResult = () => {
+  return searchResult;
+};
+
 // USER INFORMATION
 
 let usersOnline: number = 0;
@@ -54,66 +66,124 @@ export const lastTimeOnline = (userLastTimeOnline: number) => {
 
   let user = undefined;
 
-  if (
+  let yearText: string = undefined;
+  let monthText: string = undefined;
+  let dayText: string = undefined;
+  let hourText: string = undefined;
+  let minuteText: string = undefined;
+  let secondText: string = undefined;
+
+  if (years <= 1) {
+    yearText = 'year';
+  } else {
+    yearText = 'years';
+  }
+
+  if (months <= 1) {
+    monthText = 'month';
+  } else {
+    monthText = 'months';
+  }
+
+  if (days <= 1) {
+    dayText = 'day';
+  } else {
+    dayText = 'days';
+  }
+
+  if (hours <= 1) {
+    hourText = 'hour';
+  } else {
+    hourText = 'hours';
+  }
+
+  if (minutes <= 1) {
+    minuteText = 'minute';
+  } else {
+    minuteText = 'minutes';
+  }
+
+  if (seconds <= 1) {
+    secondText = 'second';
+  } else {
+    secondText = 'seconds';
+  }
+
+  if (years === 0 && months === 0 && days === 0 && hours === 0 && minutes < 5) {
+    user = 'just now';
+  } else if (
     years === 0 &&
     months === 0 &&
     days === 0 &&
     hours === 0 &&
-    minutes === 0
+    minutes >= 5
   ) {
-    user = seconds + ' seconds';
-  } else if (years === 0 && months === 0 && days === 0 && hours === 0) {
-    user = minutes + ' minutes ' + seconds + ' seconds';
+    user = minutes + ' ' + minuteText;
   } else if (years === 0 && months === 0 && days === 0) {
-    user = hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds';
+    user = hours + ' ' + hourText + ' ' + minutes + ' ' + minuteText;
   } else if (years === 0 && months === 0) {
     user =
       days +
-      ' days ' +
+      ' ' +
+      dayText +
+      ' ' +
       hours +
-      ' hours ' +
+      ' ' +
+      hourText +
+      ' ' +
       minutes +
-      ' minutes ' +
-      seconds +
-      ' seconds';
+      ' ' +
+      minuteText;
   } else if (years === 0) {
     user =
       months +
-      ' months ' +
+      ' ' +
+      monthText +
+      ' ' +
       days +
-      ' days ' +
+      ' ' +
+      dayText +
+      ' ' +
       hours +
-      ' hours ' +
+      ' ' +
+      hourText +
+      ' ' +
       minutes +
-      ' minutes ' +
-      seconds +
-      ' seconds';
+      ' ' +
+      minuteText;
   } else {
     user =
       years +
-      ' years ' +
+      ' ' +
+      yearText +
+      ' ' +
       months +
-      ' months ' +
+      ' ' +
+      monthText +
+      ' ' +
       days +
-      ' days ' +
+      ' ' +
+      dayText +
+      ' ' +
       hours +
-      ' hours ' +
+      ' ' +
+      hourText +
+      ' ' +
       minutes +
-      ' minutes ' +
-      seconds +
-      ' seconds';
+      ' ' +
+      minuteText;
   }
 
   return user;
 };
 
 let registeredTime = {
-  years: 0,
-  months: 0,
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
+  years: undefined,
+  months: undefined,
+  days: undefined,
+  hours: undefined,
+  minutes: undefined,
+  seconds: undefined,
 };
 
 export const registeredFor = (userDate: number) => {
@@ -160,9 +230,6 @@ export const setLoyaltyBadge = (value: {
   years: number;
   months: number;
   days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
 }) => {
   if (value.years >= 2) {
     LoyaltyBadge = TwoYearsBadge;
@@ -170,10 +237,12 @@ export const setLoyaltyBadge = (value: {
     LoyaltyBadge = YearBadge;
   } else if (value.months >= 1 && value.years === 0) {
     LoyaltyBadge = MonthBadge;
-  } else if (value.days >= 14 && value.months === 0) {
+  } else if (value.days >= 14 && value.months === 0 && value.years === 0) {
     LoyaltyBadge = TwoWeeksBadge;
-  } else if (value.days >= 7 && value.months === 0) {
+  } else if (value.days >= 7 && value.months === 0 && value.years === 0) {
     LoyaltyBadge = WeekBadge;
+  } else {
+    LoyaltyBadge = undefined;
   }
 
   return LoyaltyBadge;
