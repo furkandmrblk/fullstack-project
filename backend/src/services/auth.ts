@@ -111,6 +111,32 @@ export function verifyAccessToken(
   });
 }
 
+// verifyAccessTokenWS
+
+export function verifyAccessTokenWS(req: any, accessToken: string) {
+  return new Promise<string>((resolve, reject) => {
+    const bearerToken = accessToken.split(' ');
+    const token = bearerToken[1];
+
+    if (!token) return new createError.NotFound('Could not find accessToken.');
+
+    jwt.verify(
+      token,
+      config.accessTokenSecret,
+      (err: { name: string; message: string }, payload: any) => {
+        if (err) {
+          const message =
+            err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message;
+          return reject(new createError.Unauthorized(message));
+        }
+        req.payload = payload;
+
+        return resolve(payload.aud);
+      }
+    );
+  });
+}
+
 // verify RefreshToken
 export function verifyRefreshToken(
   req: any,

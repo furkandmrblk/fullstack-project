@@ -151,15 +151,7 @@ export const getListsQ = gql`
   }
 `;
 
-// Friend Request & Friendlist Queries
-export const getFriendRequestsQ = gql`
-  query getFriendRequests {
-    getFriendRequests {
-      incomingUser
-      incomingUserId
-    }
-  }
-`;
+// Friendlist Queries
 
 export const getFriendListQ = gql`
   query getFriendList {

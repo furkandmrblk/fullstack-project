@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export const WelcomeProfileCard = ({ props }) => {
   return (
@@ -26,14 +27,11 @@ export const WelcomeProfileCard = ({ props }) => {
                   {props.description}
                 </p>
               </div>
-              <div
-                className="rounded-full bg-gray-200 h-28 w-28"
-                style={{
-                  backgroundImage: `url('${props.picture}')`,
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                  backgroundRepeat: 'no-repeat',
-                }}
+              <Image
+                src={props.picture}
+                height="120"
+                width="120"
+                className="rounded-full bg-gray-200"
               />
             </div>
             <div className="container flex items-start justify-between max-w-full">

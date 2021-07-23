@@ -3,10 +3,12 @@ import { AppProps } from 'next/app';
 import '../styles/globals.css';
 import AuthReducer, { Context, initialState } from '../reducer';
 import { useContext, useEffect, useReducer } from 'react';
-import { client } from '../client';
+import { createApolloClient } from '../client';
 import { ApolloProvider } from '@apollo/client';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const client = createApolloClient(initialState, Context);
+
   let localState = undefined;
 
   if (typeof window !== 'undefined') {

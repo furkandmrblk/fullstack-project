@@ -6,6 +6,7 @@ import { LeftSidebar } from '../components/Layout/LeftSidebar';
 import { RightSidebar } from '../components/Layout/RightSidebar';
 import { Main } from '../components/Rankings/Main';
 import { getCurrentUserQ, getProfilesQ } from '../graphql/Queries';
+import { Context, initialState } from '../reducer';
 
 export default function Rankings() {
   const profile = useQuery(getCurrentUserQ);
@@ -33,7 +34,7 @@ export default function Rankings() {
 }
 
 export async function getServerSideProps() {
-  const client = await getStandaloneApolloClient();
+  const client = await getStandaloneApolloClient(initialState, Context);
 
   await client.query({
     query: getProfilesQ,

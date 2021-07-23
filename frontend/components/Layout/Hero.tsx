@@ -6,6 +6,7 @@ import { Greeting } from '../Intro/Greeting';
 import { getStandaloneApolloClient } from '../../client/standAloneClient';
 import { getCurrentUserQ } from '../../graphql/Queries';
 import Link from 'next/link';
+import { Context, initialState } from '../../reducer';
 
 export const Hero = ({ props, list, profile }): JSX.Element => {
   if (profile.loading) {
@@ -75,7 +76,7 @@ export const Hero = ({ props, list, profile }): JSX.Element => {
 };
 
 export async function getServerSideProps() {
-  const client = await getStandaloneApolloClient();
+  const client = await getStandaloneApolloClient(initialState, Context);
 
   await client.query({
     query: getCurrentUserQ,

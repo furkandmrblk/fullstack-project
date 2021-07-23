@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/dist/client/router';
 import React, { useContext, useState } from 'react';
-import { client } from '../../../client';
 import { deleteUserM, logoutUserM } from '../../../graphql/Mutations';
 import { setAccessToken } from '../../../helpers/Tokens';
 import { Context } from '../../../reducer';
@@ -39,7 +38,6 @@ export const DeleteUser = ({
 
   const [logout, logoutResult] = useMutation(logoutUserM, {
     onCompleted() {
-      client.resetStore();
       setAccessToken(null);
       authContext.authDispatch('logout');
       router.push('/');

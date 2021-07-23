@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { PlusCircleIcon, XCircleIcon } from '@heroicons/react/solid';
-import { useMutation, useQuery } from '@apollo/client';
-import { getFriendRequestsQ } from '../../../../graphql/Queries';
+import {
+  DocumentNode,
+  SubscriptionHookOptions,
+  SubscriptionResult,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from '@apollo/client';
+import { getFriendRequestsS } from '../../../../graphql/Subscriptions';
 import { acceptFriendRequestM } from '../../../../graphql/Mutations';
 
 export const FriendRequest = () => {
   const [id, setId] = useState('');
   const [accept, setAccept] = useState(undefined);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [requests, setRequests] = useState([]);
 
-  const getRequests = useQuery(getFriendRequestsQ);
+  const getRequests = useSubscription(getFriendRequestsS);
+
   const [acceptRequest] = useMutation(acceptFriendRequestM, {
     variables: {
       accept: accept,

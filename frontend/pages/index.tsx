@@ -5,7 +5,7 @@ import { getStandaloneApolloClient } from '../client/standAloneClient';
 import { Hero } from '../components/Layout/Hero';
 import { Navbar } from '../components/Auth/Navbar';
 import { Welcome } from '../components/Intro/Welcome';
-import { Context } from '../reducer';
+import { Context, initialState } from '../reducer';
 import { getCurrentUserQ, getListsQ, getProfilesQ } from '../graphql/Queries';
 
 export default function Index() {
@@ -41,7 +41,7 @@ export default function Index() {
 }
 
 export async function getServerSideProps() {
-  const client = await getStandaloneApolloClient();
+  const client = await getStandaloneApolloClient(initialState, Context);
 
   await client.query({
     query: getProfilesQ,

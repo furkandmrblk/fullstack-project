@@ -37,10 +37,8 @@ export const getFriendRequests = async (parent, args, context, info) => {
           incomingUser: requestUsername,
         });
       }
-
       return requestingUsers;
     }
-    return null;
   } catch (error) {
     console.log(error);
   }

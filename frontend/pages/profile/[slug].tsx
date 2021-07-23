@@ -6,6 +6,7 @@ import { LeftSidebar } from '../../components/Layout/LeftSidebar';
 import { RightSidebar } from '../../components/Layout/RightSidebar';
 import { UserProfile } from '../../components/Userprofile/UserProfile';
 import { getCurrentUserQ, getListQ, getProfileQ } from '../../graphql/Queries';
+import { Context, initialState } from '../../reducer';
 
 export default function ProfilePage({ slug }) {
   const id = slug.slug;
@@ -72,7 +73,7 @@ export default function ProfilePage({ slug }) {
 // }
 
 export async function getServerSideProps({ params }) {
-  const client = await getStandaloneApolloClient();
+  const client = await getStandaloneApolloClient(initialState, Context);
 
   await client.query({
     query: getProfileQ,

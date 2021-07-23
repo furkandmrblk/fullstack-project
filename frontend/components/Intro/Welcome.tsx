@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { WelcomeProfileCard } from './WelcomeProfileCard';
 import { SignUp } from '../Auth/SignUp';
 
+import Card1Picture from '../../public/kpop.jpeg';
+import Card2Picture from '../../public/koreanrnb.jpeg';
+
 export const Welcome = () => {
   const [signUp, setSignUp] = useState(false);
 
@@ -22,7 +25,7 @@ export const Welcome = () => {
     finished: '62',
     watching: '5',
     watchlist: '23',
-    picture: './kpop.jpeg',
+    picture: Card1Picture,
   };
 
   const profiledata2 = {
@@ -38,7 +41,7 @@ export const Welcome = () => {
     finished: '81',
     watching: '2',
     watchlist: '43',
-    picture: './koreanrnb.jpeg',
+    picture: Card2Picture,
   };
 
   return (
@@ -51,9 +54,7 @@ export const Welcome = () => {
           <div className="flex flex-col items-start">
             <h1 className="text-8xl font-bold  text-black mb-16">
               Welcome to ani
-              <span className="text-8xl font-bold  text-indigo-700">
-                Spot
-              </span>
+              <span className="text-8xl font-bold  text-indigo-700">Spot</span>
             </h1>
             <p className="text-xl text-black font-light max-w-[480px] mb-16 ml-2">
               Create yourself a profile & share it with your friends and the
@@ -69,7 +70,7 @@ export const Welcome = () => {
           <WelcomeProfileCard props={profiledata} />
           <WelcomeProfileCard props={profiledata2} />
         </div>
-        <div className="absolute bottom-0 right-0 left-0">
+        <div className="absolute bottom-0 right-0 left-0 overflow-x-hidden">
           <svg
             width="1920"
             height="223"

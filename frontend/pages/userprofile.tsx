@@ -14,6 +14,7 @@ import {
   getCurrentUserProfileQ,
   getCurrentUserQ,
 } from '../graphql/Queries';
+import { Context, initialState } from '../reducer';
 
 export default function CurrentUserProfile() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function CurrentUserProfile() {
 }
 
 export async function getServerSideProps() {
-  const client = await getStandaloneApolloClient();
+  const client = await getStandaloneApolloClient(initialState, Context);
 
   await client.query({
     query: getCurrentUserProfileQ,

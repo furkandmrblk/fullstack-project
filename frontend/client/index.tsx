@@ -5,6 +5,7 @@ import {
   from,
   InMemoryCache,
   NormalizedCacheObject,
+  ApolloLink,
 } from '@apollo/client';
 
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
@@ -19,42 +20,42 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 
-// import { WebSocketLink } from '@apollo/client/link/ws';
-
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from './WebSocket';
-import WebSocket from 'ws';
 
-const wsLink = new WebSocketLink({
-  url: 'ws://localhost:4000/graphql',
-  connectionParams: () => {
-    const accessToken = getAccessToken().valueOf();
+const wsLink = process.browser
+  ? new WebSocketLink({
+      url: 'ws://localhost:4000/graphql',
+      connectionParams: () => {
+        const token: string = getAccessToken();
+        const accessToken: string = btoa(token);
 
-    if (!accessToken) return {};
-
-    return {
-      Authorization: accessToken ? `Bearer ${accessToken}` : '',
-    };
-  },
-  webSocketImpl: WebSocket,
-});
+        return {
+          authorization: accessToken ? `Bearer ${accessToken}` : '',
+        };
+      },
+      keepAlive: 5_000,
+    })
+  : null;
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
   credentials: 'include',
 });
 
-const splitLink = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    );
-  },
-  wsLink,
-  httpLink
-);
+const splitLink = process.browser
+  ? split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+          definition.kind === 'OperationDefinition' &&
+          definition.operation === 'subscription'
+        );
+      },
+      wsLink,
+      httpLink
+    )
+  : httpLink;
 
 const refreshLink: any = new TokenRefreshLink({
   accessTokenField: 'accessToken',
@@ -93,13 +94,24 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-export const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  ssrMode: true,
-  cache: new InMemoryCache(),
-  link: from([refreshLink, authLink, errorLink, splitLink]),
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-and-network',
+export function createApolloClient(initialState, ctx) {
+  const ssrMode = Boolean(ctx);
+
+  let link: ApolloLink;
+  if (ssrMode) {
+    link = from([refreshLink, authLink, errorLink, httpLink]);
+  } else {
+    link = from([refreshLink, authLink, errorLink, splitLink]);
+  }
+
+  return new ApolloClient({
+    ssrMode: ssrMode,
+    link: link,
+    cache: new InMemoryCache().restore(initialState),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+      },
     },
-  },
-});
+  });
+}

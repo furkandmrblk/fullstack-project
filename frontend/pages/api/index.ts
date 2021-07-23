@@ -16,6 +16,7 @@ import TwoWeeksBadge from '../../public/2weeks.svg';
 import MonthBadge from '../../public/1month.svg';
 import YearBadge from '../../public/1year.svg';
 import TwoYearsBadge from '../../public/2years.svg';
+import { useState } from 'react';
 
 export const tempArrayFinished: string[] = [];
 export const tempArrayWatching: string[] = [];

@@ -2,7 +2,7 @@ import { authMutations } from './auth';
 import { userMutations, userQueries, userSubscriptions } from './user';
 import { newsMutations, newsQueries } from './news';
 
-export const roots: any = {
+export const resolvers: any = {
   Query: {
     ...userQueries,
     ...newsQueries,
