@@ -1,3 +1,4 @@
+import { NormalizedCacheObject } from '@apollo/client';
 import { createContext } from 'react';
 
 export const initialState: string = 'false';

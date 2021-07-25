@@ -22,40 +22,45 @@ import { onError } from '@apollo/client/link/error';
 
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from './WebSocket';
+import { Context } from 'vm';
+import { w3cwebsocket } from 'websocket';
 
-const wsLink = process.browser
-  ? new WebSocketLink({
-      url: 'ws://localhost:4000/graphql',
-      connectionParams: () => {
-        const token: string = getAccessToken();
-        const accessToken: string = btoa(token);
+const wsLink =
+  typeof window === 'undefined'
+    ? null
+    : new WebSocketLink({
+        url: 'ws://localhost:4000/graphql',
+        lazy: false,
 
-        return {
-          authorization: accessToken ? `Bearer ${accessToken}` : '',
-        };
-      },
-      keepAlive: 5_000,
-    })
-  : null;
+        connectionParams: () => {
+          const token: string = getAccessToken();
+          const accessToken: string = btoa(token);
+
+          return {
+            authorization: accessToken ? `Bearer ${accessToken}` : '',
+          };
+        },
+      });
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
   credentials: 'include',
 });
 
-const splitLink = process.browser
-  ? split(
-      ({ query }) => {
-        const definition = getMainDefinition(query);
-        return (
-          definition.kind === 'OperationDefinition' &&
-          definition.operation === 'subscription'
-        );
-      },
-      wsLink,
-      httpLink
-    )
-  : httpLink;
+const splitLink =
+  typeof window === 'undefined'
+    ? httpLink
+    : split(
+        ({ query }) => {
+          const definition = getMainDefinition(query);
+          return (
+            definition.kind === 'OperationDefinition' &&
+            definition.operation === 'subscription'
+          );
+        },
+        wsLink,
+        httpLink
+      );
 
 const refreshLink: any = new TokenRefreshLink({
   accessTokenField: 'accessToken',
@@ -94,7 +99,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-export function createApolloClient(initialState, ctx) {
+export function createApolloClient(initialState, ctx: Context) {
   const ssrMode = Boolean(ctx);
 
   let link: ApolloLink;
@@ -105,7 +110,7 @@ export function createApolloClient(initialState, ctx) {
   }
 
   return new ApolloClient({
-    ssrMode: ssrMode,
+    ssrMode,
     link: link,
     cache: new InMemoryCache().restore(initialState),
     defaultOptions: {

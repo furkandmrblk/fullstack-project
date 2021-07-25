@@ -5,6 +5,7 @@ import config from '../config';
 
 import { client } from '../loaders/redis';
 import { domain } from 'node:process';
+import createHttpError from 'http-errors';
 
 // create AccessToken
 export function createAccessToken(userId: string) {
@@ -118,7 +119,8 @@ export function verifyAccessTokenWS(req: any, accessToken: string) {
     const bearerToken = accessToken.split(' ');
     const token = bearerToken[1];
 
-    if (!token) return new createError.NotFound('Could not find accessToken.');
+    if (!token)
+      return reject(new createHttpError.NotFound('Access Token not found.'));
 
     jwt.verify(
       token,
@@ -127,7 +129,7 @@ export function verifyAccessTokenWS(req: any, accessToken: string) {
         if (err) {
           const message =
             err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message;
-          return reject(new createError.Unauthorized(message));
+          return reject(new createHttpError.Unauthorized(message));
         }
         req.payload = payload;
 

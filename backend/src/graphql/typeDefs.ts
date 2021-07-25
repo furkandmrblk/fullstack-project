@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-express';
+import { GraphQLSchema } from 'graphql';
 
 export const typeDefs: any = gql`
   type User {

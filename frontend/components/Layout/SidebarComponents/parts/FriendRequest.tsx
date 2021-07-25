@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import { PlusCircleIcon, XCircleIcon } from '@heroicons/react/solid';
-import {
-  DocumentNode,
-  SubscriptionHookOptions,
-  SubscriptionResult,
-  useMutation,
-  useQuery,
-  useSubscription,
-} from '@apollo/client';
+import { useMutation, useSubscription } from '@apollo/client';
 import { getFriendRequestsS } from '../../../../graphql/Subscriptions';
 import { acceptFriendRequestM } from '../../../../graphql/Mutations';
 
@@ -15,7 +8,7 @@ export const FriendRequest = () => {
   const [id, setId] = useState('');
   const [accept, setAccept] = useState(undefined);
   const [error, setError] = useState('');
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState({});
 
   const getRequests = useSubscription(getFriendRequestsS);
 
@@ -44,6 +37,7 @@ export const FriendRequest = () => {
   if (getRequests.loading) {
     return <p>Loading...</p>;
   }
+  console.log(getRequests);
 
   return (
     <>

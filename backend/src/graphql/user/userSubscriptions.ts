@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import { FriendRequest, User } from '../../models/User';
 import { verifyAccessToken } from '../../services/auth';
+import { pubsub } from '../../api/middlewares/pubsub';
 
 export const getFriendRequests = async (parent, args, context, info) => {
   try {
@@ -37,6 +38,9 @@ export const getFriendRequests = async (parent, args, context, info) => {
           incomingUser: requestUsername,
         });
       }
+
+      pubsub.asyncIterator('NEW_REQUEST');
+
       return requestingUsers;
     }
   } catch (error) {

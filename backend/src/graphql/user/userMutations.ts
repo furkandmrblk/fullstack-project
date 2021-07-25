@@ -8,6 +8,7 @@ import {
   FriendList,
 } from '../../models/User';
 import { verifyAccessToken } from '../../services/auth';
+import { pubsub } from '../../api/middlewares/pubsub';
 
 // PROFILE
 
@@ -301,24 +302,40 @@ export const sendFriendRequest = async (parent, args, context, info) => {
       });
 
       await updateUser.save();
-      await request.save();
+      await request.save().then(() => {
+        pubsub.publish('NEW_REQUEST', {
+          getFriendRequests: { user: requestedUser, incomingUserId: userId },
+        });
+        return {
+          user: requestedUser,
+          incomingUserId: userId,
+        };
+      });
 
-      return {
-        user: requestedUser,
-        incomingUserId: userId,
-      };
+      // return {
+      //   user: requestedUser,
+      //   incomingUserId: userId,
+      // };
     } else {
       if (friendRequest.incomingUserId.includes(userId)) {
         return new createError.BadRequest('You already sent a friend request.');
       }
 
       friendRequest.incomingUserId.push(userId);
-      await friendRequest.save();
+      await friendRequest.save().then(() => {
+        pubsub.publish('NEW_REQUEST', {
+          getFriendRequests: { user: requestedUser, incomingUserId: userId },
+        });
+        return {
+          user: requestedUser,
+          incomingUserId: userId,
+        };
+      });
 
-      return {
-        user: requestedUser,
-        incomingUserId: userId,
-      };
+      // return {
+      //   user: requestedUser,
+      //   incomingUserId: userId,
+      // };
     }
   } catch (error) {
     console.log(error);

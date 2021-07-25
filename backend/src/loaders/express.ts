@@ -7,8 +7,9 @@ import cors from 'cors';
 import config from '../config';
 import ws from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
-import { execute, subscribe } from 'graphql';
+import { execute, GraphQLSchema, subscribe } from 'graphql';
 import { verifyAccessTokenWS } from '../services/auth';
+import { pubsub } from '../api/middlewares/pubsub';
 
 const atob = require('atob');
 
@@ -18,9 +19,9 @@ export default async () => {
   const app = express();
 
   const apolloServer = new ApolloServer({
-    typeDefs,
+    typeDefs: typeDefs,
     resolvers: resolvers as any,
-    context: ({ req, res }) => ({ req, res }),
+    context: ({ req, res }) => ({ req, res, pubsub: pubsub }),
   });
 
   await apolloServer.start();
@@ -74,24 +75,14 @@ export default async () => {
 
     useServer(
       {
-        onConnect: async (ctx) => {
-          const token = await ctx.connectionParams?.authorization;
-          const accessToken = await atob(token);
-          if (
-            !(await verifyAccessTokenWS(
-              ctx.extra.request,
-              (await accessToken) as string
-            ))
-          ) {
-            return false;
-          }
-        },
-
-        context: ({ extra }) => ({ req: extra.request }),
-        schema: typeDefs,
-        roots: resolvers,
-        // execute,
+        context: ({ extra }) => ({ req: extra.request, pubsub: pubsub }),
+        schema: typeDefs as GraphQLSchema,
         subscribe,
+        execute,
+
+        onError: (err) => {
+          console.log(err);
+        },
       },
       wsServer
     );
